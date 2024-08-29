@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Martín Silva - Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -12,6 +14,7 @@
             margin: 0;
             padding: 20px;
         }
+
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -20,29 +23,35 @@
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         h1 {
             font-size: 32px;
             margin-bottom: 5px;
             color: #2c3e50;
         }
+
         h2 {
             font-size: 24px;
             margin-bottom: 15px;
             color: #34495e;
         }
+
         p {
             line-height: 1.6;
         }
+
         .section-title {
-            margin-top: 30px;
             font-size: 20px;
             color: #2980b9;
             border-bottom: 2px solid #2980b9;
             padding-bottom: 5px;
         }
-        .contact-info, .skills {
+
+        .contact-info,
+        .skills {
             margin-bottom: 20px;
         }
+
         .skills span {
             display: inline-block;
             background-color: #ecf0f1;
@@ -52,24 +61,30 @@
             margin-top: 5px;
             font-size: 14px;
         }
+
         .experience-item {
             margin-bottom: 20px;
         }
+
         .experience-item h3 {
             font-size: 18px;
             margin-bottom: 5px;
             color: #16a085;
         }
+
         .experience-item p {
             margin: 0;
         }
+
         ul {
             margin: 10px 0;
             padding-left: 20px;
         }
+
         ul li {
             margin-bottom: 5px;
         }
+
         .footer {
             text-align: center;
             margin-top: 40px;
@@ -78,105 +93,151 @@
         }
     </style>
 </head>
+
 <body>
 
-<div class="container">
-    <h1>Martín Silva</h1>
-    <h2>Rust Developer & Cooperativist</h2>
+    <div class="container">
+        <div class="flex flex-row items-center mb-5">
+            <div class="mr-8">
+                <img src="https://placehold.it/150x150" alt="Logo" class="max-w-full h-auto">
+            </div>
 
-    <div class="contact-info">
-        <p>Email: msmartinsilva@gmail.com</p>
-        <p>LinkedIn: <a href="https://www.linkedin.com/in/mart%C3%ADn-silva-18a1b6249">martín-silva</a></p>
-        <p>Website: <a href="https://fiqus.coop/">fiqus.coop</a></p>
+            <div>
+                <h1 class="text-xl font-bold">Martín Silva</h1>
+                <h2 class="text-lg font-semibold">Developer & Cooperativist</h2>
+
+                <div class="contact-info mt-4">
+                    <div class="flex gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                        </svg>
+
+                        <p class="text-blue-500">msmartinsilva@gmail.com, martin.silva@lawal.com</p>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-6">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M12 21a9.004 9.004 0 0 0 8.716-6.747M12 21a9.004 9.004 0 0 1-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 0 1 7.843 4.582M12 3a8.997 8.997 0 0 0-7.843 4.582m15.686 0A11.953 11.953 0 0 1 12 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0 1 21 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0 1 12 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 0 1 3 12c0-1.605.42-3.113 1.157-4.418" />
+                        </svg>
+
+                        <p><a href="https://lawal.io/" class="text-blue-500">https://lawal.io/</a></p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title">Skills</div>
+        <div class="skills py-5">
+            <span class="font-bold">Cooperative Management</span>
+            <span class="font-bold">Jr. Developers coaching</span>
+            <span class="font-bold">Project Management</span>
+            <span class="font-bold">Rust</span>
+            <span class="font-bold">Elixir</span>
+            <span class="font-bold">NodeJs</span>
+            <span class="font-bold">Python</span>
+            <span class="font-bold">Ruby</span>
+            <span class="font-bold">Javascript</span>
+            <span class="font-bold">CSS</span>
+            <span class="font-bold">HTML</span>
+            <span class="font-bold">Postgresql</span>
+            <span class="font-bold">MongoDB</span>
+            <span class="font-bold">Redis</span>
+            <span class="font-bold">Amazon Web Service</span>
+            <span class="font-bold">Google Cloud</span>
+        </div>
+
+        <div class="section-title ">Experience</div>
+
+        <div class="experiences my-5">
+
+            <div class="experience-item">
+                <h3 class="font-bold">Lawal - Backend Engineer & Partner</h3>
+                <p><strong>2023 - Present</strong></p>
+                <ul>
+                    <li>Cedalio: Design and develop applications in Rust and Elixir</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <h3 class="font-bold">Fiqus - Full Stack Engineer & Partner</h3>
+                <p><strong>February 2018 - 2023</strong></p>
+                <ul class="mt-2">
+                    <li>Forte: Design and develop microservices in Elixir, using Phoenix for a crypto assets platform
+                        (2020-2021).</li>
+                    <li>Buenbit: Develop a web/mobile application using Django, React, and React Native for an exchange
+                        platform (2020).</li>
+                    <li>Betterez: Define client-side architecture and develop a microservice for payment refunds, moving
+                        old
+                        code to VueJS for a ground traveling reservations platform (2017-2019).</li>
+                    <li>Coaching junior developers.</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <h3 class="font-bold">Flowics - Full Stack Developer</h3>
+                <p><strong>January 2015 - December 2017: NodeJs, Java and Ruby</strong></p>
+                <ul class="mt-2">
+
+                    <li>Setup, design, develop, maintain and deploy a web and backend app to create auto responses for
+                        the
+                        Twitter platform.</li>
+                    <li>Project management and coach junior developers.</li>
+                    <li>Set up a single sign-on (SSO) solution for all apps in the Flowics suite.</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <h3 class="font-bold">Zauber - Full Stack Developer</h3>
+                <p><strong>January 2010 - December 2014</strong></p>
+                <ul class="mt-2">
+
+                    <li>Developed a native Android geofence app for pets.</li>
+                    <li>Developed a web and mobile complimentary application for schizophrenia treatment.</li>
+                    <li>Created an HTML5 mobile-first app for monitoring fires for the city of San Francisco.</li>
+                    <li>Developed an HTML5 iPad app for Infobae newspaper.</li>
+                    <li>Technical lead and coached junior developers.</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <h3 class="font-bold">ITR (IT Resources) - Back End Developer</h3>
+                <p><strong>January 2009 - December 2010</strong></p>
+                <ul class="mt-2">
+
+                    <li>Developed web apps for City Bank using the Spring Framework.</li>
+                    <li>Developed web apps for Swiss Medical Group using the Spring Framework.</li>
+                </ul>
+            </div>
+
+            <div class="experience-item">
+                <h3 class="font-bold">Siemens - Back End Developer</h3>
+                <p><strong>January 2006 - December 2008</strong></p>
+                <ul class="mt-2">
+
+                    <li>Developed an interpreter for the Mosaic language using Java.</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="section-title mb-5">Education</div>
+
+        <div class="experience-item">
+            <h3 class="font-bold">Universidad Tecnológica Nacional</h3>
+            <p><strong>Bachelor of Engineering, Computer Software Engineering</strong></p>
+            <p>January 2002 - December 2010</p>
+        </div>
+
+        <div class="footer">
+            <p>Martín Silva - Rust Developer & Cooperativist</p>
+        </div>
     </div>
-
-    <div class="section-title">Skills</div>
-    <div class="skills">
-        <span>Cooperative Management</span>
-        <span>Jr. Developers coaching</span>
-        <span>Project Management</span>
-        <span>Rust</span>
-        <span>Elixir</span>
-        <span>NodeJs</span>
-        <span>Python</span>
-        <span>Ruby</span>
-        <span>Javascript, CSS and HTML</span>
-        <span>Postgresql, MongoDB, Redis</span>
-        <span>Amazon Web Service, Google Cloud</span>
-    </div>
-
-    <div class="section-title">Experience</div>
-
-    <div class="experience-item">
-        <h3>Lawal - Backend Engineer & Partner</h3>
-        <p><strong>2023 - Present</strong></p>
-        <ul>
-            <li>Cedalio: Design and develop applications in Rust and Elixir</li>
-        </ul>
-    </div>
-
-    <div class="experience-item">
-        <h3>Fiqus - Full Stack Engineer & Partner</h3>
-        <p><strong>February 2018 - 2023</strong></p>
-        <ul>
-            <li>Forte: Design and develop microservices in Elixir, using Phoenix for a crypto assets platform (2020-2021).</li>
-            <li>Buenbit: Develop a web/mobile application using Django, React, and React Native for an exchange platform (2020).</li>
-            <li>Betterez: Define client-side architecture and develop a microservice for payment refunds, moving old code to VueJS for a ground traveling reservations platform (2017-2019).</li>
-            <li>Coaching junior developers.</li>
-        </ul>
-    </div>
-
-    <div class="experience-item">
-        <h3>Flowics - Full Stack Developer</h3>
-        <p><strong>January 2015 - December 2017: NodeJs, Java and Ruby</strong></p>
-        <ul>
-            <li>Setup, design, develop, maintain and deploy a web and backend app to create auto responses for the Twitter platform.</li>
-            <li>Project management and coach junior developers.</li>
-            <li>Set up a single sign-on (SSO) solution for all apps in the Flowics suite.</li>
-        </ul>
-    </div>
-
-    <div class="experience-item">
-        <h3>Zauber - Full Stack Developer</h3>
-        <p><strong>January 2010 - December 2014</strong></p>
-        <ul>
-            <li>Developed a native Android geofence app for pets.</li>
-            <li>Developed a web and mobile complimentary application for schizophrenia treatment.</li>
-            <li>Created an HTML5 mobile-first app for monitoring fires for the city of San Francisco.</li>
-            <li>Developed an HTML5 iPad app for Infobae newspaper.</li>
-            <li>Technical lead and coached junior developers.</li>
-        </ul>
-    </div>
-
-    <div class="experience-item">
-        <h3>ITR (IT Resources) - Back End Developer</h3>
-        <p><strong>January 2009 - December 2010</strong></p>
-        <ul>
-            <li>Developed web apps for City Bank using the Spring Framework.</li>
-            <li>Developed web apps for Swiss Medical Group using the Spring Framework.</li>
-        </ul>
-    </div>
-
-    <div class="experience-item">
-        <h3>Siemens - Back End Developer</h3>
-        <p><strong>January 2006 - December 2008</strong></p>
-        <ul>
-            <li>Developed an interpreter for the Mosaic language using Java.</li>
-        </ul>
-    </div>
-
-    <div class="section-title">Education</div>
-
-    <div class="experience-item">
-        <h3>Universidad Tecnológica Nacional</h3>
-        <p><strong>Bachelor of Engineering, Computer Software Engineering</strong></p>
-        <p>January 2002 - December 2010</p>
-    </div>
-
-    <div class="footer">
-        <p>Martín Silva - Rust Developer & Cooperativist</p>
-    </div>
-</div>
 
 </body>
+
 </html>
