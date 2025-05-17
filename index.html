@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <title>CSV Viewer</title>
+        <style>
+            body {
+                font-family: sans-serif;
+                padding: 20px;
+            }
+            table {
+                border-collapse: collapse;
+                width: 100%;
+                margin-top: 20px;
+            }
+            th,
+            td {
+                border: 1px solid #ccc;
+                padding: 8px;
+            }
+            button {
+                margin-top: 20px;
+                padding: 10px 20px;
+                font-size: 16px;
+            }
+
+            #randomRow {
+                margin-top: 30px;
+                font-size: 22px;
+                font-weight: bold;
+                opacity: 0;
+                transform: scale(0.8);
+                transition: all 0.5s ease;
+            }
+
+            #randomRow.show {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            .winner-name {
+                font-size: 36px;
+                color: #2c7;
+                display: block;
+                margin: 10px 0;
+            }
+
+            .winner-details {
+                font-size: 20px;
+                color: #555;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>CSV Demo</h1>
+        <table id="csvTable">
+            <thead></thead>
+            <tbody></tbody>
+        </table>
+
+        <button onclick="showRandomRow()">Sortear fila al azar</button>
+        <div id="randomRow"></div>
+
+        <script>
+            let allRows = [];
+            let headers = [];
+
+            function parseCSV(text) {
+                return text
+                    .trim()
+                    .split("\n")
+                    .map((row) => row.split(","));
+            }
+
+            fetch("data.csv")
+                .then((response) => response.text())
+                .then((text) => {
+                    const rows = parseCSV(text);
+                    headers = rows[0];
+                    allRows = rows.slice(1); // sin encabezado
+                    renderTable([headers, ...allRows.slice(0, 5)]);
+                });
+
+            function renderTable(rows) {
+                const table = document.getElementById("csvTable");
+                const thead = table.querySelector("thead");
+                const tbody = table.querySelector("tbody");
+
+                thead.innerHTML = "";
+                tbody.innerHTML = "";
+
+                const headerRow = document.createElement("tr");
+                rows[0].forEach((cell) => {
+                    const th = document.createElement("th");
+                    th.textContent = cell;
+                    headerRow.appendChild(th);
+                });
+                thead.appendChild(headerRow);
+
+                for (let i = 1; i < rows.length; i++) {
+                    const tr = document.createElement("tr");
+                    rows[i].forEach((cell) => {
+                        const td = document.createElement("td");
+                        td.textContent = cell;
+                        tr.appendChild(td);
+                    });
+                    tbody.appendChild(tr);
+                }
+            }
+
+            function showRandomRow() {
+                if (allRows.length === 0) return;
+
+                const randomIndex = Math.floor(Math.random() * allRows.length);
+                const randomRow = allRows[randomIndex];
+                const name = randomRow[0];
+
+                // Contar compras y sumar total gastado
+                let compras = 0;
+                let totalGasto = 0;
+
+                allRows.forEach((row) => {
+                    if (row[0] === name) {
+                        compras++;
+
+                        const montoStr = row[3].substr(1);
+                        const monto = parseFloat(montoStr);
+                        totalGasto += monto;
+                    }
+                });
+
+                const div = document.getElementById("randomRow");
+                div.innerHTML = `
+        🎉 ¡Felicitaciones! <span class="winner-name">${name}</span>
+        <div class="winner-details">
+          Compró <strong>${compras}</strong> veces y gastó un total de <strong>$${totalGasto.toFixed(2)}</strong>.
+        </div>
+      `;
+
+                // Reiniciar animación
+                div.classList.remove("show");
+                void div.offsetWidth;
+                div.classList.add("show");
+            }
+        </script>
+    </body>
+</html>
