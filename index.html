@@ -20,10 +20,10 @@
             }
             button {
                 margin-top: 20px;
+                margin-right: 10px;
                 padding: 10px 20px;
                 font-size: 16px;
             }
-
             #randomRow {
                 margin-top: 30px;
                 font-size: 22px;
@@ -32,19 +32,16 @@
                 transform: scale(0.8);
                 transition: all 0.5s ease;
             }
-
             #randomRow.show {
                 opacity: 1;
                 transform: scale(1);
             }
-
             .winner-name {
                 font-size: 36px;
                 color: #2c7;
                 display: block;
                 margin: 10px 0;
             }
-
             .winner-details {
                 font-size: 20px;
                 color: #555;
@@ -59,9 +56,13 @@
         </table>
 
         <button onclick="showRandomRow()">Sortear fila al azar</button>
+        <button onclick="showNewClients()">Mostrar 5 clientes nuevos</button>
+
         <div id="randomRow"></div>
 
         <script>
+            const seenNames = new Set();
+
             let allRows = [];
             let headers = [];
 
@@ -115,14 +116,12 @@
                 const randomRow = allRows[randomIndex];
                 const name = randomRow[0];
 
-                // Contar compras y sumar total gastado
                 let compras = 0;
                 let totalGasto = 0;
 
                 allRows.forEach((row) => {
                     if (row[0] === name) {
                         compras++;
-
                         const montoStr = row[3].substr(1);
                         const monto = parseFloat(montoStr);
                         totalGasto += monto;
@@ -131,16 +130,32 @@
 
                 const div = document.getElementById("randomRow");
                 div.innerHTML = `
-        🎉 ¡Felicitaciones! <span class="winner-name">${name}</span>
-        <div class="winner-details">
-          Compró <strong>${compras}</strong> veces y gastó un total de <strong>$${totalGasto.toFixed(2)}</strong>.
-        </div>
-      `;
+                🎉 ¡Felicitaciones! <span class="winner-name">${name}</span>
+                <div class="winner-details">
+                    Compró <strong>${compras}</strong> veces y gastó un total de <strong>$${totalGasto.toFixed(2)}</strong>.
+                </div>
+            `;
 
-                // Reiniciar animación
                 div.classList.remove("show");
                 void div.offsetWidth;
                 div.classList.add("show");
+            }
+
+            function showNewClients() {
+                if (allRows.length === 0) return;
+
+                const uniqueClientRows = [];
+
+                for (const row of allRows) {
+                    const name = row[0];
+                    if (!seenNames.has(name)) {
+                        seenNames.add(name);
+                        uniqueClientRows.push(row);
+                    }
+                    if (uniqueClientRows.length === 5) break;
+                }
+
+                renderTable([headers, ...uniqueClientRows]);
             }
         </script>
     </body>
