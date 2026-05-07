@@ -1,10 +1,1001 @@
 <!DOCTYPE html>
-  <html lang="en">
+<html lang="en">
   <head>
-      <meta charset="UTF-8">
-      <title>Music</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1"></head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>iPhodo Architecture Proposal</title>
+    <meta
+      name="description"
+      content="Architecture proposal draft for iPhodo by Lawal."
+    />
+    <style>
+      :root {
+        --bg: #0a0612;
+        --surface: #151022;
+        --surface-elevated: #1c1630;
+        --border: rgba(255, 255, 255, 0.09);
+        --border-accent: rgba(168, 85, 247, 0.35);
+        --text-primary: #f4f1fb;
+        --text-secondary: #c8c2da;
+        --text-muted: #9189ab;
+        --accent: #a855f7;
+        --accent-strong: #c084fc;
+        --accent-glow: rgba(168, 85, 247, 0.12);
+        --success: #d8b4fe;
+        --max: 1220px;
+        --radius: 24px;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text-primary);
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        line-height: 1.5;
+        overflow-x: hidden;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .shell {
+        width: min(calc(100% - 2rem), var(--max));
+        margin: 0 auto;
+      }
+
+      .background {
+        position: fixed;
+        inset: 0;
+        z-index: -10;
+        overflow: hidden;
+        pointer-events: none;
+      }
+
+      .background::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background:
+          radial-gradient(ellipse 80% 60% at 50% 40%, rgba(168, 85, 247, 0.18) 0%, rgba(139, 92, 246, 0.06) 35%, transparent 70%);
+      }
+
+      .background::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(ellipse at center, transparent 40%, rgba(10, 6, 18, 0.75) 100%);
+      }
+
+      .glass {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 96vw;
+        height: 96vh;
+        transform: translate(-50%, -50%);
+        border-radius: 32px;
+        background:
+          linear-gradient(135deg, rgba(168, 85, 247, 0.07) 0%, rgba(168, 85, 247, 0.015) 45%, rgba(192, 132, 252, 0.06) 100%);
+        border: 1px solid rgba(168, 85, 247, 0.2);
+        box-shadow:
+          inset 0 1px 0 rgba(255, 255, 255, 0.1),
+          inset 0 0 80px rgba(168, 85, 247, 0.05);
+      }
+
+      .glass::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: 32px;
+        background:
+          linear-gradient(120deg, transparent 35%, rgba(192, 132, 252, 0.1) 50%, transparent 65%);
+      }
+
+      .glass::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 2rem;
+        right: 2rem;
+        height: 1px;
+        background:
+          linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.28) 50%, transparent 100%);
+      }
+
+      .section-nav {
+        position: fixed;
+        right: 1.5rem;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 20;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+
+      .section-nav a {
+        display: block;
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(145, 137, 171, 0.4);
+        transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .section-nav a:hover,
+      .section-nav a.active {
+        background: var(--accent);
+        transform: scale(1.4);
+        box-shadow: 0 0 12px rgba(168, 85, 247, 0.8);
+      }
+
+      section {
+        padding: 6rem 0;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        padding: 0.45rem 1rem;
+        border-radius: 999px;
+        border: 1px solid var(--border-accent);
+        background: var(--accent-glow);
+      }
+
+      .pill-dot {
+        width: 0.52rem;
+        height: 0.52rem;
+        border-radius: 999px;
+        background: var(--accent);
+      }
+
+      .pill-label {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        color: var(--accent-strong);
+        text-transform: uppercase;
+      }
+
+      .cover {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
+
+      .cover h1 {
+        margin-top: 2.4rem;
+        font-size: clamp(3rem, 8vw, 7rem);
+        line-height: 1.04;
+        font-weight: 800;
+        max-width: 12ch;
+      }
+
+      .cover h1 span {
+        color: var(--accent);
+      }
+
+      .brandline {
+        margin-top: 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        color: var(--text-secondary);
+      }
+
+      .brandline img {
+        height: 32px;
+        width: auto;
+        object-fit: contain;
+      }
+
+      .subbrand {
+        margin-top: 0.6rem;
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.24em;
+        color: var(--text-muted);
+      }
+
+      .meta {
+        margin-top: 2.6rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        justify-content: center;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.72rem;
+        letter-spacing: 0.16em;
+        color: var(--text-muted);
+        text-transform: uppercase;
+      }
+
+      .meta .dot {
+        width: 4px;
+        height: 4px;
+        border-radius: 999px;
+        background: var(--text-muted);
+      }
+
+      .section-intro {
+        max-width: 900px;
+        text-align: center;
+        margin: 0 auto;
+      }
+
+      h2 {
+        margin-top: 2rem;
+        font-size: clamp(2rem, 5vw, 4.2rem);
+        line-height: 1.06;
+        font-weight: 800;
+      }
+
+      .lead {
+        margin-top: 1.3rem;
+        font-size: clamp(1.05rem, 2vw, 1.45rem);
+        line-height: 1.75;
+        color: var(--text-secondary);
+      }
+
+      .stack-pill {
+        margin-top: 2.2rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.85rem 1.4rem;
+        border-radius: 999px;
+        border: 1px solid var(--border-accent);
+        background: var(--accent-glow);
+      }
+
+      .stack-pill span:last-child {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.92rem;
+        letter-spacing: 0.08em;
+        color: var(--accent-strong);
+      }
+
+      .grid-2 {
+        margin-top: 4rem;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.5rem;
+      }
+
+      .card {
+        padding: 2rem;
+        border-radius: var(--radius);
+        background: var(--surface);
+        border: 1px solid var(--border);
+      }
+
+      .card.accent {
+        border-color: var(--border-accent);
+      }
+
+      .label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .label .dot {
+        width: 0.55rem;
+        height: 0.55rem;
+        border-radius: 999px;
+        background: var(--text-muted);
+      }
+
+      .accent .label {
+        color: var(--accent-strong);
+      }
+
+      .accent .label .dot {
+        background: var(--accent);
+      }
+
+      .card h3 {
+        margin-top: 1.2rem;
+        font-size: 1.7rem;
+        line-height: 1.2;
+      }
+
+      .card p {
+        margin-top: 1rem;
+        color: var(--text-secondary);
+        font-size: 1rem;
+        line-height: 1.7;
+      }
+
+      .stats {
+        margin-top: 2rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border);
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .stats strong {
+        display: block;
+        font-size: 1.6rem;
+        color: var(--text-primary);
+      }
+
+      .accent .stats strong {
+        color: var(--accent-strong);
+      }
+
+      .stats span {
+        display: block;
+        margin-top: 0.35rem;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        font-size: 0.68rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .content-grid {
+        margin-top: 4rem;
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 1.5rem;
+      }
+
+      .list-card h3,
+      .note-card h3 {
+        font-size: 1.4rem;
+      }
+
+      .list {
+        margin-top: 1.2rem;
+        list-style: none;
+      }
+
+      .list li + li {
+        margin-top: 1rem;
+      }
+
+      .list li {
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+
+      .list strong {
+        color: var(--text-primary);
+      }
+
+      .note-card {
+        background: var(--surface-elevated);
+      }
+
+      .note-box {
+        margin-top: 1.25rem;
+        padding: 1.2rem 1.25rem;
+        border-radius: 18px;
+        border: 1px solid rgba(250, 204, 21, 0.24);
+        background:
+          linear-gradient(180deg, rgba(250, 204, 21, 0.09) 0%, rgba(168, 85, 247, 0.05) 100%);
+      }
+
+      .note-box p {
+        margin-top: 0.55rem;
+        color: var(--text-secondary);
+      }
+
+      .warning-links {
+        margin-top: 1rem;
+        display: grid;
+        gap: 0.55rem;
+      }
+
+      .warning-links a {
+        color: #f5d76e;
+        text-decoration: underline;
+        text-decoration-color: rgba(245, 215, 110, 0.4);
+        text-underline-offset: 0.18em;
+      }
+
+      .warning-links a:hover {
+        text-decoration-color: rgba(245, 215, 110, 0.9);
+      }
+
+      .option-stack {
+        margin-top: 2rem;
+        display: grid;
+        gap: 1.2rem;
+      }
+
+      .option-card {
+        padding: 1.8rem;
+        border-radius: 22px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+      }
+
+      .option-card.recommended {
+        border-color: var(--border-accent);
+        background:
+          linear-gradient(180deg, rgba(168, 85, 247, 0.08) 0%, rgba(21, 16, 34, 1) 100%);
+      }
+
+      .option-card h3 {
+        margin-top: 1rem;
+        font-size: 1.5rem;
+      }
+
+      .option-card p {
+        margin-top: 0.9rem;
+        color: var(--text-secondary);
+        line-height: 1.7;
+      }
+
+      .split {
+        margin-top: 1.4rem;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+      }
+
+      .mini {
+        padding: 1.15rem;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border);
+      }
+
+      .mini h4 {
+        font-size: 0.78rem;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--accent-strong);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      }
+
+      .mini ul {
+        margin-top: 0.8rem;
+        list-style: none;
+      }
+
+      .mini li + li {
+        margin-top: 0.7rem;
+      }
+
+      .mini li {
+        color: var(--text-secondary);
+        line-height: 1.65;
+      }
+
+      .recommend {
+        margin-top: 2.5rem;
+        padding: 1.6rem 1.8rem;
+        border-radius: 22px;
+        border: 1px solid var(--border-accent);
+        background: rgba(168, 85, 247, 0.08);
+      }
+
+      .market-grid {
+        margin-top: 3.2rem;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1.2rem;
+      }
+
+      .source-list {
+        margin-top: 1rem;
+        display: grid;
+        gap: 0.55rem;
+      }
+
+      .source-list a {
+        color: var(--accent-strong);
+        text-decoration: underline;
+        text-decoration-color: rgba(192, 132, 252, 0.32);
+        text-underline-offset: 0.18em;
+      }
+
+      .source-list a:hover {
+        text-decoration-color: rgba(192, 132, 252, 0.9);
+      }
+
+      .recommend h3 {
+        font-size: 1.35rem;
+      }
+
+      .recommend p {
+        margin-top: 0.85rem;
+        color: var(--text-secondary);
+        line-height: 1.8;
+      }
+
+      .next {
+        max-width: 860px;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .cta-row {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      .cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.95rem 1.35rem;
+        border-radius: 999px;
+        border: 1px solid var(--border-accent);
+        background: var(--accent-glow);
+        color: var(--text-primary);
+        font-weight: 600;
+      }
+
+      footer {
+        padding: 0 0 4rem;
+      }
+
+      .footer {
+        padding-top: 2rem;
+        border-top: 1px solid var(--border);
+        color: var(--text-muted);
+        text-align: center;
+        font-size: 0.95rem;
+      }
+
+      @media (max-width: 1024px) {
+        .section-nav {
+          display: none;
+        }
+
+        .content-grid,
+        .grid-2,
+        .split,
+        .market-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 720px) {
+        section {
+          padding: 4.5rem 0;
+        }
+
+        .cover h1 {
+          max-width: none;
+        }
+
+        .brandline {
+          flex-direction: column;
+        }
+
+        .stats {
+          grid-template-columns: 1fr;
+        }
+
+        .glass {
+          width: calc(100vw - 1rem);
+          height: calc(100vh - 1rem);
+          border-radius: 24px;
+        }
+      }
+    </style>
+  </head>
   <body>
-      <div id="elm-app"></div>
-  <script src="main.js"></script></body>
+    <div class="background">
+      <div class="glass"></div>
+    </div>
+
+    <nav class="section-nav" aria-hidden="true">
+      <a href="#cover" class="active"></a>
+      <a href="#introduction"></a>
+      <a href="#assessment"></a>
+      <a href="#option-a"></a>
+      <a href="#option-b"></a>
+      <a href="#recommendation"></a>
+      <a href="#next"></a>
+    </nav>
+
+    <main>
+      <section id="cover" class="cover shell">
+        <div class="pill">
+          <span class="pill-dot"></span>
+          <span class="pill-label">Architecture Proposal</span>
+        </div>
+
+        <h1>
+          Architecture Proposal
+          for <span>iPhodo</span>
+        </h1>
+
+        <div class="brandline">
+          <span>by</span>
+          <img src="./lawal-logo.png" alt="Lawal" />
+        </div>
+        <p class="subbrand">Software Cooperative</p>
+
+        <div class="meta">
+          <span>May 2026</span>
+          <span class="dot"></span>
+          <span>Draft v0.1</span>
+        </div>
+      </section>
+
+      <section id="introduction" class="shell">
+        <div class="section-intro">
+          <h2>The move away from Base44 is already decided.</h2>
+          <p class="lead">
+            The client has already decided to move out of Base44. The purpose of this proposal is to clarify
+            what the product leaves behind, what the new
+            architecture should look like, and which operational and technical responsibilities Lawal would
+            take on in the transition.
+          </p>
+          <div class="stack-pill">
+            <span class="pill-dot"></span>
+            <span>Migration analysis / shared backend / mobile strategy / operating model</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="assessment" class="shell">
+        <div class="section-intro">
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span class="pill-label">Current Assessment</span>
+          </div>
+          <h2>The product already has a shared-system logic that can be preserved.</h2>
+          <p class="lead">
+            Today, iPhodo is essentially a web-first product with a shared backend model around image generation,
+            commerce, sign-in, user account management, order history, and administration. Based on the current
+            repository, there are no clear signs of a native iOS or Android application codebase. The strategic goal
+            is to preserve that shared structure while rebuilding it outside Base44 with more long-term ownership and
+            flexibility.
+          </p>
+        </div>
+
+        <div class="grid-2">
+          <article class="card">
+            <div class="label">
+              <span class="dot"></span>
+              <span>Current State</span>
+            </div>
+            <h3>Centralized around an existing application platform.</h3>
+            <p>
+              The current implementation already combines frontend, backend logic, authentication, content,
+              and operations in a tightly connected environment. This reduces fragmentation and keeps the
+              operating model more concentrated.
+            </p>
+            <div class="stats">
+              <div>
+                <strong>1</strong>
+                <span>Shared backend</span>
+              </div>
+              <div>
+                <strong>1</strong>
+                <span>Admin surface</span>
+              </div>
+              <div>
+                <strong>3</strong>
+                <span>Potential channels</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card accent">
+            <div class="label">
+              <span class="dot"></span>
+              <span>Target Question</span>
+            </div>
+            <h3>How far should the platform evolve beyond the current model?</h3>
+            <p>
+              The next step is to preserve the useful parts of that structure while moving toward a more
+              custom stack with web on Vercel and a more explicitly owned technical base. Dedicated mobile
+              apps can remain a later-stage expansion rather than part of the immediate implementation scope.
+            </p>
+            <div class="stats">
+              <div>
+                <strong>More</strong>
+                <span>Control</span>
+              </div>
+              <div>
+                <strong>More</strong>
+                <span>Mobile depth</span>
+              </div>
+              <div>
+                <strong>More</strong>
+                <span>Operational work</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="option-a" class="shell">
+        <div class="content-grid">
+          <div class="card list-card">
+            <div class="pill">
+              <span class="pill-dot"></span>
+              <span class="pill-label">What We Leave Behind</span>
+            </div>
+            <h2>What Base44 currently gives the product.</h2>
+            <p class="lead" style="text-align:left;max-width:none;">
+              Since the decision is to move away from Base44, the relevant question is what the current platform
+              advantages are, because those are the things we must preserve,
+              replace, or reimplement in the new architecture.
+            </p>
+            <ul class="list">
+              <li><strong>Unified Product Context:</strong> Frontend, backend logic, data, and administration remain closely connected.</li>
+              <li><strong>Lower Operational Surface Area:</strong> More of the product stays inside one operating context, with fewer separate release paths.</li>
+              <li><strong>Lighter Infrastructure Ownership:</strong> The client owns less platform infrastructure directly.</li>
+              <li><strong>Integrated Delivery Model:</strong> Publishing, data structures, and runtime behavior are tightly linked inside the platform.</li>
+              <li><strong>Built-In Product Services:</strong> Authentication, entities, functions, and admin tooling already come preassembled.</li>
+            </ul>
+          </div>
+
+          <aside class="card note-card">
+            <h3>What must be preserved in the migration</h3>
+            <div class="note-box">
+              <p>
+                These are not arguments to remain on Base44. They are the structural conveniences the product
+                currently enjoys. Once the platform is removed, the new architecture has to replace them with
+                explicit technical design and operational discipline.
+              </p>
+              <p>
+                A related point is payments: if the product moves into store-distributed mobile apps, the team
+                must classify what is being sold. Physical prints can generally use wallet-style payment flows,
+                while paid digital photo access or digital features may trigger Apple and Google store billing requirements.
+              </p>
+              <div class="warning-links">
+                <a href="https://developer.apple.com/design/human-interface-guidelines/in-app-purchase?language=_8" target="_blank" rel="noreferrer">Apple: In-App Purchase vs Apple Pay</a>
+                <a href="https://support.google.com/googleplay/android-developer/answer/9858738?hl=en" target="_blank" rel="noreferrer">Google Play Payments Policy</a>
+              </div>
+            </div>
+            <ul class="list">
+              <li><strong>Replace Product Coupling:</strong> Lawal would reconstruct the shared logic that Base44 currently holds together.</li>
+              <li><strong>Recreate Core Application Layers:</strong> Data models, backend logic, authentication, and admin structures currently embedded in Base44 must be reimplemented in the new stack.</li>
+              <li><strong>Replace Built-In Services:</strong> Authentication, backend entities, cloud functions, and administration must become explicit application layers.</li>
+              <li><strong>Replace Publishing Simplicity:</strong> Deployment and release management must move into a more formal engineering workflow.</li>
+              <li><strong>Replace Platform Guardrails:</strong> Ownership increases, but so does responsibility for consistency, monitoring, and change control.</li>
+              <li><strong>Keep Mobile Out Of Scope For Now:</strong> Since the current codebase does not show a native mobile implementation, adding iOS and Android now would introduce a separate delivery stream and additional coordination overhead.</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section id="option-b" class="shell">
+        <div class="content-grid">
+          <div class="card list-card accent">
+            <div class="pill">
+              <span class="pill-dot"></span>
+              <span class="pill-label">Target Architecture</span>
+            </div>
+            <h2>Rebuild the product on web + shared backend, with mobile reserved for a later phase.</h2>
+            <p class="lead" style="text-align:left;max-width:none;">
+              In the target model, the web application would run on Vercel and connect to a shared backend with
+              clearer technical separation of responsibilities. Native iOS and Android apps may become a later
+              product phase, but they should not be treated as part of the current delivery scope unless the
+              client explicitly prioritizes them.
+            </p>
+            <ul class="list">
+              <li><strong>Greater Platform Ownership:</strong> The product becomes independent from a single no-code platform.</li>
+              <li><strong>Stronger Web Foundation:</strong> The immediate platform can be rebuilt around the actual product that exists today.</li>
+              <li><strong>More Product Flexibility:</strong> Camera flows, AI interactions, and custom UX can be shaped more deliberately.</li>
+              <li><strong>Clearer Technical Boundaries:</strong> Web, backend, mobile, and admin each gain explicit responsibilities.</li>
+              <li><strong>Long-Term Architectural Control:</strong> The system becomes easier to evolve on the client’s own terms.</li>
+            </ul>
+          </div>
+
+          <aside class="card note-card">
+            <h3>What Lawal would take on</h3>
+            <div class="note-box">
+              <p>
+                Moving out of Base44 increases complexity because the operating model becomes more distributed.
+                Lawal’s role is to absorb and organize that complexity so the resulting system is deliberate rather
+                than fragmented.
+              </p>
+              <p>
+                Native mobile work should be treated as additional overhead, not as an assumed part of the current
+                implementation. It would introduce separate app codebases or mobile packaging, store submission
+                processes, platform-specific QA, permissions, certificates, and release management across iOS and
+                Android.
+              </p>
+              <p>
+                Payments become part of that responsibility. If mobile apps sell digital features or digital
+                photo access inside the app, Apple typically expects In-App Purchase and Google Play expects
+                Play Billing. If the purchase is for physical prints or physical services, the allowed payment
+                path can be different.
+              </p>
+              <div class="warning-links">
+                <a href="https://developer.apple.com/app-store/review/guidelines/" target="_blank" rel="noreferrer">Apple App Review Guidelines</a>
+                <a href="https://developer.apple.com/in-app-purchase/" target="_blank" rel="noreferrer">Apple In-App Purchase</a>
+                <a href="https://support.google.com/googleplay/android-developer/answer/10281818?hl=en-EN" target="_blank" rel="noreferrer">Google Play Billing Guidance</a>
+              </div>
+            </div>
+            <ul class="list">
+              <li><strong>Coordinate The Active Product Layers:</strong> Web, backend, and admin must operate as one coherent system in the current phase.</li>
+              <li><strong>Manage Platform Configuration:</strong> Secrets, credentials, environments, and deployment setup become part of delivery.</li>
+              <li><strong>Own Cross-Channel QA:</strong> Testing and release validation must cover the live customer-facing surfaces in scope.</li>
+              <li><strong>Run Formal Release Governance:</strong> Deployment, compliance, and ownership boundaries must be explicit and maintained.</li>
+              <li><strong>Add Mobile Only With Intentional Scope:</strong> iOS and Android should be treated as a later expansion with their own budget, delivery plan, and operating overhead.</li>
+            </ul>
+          </aside>
+        </div>
+      </section>
+
+      <section id="recommendation" class="shell">
+        <div class="section-intro">
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span class="pill-label">Working Recommendation</span>
+          </div>
+          <h2>The architecture decision is made. The remaining question is execution quality.</h2>
+          <p class="lead">
+            The product is moving out of Base44. What matters now is understanding what that migration
+            removes, what the new stack must replace, and how Lawal structures the transition so the
+            client gains ownership without losing coherence.
+          </p>
+        </div>
+
+        <div class="option-stack">
+          <article class="option-card recommended">
+            <div class="label">
+              <span class="dot"></span>
+              <span>What Is Lost</span>
+            </div>
+            <h3>The migration gives up platform convenience and built-in structural coupling.</h3>
+            <p>
+              The product leaves behind an environment where multiple layers were already assembled together.
+              That convenience must now be rebuilt deliberately in the custom stack.
+            </p>
+          </article>
+
+          <article class="option-card">
+            <div class="label">
+              <span class="dot"></span>
+              <span>What Is Gained</span>
+            </div>
+            <h3>The new architecture creates more ownership, flexibility, and long-term control.</h3>
+            <p>
+              The system becomes more demanding to operate, but it also becomes more capable of supporting
+              a serious product roadmap across web, backend, and administration, while leaving room for mobile
+              as a deliberate later phase instead of an immediate obligation.
+            </p>
+          </article>
+        </div>
+
+        <div class="recommend">
+          <h3>What this means for the current proposal</h3>
+          <p>
+            At this stage, the proposal should frame the migration as an ownership decision that is already in motion.
+            The role of the analysis is to make the tradeoffs explicit and show how Lawal would handle the added
+            complexity in a structured way.
+          </p>
+        </div>
+
+        <div class="market-grid">
+          <article class="card">
+            <div class="label">
+              <span class="dot"></span>
+              <span>Community Perception</span>
+            </div>
+            <h3>Public sentiment appears mixed, with a recurring migration narrative.</h3>
+            <p>
+              Reddit commentary is anecdotal and should not be treated as formal evidence, but several recurring
+              themes appear consistently: Base44 is often described as useful for prototyping, yet frustrating for
+              debugging, credit consumption, production stability, and long-term ownership. A recurring suggestion
+              from users is to move the code into GitHub and, if the product becomes serious, migrate toward
+              infrastructure the team controls more directly.
+            </p>
+            <p>
+              A recurring migration concern in those discussions is that exporting or syncing code does not
+              automatically recreate the full product structure. Teams may still need to rebuild database models,
+              backend logic, authentication, and operational tooling outside the platform.
+            </p>
+            <div class="source-list">
+              <a href="https://www.reddit.com/r/Base44/comments/1q349yf/base44_is_actually_terrible/" target="_blank" rel="noreferrer">Reddit: “Base44 is actually terrible.”</a>
+              <a href="https://www.reddit.com/r/Base44/comments/1lron1x/migrating_away_from_base44/" target="_blank" rel="noreferrer">Reddit: “Migrating away from Base44?”</a>
+              <a href="https://www.reddit.com/r/Base44/comments/1r7qqs9/migrate_away_from_base44/" target="_blank" rel="noreferrer">Reddit: “Migrate away from Base44?”</a>
+            </div>
+          </article>
+
+          <article class="card accent">
+            <div class="label">
+              <span class="dot"></span>
+              <span>Documented Platform Behavior</span>
+            </div>
+            <h3>Base44 does officially support GitHub-based workflows, with important limits.</h3>
+            <p>
+              Base44’s documentation confirms that apps can be connected to GitHub for local development and
+              synchronization. At the same time, that workflow is plan-dependent and still keeps publishing tied
+              to Base44. This supports the broader migration logic already chosen here: GitHub can be part of
+              regaining control, but it is not the same thing as fully leaving the platform.
+            </p>
+            <div class="source-list">
+              <a href="https://docs.base44.com/developers/app-code/local-development/github" target="_blank" rel="noreferrer">Base44 Docs: GitHub Integration</a>
+              <a href="https://docs.base44.com/developers/references/cli/commands/deploy" target="_blank" rel="noreferrer">Base44 Docs: Deploy Command</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="next" class="shell">
+        <div class="next">
+          <div class="pill">
+            <span class="pill-dot"></span>
+            <span class="pill-label">Next Step</span>
+          </div>
+          <h2>Align on the target operating model before execution begins.</h2>
+          <p class="lead">
+            The next conversation with the client should focus on transition structure: what must be preserved,
+            what must be reimplemented, how the new shared backend should be shaped, and how Lawal will manage
+            the operational responsibilities that Base44 previously absorbed.
+          </p>
+          <div class="cta-row">
+            <a class="cta" href="#option-a">Review What Base44 Currently Gives</a>
+            <a class="cta" href="#option-b">Review Target Architecture</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="shell">
+      <div class="footer">
+        Draft prepared by Lawal as part of the current architecture review for iPhodo.
+      </div>
+    </footer>
+
+    <script>
+      const navLinks = Array.from(document.querySelectorAll('.section-nav a'));
+      const sections = navLinks
+        .map((link) => document.querySelector(link.getAttribute('href')))
+        .filter(Boolean);
+
+      function updateActive() {
+        const line = window.innerHeight * 0.35;
+        let best = 0;
+        let bestDist = Infinity;
+        sections.forEach((section, i) => {
+          const rect = section.getBoundingClientRect();
+          if (rect.top <= line) {
+            const dist = line - rect.top;
+            if (dist < bestDist) {
+              bestDist = dist;
+              best = i;
+            }
+          }
+        });
+        navLinks.forEach((link, i) => link.classList.toggle('active', i === best));
+      }
+
+      updateActive();
+      window.addEventListener('scroll', updateActive, { passive: true });
+      window.addEventListener('resize', updateActive);
+    </script>
+  </body>
 </html>
