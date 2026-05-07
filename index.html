@@ -651,14 +651,14 @@
         <div class="section-intro">
           <h2>The move away from Base44 is already decided.</h2>
           <p class="lead">
-            The client has already decided to move out of Base44. The purpose of this proposal is to clarify
-            what the product leaves behind, what the new
-            architecture should look like, and which operational and technical responsibilities Lawal would
+            The decision to move out of Base44 is already made. This proposal clarifies what the product
+            leaves behind, what the new
+            architecture should look like, and which operational and technical responsibilities Lawal will
             take on in the transition.
           </p>
           <div class="stack-pill">
             <span class="pill-dot"></span>
-            <span>Migration analysis / shared backend / mobile strategy / operating model</span>
+            <span>Migration plan / shared backend / web platform / operating model</span>
           </div>
         </div>
       </section>
@@ -669,12 +669,12 @@
             <span class="pill-dot"></span>
             <span class="pill-label">Current Assessment</span>
           </div>
-          <h2>The product already has a shared-system logic that can be preserved.</h2>
+          <h2>The product already has a shared structure worth preserving.</h2>
           <p class="lead">
             Today, iPhodo is essentially a web-first product with a shared backend model around image generation,
-            commerce, sign-in, user account management, order history, and administration. Based on the current
-            repository, there are no clear signs of a native iOS or Android application codebase. The strategic goal
-            is to preserve that shared structure while rebuilding it outside Base44 with more long-term ownership and
+            commerce, sign-in, user account management, order history, and administration. The current repository
+            does not show a clear native iOS or Android application codebase. The goal is to preserve that shared
+            structure while rebuilding it outside Base44 with more long-term ownership and
             flexibility.
           </p>
         </div>
@@ -687,7 +687,7 @@
             </div>
             <h3>Centralized around an existing application platform.</h3>
             <p>
-              The current implementation already combines frontend, backend logic, authentication, content,
+              The current implementation combines frontend, backend logic, authentication, content,
               and operations in a tightly connected environment. This reduces fragmentation and keeps the
               operating model more concentrated.
             </p>
@@ -712,11 +712,11 @@
               <span class="dot"></span>
               <span>Target Question</span>
             </div>
-            <h3>How far should the platform evolve beyond the current model?</h3>
+            <h3>What the next architecture needs to preserve.</h3>
             <p>
-              The next step is to preserve the useful parts of that structure while moving toward a more
-              custom stack with web on Vercel and a more explicitly owned technical base. Dedicated mobile
-              apps can remain a later-stage expansion rather than part of the immediate implementation scope.
+              The next step is to preserve the useful parts of that structure while moving toward a custom
+              stack with web on Vercel and a more explicitly owned technical base. Dedicated mobile apps can
+              remain a later-stage expansion rather than part of the immediate implementation scope.
             </p>
             <div class="stats">
               <div>
@@ -743,11 +743,10 @@
               <span class="pill-dot"></span>
               <span class="pill-label">What We Leave Behind</span>
             </div>
-            <h2>What Base44 currently gives the product.</h2>
+            <h2>What Base44 gives the product today.</h2>
             <p class="lead" style="text-align:left;max-width:none;">
-              Since the decision is to move away from Base44, the relevant question is what the current platform
-              advantages are, because those are the things we must preserve,
-              replace, or reimplement in the new architecture.
+              Since the move away from Base44 is already decided, the relevant question is what the platform
+              provides today. Those are the capabilities that must be preserved, replaced, or reimplemented in the new architecture.
             </p>
             <ul class="list">
               <li><strong>Unified Product Context:</strong> Frontend, backend logic, data, and administration remain closely connected.</li>
@@ -763,7 +762,7 @@
             <div class="note-box">
               <p>
                 These are not arguments to remain on Base44. They are the structural conveniences the product
-                currently enjoys. Once the platform is removed, the new architecture has to replace them with
+                uses today. Once the platform is removed, the new architecture has to replace them with
                 explicit technical design and operational discipline.
               </p>
               <p>
@@ -777,7 +776,7 @@
               </div>
             </div>
             <ul class="list">
-              <li><strong>Replace Product Coupling:</strong> Lawal would reconstruct the shared logic that Base44 currently holds together.</li>
+              <li><strong>Replace Product Coupling:</strong> Lawal will reconstruct the shared logic that Base44 currently holds together.</li>
               <li><strong>Recreate Core Application Layers:</strong> Data models, backend logic, authentication, and admin structures currently embedded in Base44 must be reimplemented in the new stack.</li>
               <li><strong>Replace Built-In Services:</strong> Authentication, backend entities, cloud functions, and administration must become explicit application layers.</li>
               <li><strong>Replace Publishing Simplicity:</strong> Deployment and release management must move into a more formal engineering workflow.</li>
@@ -805,9 +804,9 @@
             <ul class="list">
               <li><strong>Greater Platform Ownership:</strong> The product becomes independent from a single no-code platform.</li>
               <li><strong>Stronger Web Foundation:</strong> The immediate platform can be rebuilt around the actual product that exists today.</li>
-              <li><strong>More Product Flexibility:</strong> Camera flows, AI interactions, and custom UX can be shaped more deliberately.</li>
+              <li><strong>More Product Flexibility:</strong> Camera flows, AI interactions, and custom UX can be shaped more precisely.</li>
               <li><strong>Clearer Technical Boundaries:</strong> Web, backend, mobile, and admin each gain explicit responsibilities.</li>
-              <li><strong>Long-Term Architectural Control:</strong> The system becomes easier to evolve on the client’s own terms.</li>
+              <li><strong>Long-Term Architectural Control:</strong> The system becomes easier to evolve on its own terms.</li>
             </ul>
           </div>
 
@@ -816,7 +815,7 @@
             <div class="note-box">
               <p>
                 Moving out of Base44 increases complexity because the operating model becomes more distributed.
-                Lawal’s role is to absorb and organize that complexity so the resulting system is deliberate rather
+                Lawal’s role is to absorb and organize that complexity so the resulting system is coherent rather
                 than fragmented.
               </p>
               <p>
@@ -854,7 +853,7 @@
             <span class="pill-dot"></span>
             <span class="pill-label">Working Recommendation</span>
           </div>
-          <h2>The architecture decision is made. The remaining question is execution quality.</h2>
+          <h2>The architecture decision is made. What matters now is execution.</h2>
           <p class="lead">
             The product is moving out of Base44. What matters now is understanding what that migration
             removes, what the new stack must replace, and how Lawal structures the transition so the
@@ -871,7 +870,7 @@
             <h3>The migration gives up platform convenience and built-in structural coupling.</h3>
             <p>
               The product leaves behind an environment where multiple layers were already assembled together.
-              That convenience must now be rebuilt deliberately in the custom stack.
+              That convenience must now be rebuilt explicitly in the custom stack.
             </p>
           </article>
 
@@ -884,7 +883,7 @@
             <p>
               The system becomes more demanding to operate, but it also becomes more capable of supporting
               a serious product roadmap across web, backend, and administration, while leaving room for mobile
-              as a deliberate later phase instead of an immediate obligation.
+              as a later phase instead of an immediate obligation.
             </p>
           </article>
         </div>
@@ -892,9 +891,8 @@
         <div class="recommend">
           <h3>What this means for the current proposal</h3>
           <p>
-            At this stage, the proposal should frame the migration as an ownership decision that is already in motion.
-            The role of the analysis is to make the tradeoffs explicit and show how Lawal would handle the added
-            complexity in a structured way.
+            This proposal frames the migration as an ownership decision already in motion. Its role is to make the
+            tradeoffs explicit and show how Lawal will handle the added complexity in a structured way.
           </p>
         </div>
 
@@ -950,11 +948,10 @@
             <span class="pill-dot"></span>
             <span class="pill-label">Next Step</span>
           </div>
-          <h2>Align on the target operating model before execution begins.</h2>
+          <h2>The next step is to align on how the transition will work.</h2>
           <p class="lead">
-            The next conversation with the client should focus on transition structure: what must be preserved,
-            what must be reimplemented, how the new shared backend should be shaped, and how Lawal will manage
-            the operational responsibilities that Base44 previously absorbed.
+            This means agreeing on what must be preserved, what must be rebuilt, how the new shared backend
+            should be shaped, and how Lawal will manage the responsibilities that Base44 previously absorbed.
           </p>
           <div class="cta-row">
             <a class="cta" href="#option-a">Review What Base44 Currently Gives</a>
