@@ -4,17 +4,17 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Tyny — Proyectos</title>
-<meta name="description" content="Proyectos de Tyny: Mercado Meliquina y Chromatic Circle.">
+<meta name="description" content="Proyectos de Tyny: Mercado Meliquina, Chromatic Circle y Guitar Tool.">
 <style>
   :root {
     --bg: #f4f1ea; --card: #fffdf8; --ink: #1c1a17; --muted: #6b655c;
-    --line: #e5ded1; --accent: #c26a1c; --accent2: #7a4fb8;
+    --line: #e5ded1; --accent: #c26a1c; --accent2: #7a4fb8; --accent3: #2f8f6b;
     --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 30px rgba(0,0,0,.06);
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #14120f; --card: #1e1b17; --ink: #f2ede4; --muted: #a39b8d;
-      --line: #302b23; --accent: #e0954e; --accent2: #b28ee0;
+      --line: #302b23; --accent: #e0954e; --accent2: #b28ee0; --accent3: #5fbf98;
       --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 40px rgba(0,0,0,.4);
     }
   }
@@ -46,6 +46,7 @@
   .proj:focus-visible { outline: 3px solid var(--pc); outline-offset: 3px; }
   .m { --pc: var(--accent); }
   .c { --pc: var(--accent2); }
+  .g { --pc: var(--accent3); }
   .p-emoji { font-size: 1.9rem; }
   .p-name { font-size: 1.35rem; font-weight: 800; letter-spacing: -.01em; }
   .p-desc { color: var(--muted); font-size: .96rem; margin: 0; }
@@ -75,6 +76,13 @@
         <span class="p-emoji">🎵</span>
         <span class="p-name">Chromatic Circle</span>
         <p class="p-desc">Círculo cromático interactivo: doce semitonos, elegí la tónica y explorá.</p>
+        <span class="p-go">Abrir <span class="arrow">→</span></span>
+      </a>
+
+      <a class="proj g" href="./guitar-tool/">
+        <span class="p-emoji">🎸</span>
+        <span class="p-name">Guitar Tool</span>
+        <p class="p-desc">Herramienta interactiva para guitarristas: acordes, escalas y diapasón.</p>
         <span class="p-go">Abrir <span class="arrow">→</span></span>
       </a>
     </div>
