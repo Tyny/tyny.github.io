@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marihuel — Tyny</title>
+<meta name="description" content="Marihuel — te pone a bailar.">
+<style>
+  :root {
+    --bg: #f4f1ea; --card: #fffdf8; --ink: #1c1a17; --muted: #6b655c;
+    --line: #e5ded1; --pc: #c2306e;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 30px rgba(0,0,0,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14120f; --card: #1e1b17; --ink: #f2ede4; --muted: #a39b8d;
+      --line: #302b23; --pc: #ea86b0;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 40px rgba(0,0,0,.4);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.55;
+    min-height: 100vh; display: flex; align-items: center; justify-content: center;
+    padding: 40px 20px;
+  }
+  .wrap { width: 100%; max-width: 560px; }
+  .back { display: inline-block; color: var(--muted); text-decoration: none; font-size: .95rem; margin-bottom: 22px; }
+  .back:hover { color: var(--pc); }
+  .logo-slot {
+    background: var(--card); border: 2px dashed var(--line); border-radius: 18px;
+    aspect-ratio: 16 / 9; display: flex; align-items: center; justify-content: center;
+    color: var(--muted); font-size: 1rem; letter-spacing: .02em;
+  }
+  h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -.03em; margin: 26px 0 0; }
+  h1 .dot { color: var(--pc); }
+  .lede { color: var(--muted); margin: 8px 0 0; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="../">← Volver</a>
+
+    <!-- logo area: reemplazar el contenido de .logo-slot por el logo -->
+    <div class="logo-slot" id="logo">No logo yet</div>
+
+    <h1>Marihuel<span class="dot">.</span></h1>
+    <p class="lede">Te pone a bailar.</p>
+  </div>
+</body>
+</html>
