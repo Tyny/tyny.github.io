@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lawal — Tyny</title>
 <meta name="description" content="Lawal — el isotipo de la W, punto por punto.">
+<link rel="stylesheet" href="../dots.css">
 <style>
   :root {
     --bg: #f4f1ea; --card: #fffdf8; --ink: #1c1a17; --muted: #6b655c;
     --line: #e5ded1; --pc: #dd5769;
-    --reserve: 190px;            /* room the title needs below the logo */
+    --reserve: 238px;            /* room the title needs below the logo */
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -41,7 +42,7 @@
 </head>
 <body>
   <div class="wrap">
-    <div class="logo-slot" id="logo">
+    <div class="logo-slot" id="logo" data-dots>
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 619" role="img" aria-label="Lawal">
         <title>Lawal</title>
         <g stroke="#dd5769" stroke-width="4.0" fill="none" stroke-linecap="round" opacity=".65">
@@ -159,5 +160,6 @@
 
     <h1>Lawal<span class="dot">.</span></h1>
   </div>
+  <script src="../dots.js" defer></script>
 </body>
 </html>

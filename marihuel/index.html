@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Marihuel — Tyny</title>
 <meta name="description" content="Marihuel — te pone a bailar.">
+<link rel="stylesheet" href="../dots.css">
 <style>
   :root {
     --bg: #f4f1ea; --card: #fffdf8; --ink: #1c1a17; --muted: #6b655c;
@@ -36,8 +37,8 @@
     display: block; width: auto; height: 80vh; max-width: 100%;
     /* never taller than what is left once the title block is placed,
        so the page fits the viewport without scrolling */
-    max-height: calc(100vh - 220px);
-    max-height: calc(100dvh - 220px);
+    max-height: calc(100vh - 268px);
+    max-height: calc(100dvh - 268px);
     color: var(--ink);
     filter: drop-shadow(0 0 8px color-mix(in srgb, var(--pc) 55%, transparent));
   }
@@ -49,7 +50,7 @@
 <body>
   <div class="wrap">
     <!-- logo area: reemplazar el contenido de .logo-slot por el logo -->
-    <div class="logo-slot" id="logo">
+    <div class="logo-slot" id="logo" data-dots>
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720.9 1000.0" role="img" aria-label="Marihuel: figura constelación">
       <title>Marihuel: figura constelación</title>
       <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.55">
@@ -469,5 +470,6 @@
     <h1>Marihuel<span class="dot">.</span></h1>
     <p class="lede">Te pone a bailar.</p>
   </div>
+  <script src="../dots.js" defer></script>
 </body>
 </html>

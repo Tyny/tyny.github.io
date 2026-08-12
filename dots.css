@@ -1,0 +1,27 @@
+/* Shared dot-size control. Styling hangs off each page's own custom
+   properties (--muted, --pc, --line), so it themes itself per project. */
+.dots-ui {
+  display: flex; align-items: center; gap: 12px;
+  margin-top: 14px; max-width: 620px;
+}
+.dots-ui label { color: var(--muted); font-size: .85rem; white-space: nowrap; }
+.dots-ui input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  flex: 1 1 auto; min-width: 120px; max-width: 260px;
+  height: 3px; border-radius: 2px; background: var(--line, #ccc);
+  cursor: pointer;
+}
+.dots-ui input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--pc); border: 0; cursor: pointer;
+}
+.dots-ui input[type="range"]::-moz-range-thumb {
+  width: 15px; height: 15px; border-radius: 50%;
+  background: var(--pc); border: 0; cursor: pointer;
+}
+.dots-ui input[type="range"]:focus-visible { outline: 2px solid var(--pc); outline-offset: 4px; }
+.dots-ui output {
+  color: var(--muted); font-size: .8rem;
+  font-variant-numeric: tabular-nums; min-width: 3.2em;
+}

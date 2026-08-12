@@ -5,11 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Estres — Tyny</title>
 <meta name="description" content="Estres — tres versiones del isotipo, tocá para cambiar.">
+<link rel="stylesheet" href="../dots.css">
 <style>
   :root {
     --bg: #f4f1ea; --card: #fffdf8; --ink: #1c1a17; --muted: #6b655c;
     --line: #e5ded1; --pc: #c26a1c;
-    --reserve: 250px;            /* room the title block needs below the logo */
+    --reserve: 298px;            /* room the title block needs below the logo */
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -29,7 +30,7 @@
   /* wide enough that a square logo is never width-bound before it reaches 80vh */
   .wrap { width: 100%; max-width: 1200px; }
   /* the lede wraps to more lines on narrow screens, so it needs more room */
-  @media (max-width: 620px) { :root { --reserve: 300px; } }
+  @media (max-width: 620px) { :root { --reserve: 348px; } }
 
   /* The stage is the tap target: anywhere on it advances to the next version. */
   .stage {
@@ -69,7 +70,7 @@
 </head>
 <body>
   <div class="wrap">
-    <button class="stage" id="stage" aria-label="Cambiar de versión del isotipo">
+    <button class="stage" id="stage" data-dots aria-label="Cambiar de versión del isotipo">
       <div class="frames" id="frames">
         <svg data-v="echo" class="is-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Estres, versión eco">
           <title>Estres — eco</title>
@@ -446,5 +447,6 @@
   show(0);
 })();
 </script>
+  <script src="../dots.js" defer></script>
 </body>
 </html>
