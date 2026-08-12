@@ -38,7 +38,17 @@ TRI_STROKE = 2.6
 RING_STROKE = 2.4
 TRI_RATIO = 286 / 364  # height/width, measured from the source artwork
 
-LAYOUTS = ("echo", "nested", "triad", "row")
+LAYOUTS = ("echo", "nested", "triad", "convergent", "quartus", "row")
+
+# Each arrangement is named after a constellation.
+NAMES = {
+    "echo": "Orión",              # three copies stepping in line, like the belt
+    "nested": "Corona Austral",   # concentric rings
+    "triad": "Triángulo Austral", # three-fold symmetry
+    "convergent": "Pavo",         # three blades fanning from a single point
+    "quartus": "Retículo",        # a subdivided lattice
+    "row": "Sagitta",
+}
 
 
 def tri_points(cx, cy, w, rot=0.0):
@@ -85,11 +95,40 @@ def raw_layout(kind):
             groups.append((col,) + subdivide(poly, 4 - i))
     elif kind == "triad":
         w = S * 0.50
+        h = w * TRI_RATIO
+        # Offset chosen so the three triangles meet exactly, instead of merely
+        # nearly. Each pair shares one dot: the 2/3 point of one edge and the
+        # 1/3 point of another. Equating those two positions for a pair of
+        # triangles 120° apart gives d = h/6 + w·√3/18 — the value at which the
+        # near-miss (6.216 units at the old d = 0.11·S) closes to zero.
+        d = h / 6 + w * math.sqrt(3) / 18
         for i, col in enumerate(COLORS):
             rot = i * 2 * math.pi / 3
-            d = S * 0.11
             poly = tri_points(C + d * math.sin(rot), C - d * math.cos(rot), w, rot)
             groups.append((col,) + subdivide(poly, 3))
+    elif kind == "convergent":
+        # Offset by exactly half the height and the three apexes land on one
+        # another at the centre: a single point shared by all three triangles.
+        w = S * 0.46
+        h = w * TRI_RATIO
+        d = h / 2
+        for i, col in enumerate(COLORS):
+            rot = i * 2 * math.pi / 3
+            poly = tri_points(C + d * math.sin(rot), C - d * math.cos(rot), w, rot)
+            groups.append((col,) + subdivide(poly, 3))
+    elif kind == "quartus":
+        # Three half-scale ▽ on the corners of a larger ▽. The gap they leave is
+        # a fourth triangle, inverted, that is never drawn. Each pair meets
+        # exactly on a midpoint of the parent's edge.
+        w = S * 0.66
+        h = w * TRI_RATIO
+        A = (C - w / 2, C - h / 2)
+        B = (C + w / 2, C - h / 2)
+        V = (C, C + h / 2)
+        mid = lambda p, q: ((p[0] + q[0]) / 2, (p[1] + q[1]) / 2)
+        m_ab, m_bv, m_va = mid(A, B), mid(B, V), mid(V, A)
+        for col, poly in zip(COLORS, ([A, m_ab, m_va], [m_ab, B, m_bv], [m_va, m_bv, V])):
+            groups.append((col,) + subdivide(poly, 2))
     elif kind == "row":
         for i, col in enumerate(COLORS):
             poly = tri_points(C + (i - 1) * S * 0.26, C, S * 0.26)

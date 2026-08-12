@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Estres — Tyny</title>
-<meta name="description" content="Estres — tres versiones del isotipo, tocá para cambiar.">
+<meta name="description" content="Estres — cinco conformaciones del isotipo, cada una con nombre de constelación.">
 <link rel="stylesheet" href="../dots.css">
 <style>
   :root {
     --bg: #f4f1ea; --card: #fffdf8; --ink: #1c1a17; --muted: #6b655c;
     --line: #e5ded1; --pc: #c26a1c;
-    --reserve: 298px;            /* room the title block needs below the logo */
+    --reserve: 340px;            /* room the title block needs below the logo */
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -30,7 +30,7 @@
   /* wide enough that a square logo is never width-bound before it reaches 80vh */
   .wrap { width: 100%; max-width: 1200px; }
   /* the lede wraps to more lines on narrow screens, so it needs more room */
-  @media (max-width: 620px) { :root { --reserve: 348px; } }
+  @media (max-width: 620px) { :root { --reserve: 390px; } }
 
   /* The stage is the tap target: anywhere on it advances to the next version. */
   .stage {
@@ -62,6 +62,10 @@
   .pip:focus-visible { outline: 2px solid var(--pc); outline-offset: 3px; }
   .hint { color: var(--muted); font-size: .85rem; margin-left: 4px; }
 
+  .conste {
+    margin: 0 0 6px; font-size: 1.05rem; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--pc);
+  }
   h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -.03em; margin: 18px 0 0; }
   h1 .dot { color: var(--pc); }
   .lede { color: var(--muted); margin: 8px 0 0; }
@@ -70,10 +74,11 @@
 </head>
 <body>
   <div class="wrap">
+    <p class="conste" id="conste">Orión</p>
     <button class="stage" id="stage" data-dots aria-label="Cambiar de versión del isotipo">
       <div class="frames" id="frames">
-        <svg data-v="echo" class="is-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Estres, versión eco">
-          <title>Estres — eco</title>
+        <svg data-v="echo" class="is-on" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Estres, Orión">
+          <title>Estres — Orión</title>
           <g stroke="currentColor" stroke-width="2.4" fill="none" opacity=".55">
             <line x1="951.2" y1="589.7" x2="882.5" y2="755.6"/>
             <line x1="882.5" y1="755.6" x2="755.6" y2="882.5"/>
@@ -177,8 +182,8 @@
             <circle cx="431.7" cy="556.7" r="9"/>
           </g>
         </svg>
-        <svg data-v="nested" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Estres, versión anidado">
-          <title>Estres — anidado</title>
+        <svg data-v="nested" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Estres, Corona Austral">
+          <title>Estres — Corona Austral</title>
           <g stroke="currentColor" stroke-width="2.4" fill="none" opacity=".55">
             <line x1="951.2" y1="589.7" x2="882.5" y2="755.6"/>
             <line x1="882.5" y1="755.6" x2="755.6" y2="882.5"/>
@@ -282,8 +287,8 @@
             <circle cx="420.0" cy="571.3" r="9"/>
           </g>
         </svg>
-        <svg data-v="triad" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Estres, versión tríada">
-          <title>Estres — tríada</title>
+        <svg data-v="triad" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Estres, Triángulo Austral">
+          <title>Estres — Triángulo Austral</title>
           <g stroke="currentColor" stroke-width="2.4" fill="none" opacity=".55">
             <line x1="951.2" y1="589.7" x2="882.5" y2="755.6"/>
             <line x1="882.5" y1="755.6" x2="755.6" y2="882.5"/>
@@ -321,80 +326,274 @@
             <circle cx="951.2" cy="410.3" r="7"/>
           </g>
           <g stroke="#ffbe69" stroke-width="2.6" fill="none" opacity=".7">
-            <line x1="250.0" y1="193.6" x2="416.7" y2="193.6"/>
-            <line x1="416.7" y1="193.6" x2="583.3" y2="193.6"/>
-            <line x1="583.3" y1="193.6" x2="750.0" y2="193.6"/>
-            <line x1="750.0" y1="193.6" x2="666.7" y2="324.5"/>
-            <line x1="666.7" y1="324.5" x2="583.3" y2="455.5"/>
-            <line x1="583.3" y1="455.5" x2="500.0" y2="586.4"/>
-            <line x1="500.0" y1="586.4" x2="416.7" y2="455.5"/>
-            <line x1="416.7" y1="455.5" x2="333.3" y2="324.5"/>
-            <line x1="333.3" y1="324.5" x2="250.0" y2="193.6"/>
+            <line x1="250.0" y1="190.0" x2="416.7" y2="190.0"/>
+            <line x1="416.7" y1="190.0" x2="583.3" y2="190.0"/>
+            <line x1="583.3" y1="190.0" x2="750.0" y2="190.0"/>
+            <line x1="750.0" y1="190.0" x2="666.7" y2="320.9"/>
+            <line x1="666.7" y1="320.9" x2="583.3" y2="451.9"/>
+            <line x1="583.3" y1="451.9" x2="500.0" y2="582.8"/>
+            <line x1="500.0" y1="582.8" x2="416.7" y2="451.9"/>
+            <line x1="416.7" y1="451.9" x2="333.3" y2="320.9"/>
+            <line x1="333.3" y1="320.9" x2="250.0" y2="190.0"/>
           </g>
           <g fill="#ffbe69">
-            <circle cx="250.0" cy="193.6" r="9"/>
-            <circle cx="416.7" cy="193.6" r="9"/>
-            <circle cx="583.3" cy="193.6" r="9"/>
-            <circle cx="750.0" cy="193.6" r="9"/>
-            <circle cx="666.7" cy="324.5" r="9"/>
-            <circle cx="583.3" cy="455.5" r="9"/>
-            <circle cx="500.0" cy="586.4" r="9"/>
-            <circle cx="416.7" cy="455.5" r="9"/>
-            <circle cx="333.3" cy="324.5" r="9"/>
+            <circle cx="250.0" cy="190.0" r="9"/>
+            <circle cx="416.7" cy="190.0" r="9"/>
+            <circle cx="583.3" cy="190.0" r="9"/>
+            <circle cx="750.0" cy="190.0" r="9"/>
+            <circle cx="666.7" cy="320.9" r="9"/>
+            <circle cx="583.3" cy="451.9" r="9"/>
+            <circle cx="500.0" cy="582.8" r="9"/>
+            <circle cx="416.7" cy="451.9" r="9"/>
+            <circle cx="333.3" cy="320.9" r="9"/>
           </g>
           <g stroke="#dd5769" stroke-width="2.6" fill="none" opacity=".7">
-            <line x1="890.4" y1="436.7" x2="807.0" y2="581.0"/>
-            <line x1="807.0" y1="581.0" x2="723.7" y2="725.4"/>
-            <line x1="723.7" y1="725.4" x2="640.4" y2="869.7"/>
-            <line x1="640.4" y1="869.7" x2="568.6" y2="732.1"/>
-            <line x1="568.6" y1="732.1" x2="496.9" y2="594.4"/>
-            <line x1="496.9" y1="594.4" x2="425.2" y2="456.8"/>
-            <line x1="425.2" y1="456.8" x2="580.2" y2="450.1"/>
-            <line x1="580.2" y1="450.1" x2="735.3" y2="443.4"/>
-            <line x1="735.3" y1="443.4" x2="890.4" y2="436.7"/>
+            <line x1="893.5" y1="438.5" x2="810.1" y2="582.8"/>
+            <line x1="810.1" y1="582.8" x2="726.8" y2="727.2"/>
+            <line x1="726.8" y1="727.2" x2="643.5" y2="871.5"/>
+            <line x1="643.5" y1="871.5" x2="571.7" y2="733.9"/>
+            <line x1="571.7" y1="733.9" x2="500.0" y2="596.2"/>
+            <line x1="500.0" y1="596.2" x2="428.3" y2="458.6"/>
+            <line x1="428.3" y1="458.6" x2="583.3" y2="451.9"/>
+            <line x1="583.3" y1="451.9" x2="738.4" y2="445.2"/>
+            <line x1="738.4" y1="445.2" x2="893.5" y2="438.5"/>
           </g>
           <g fill="#dd5769">
-            <circle cx="890.4" cy="436.7" r="9"/>
-            <circle cx="807.0" cy="581.0" r="9"/>
-            <circle cx="723.7" cy="725.4" r="9"/>
-            <circle cx="640.4" cy="869.7" r="9"/>
-            <circle cx="568.6" cy="732.1" r="9"/>
-            <circle cx="496.9" cy="594.4" r="9"/>
-            <circle cx="425.2" cy="456.8" r="9"/>
-            <circle cx="580.2" cy="450.1" r="9"/>
-            <circle cx="735.3" cy="443.4" r="9"/>
+            <circle cx="893.5" cy="438.5" r="9"/>
+            <circle cx="810.1" cy="582.8" r="9"/>
+            <circle cx="726.8" cy="727.2" r="9"/>
+            <circle cx="643.5" cy="871.5" r="9"/>
+            <circle cx="571.7" cy="733.9" r="9"/>
+            <circle cx="500.0" cy="596.2" r="9"/>
+            <circle cx="428.3" cy="458.6" r="9"/>
+            <circle cx="583.3" cy="451.9" r="9"/>
+            <circle cx="738.4" cy="445.2" r="9"/>
           </g>
           <g stroke="#468d81" stroke-width="2.6" fill="none" opacity=".7">
-            <line x1="359.6" y1="869.7" x2="276.3" y2="725.4"/>
-            <line x1="276.3" y1="725.4" x2="193.0" y2="581.0"/>
-            <line x1="193.0" y1="581.0" x2="109.6" y2="436.7"/>
-            <line x1="109.6" y1="436.7" x2="264.7" y2="443.4"/>
-            <line x1="264.7" y1="443.4" x2="419.8" y2="450.1"/>
-            <line x1="419.8" y1="450.1" x2="574.8" y2="456.8"/>
-            <line x1="574.8" y1="456.8" x2="503.1" y2="594.4"/>
-            <line x1="503.1" y1="594.4" x2="431.4" y2="732.1"/>
-            <line x1="431.4" y1="732.1" x2="359.6" y2="869.7"/>
+            <line x1="356.5" y1="871.5" x2="273.2" y2="727.2"/>
+            <line x1="273.2" y1="727.2" x2="189.9" y2="582.8"/>
+            <line x1="189.9" y1="582.8" x2="106.5" y2="438.5"/>
+            <line x1="106.5" y1="438.5" x2="261.6" y2="445.2"/>
+            <line x1="261.6" y1="445.2" x2="416.7" y2="451.9"/>
+            <line x1="416.7" y1="451.9" x2="571.7" y2="458.6"/>
+            <line x1="571.7" y1="458.6" x2="500.0" y2="596.2"/>
+            <line x1="500.0" y1="596.2" x2="428.3" y2="733.9"/>
+            <line x1="428.3" y1="733.9" x2="356.5" y2="871.5"/>
           </g>
           <g fill="#468d81">
-            <circle cx="359.6" cy="869.7" r="9"/>
-            <circle cx="276.3" cy="725.4" r="9"/>
-            <circle cx="193.0" cy="581.0" r="9"/>
-            <circle cx="109.6" cy="436.7" r="9"/>
-            <circle cx="264.7" cy="443.4" r="9"/>
-            <circle cx="419.8" cy="450.1" r="9"/>
-            <circle cx="574.8" cy="456.8" r="9"/>
-            <circle cx="503.1" cy="594.4" r="9"/>
-            <circle cx="431.4" cy="732.1" r="9"/>
+            <circle cx="356.5" cy="871.5" r="9"/>
+            <circle cx="273.2" cy="727.2" r="9"/>
+            <circle cx="189.9" cy="582.8" r="9"/>
+            <circle cx="106.5" cy="438.5" r="9"/>
+            <circle cx="261.6" cy="445.2" r="9"/>
+            <circle cx="416.7" cy="451.9" r="9"/>
+            <circle cx="571.7" cy="458.6" r="9"/>
+            <circle cx="500.0" cy="596.2" r="9"/>
+            <circle cx="428.3" cy="733.9" r="9"/>
+          </g>
+        </svg>
+        <svg data-v="convergent" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Estres, Pavo">
+          <title>Estres — Pavo</title>
+          <g stroke="currentColor" stroke-width="2.4" fill="none" opacity=".55">
+            <line x1="951.2" y1="589.7" x2="882.5" y2="755.6"/>
+            <line x1="882.5" y1="755.6" x2="755.6" y2="882.5"/>
+            <line x1="755.6" y1="882.5" x2="589.7" y2="951.2"/>
+            <line x1="589.7" y1="951.2" x2="410.3" y2="951.2"/>
+            <line x1="410.3" y1="951.2" x2="244.4" y2="882.5"/>
+            <line x1="244.4" y1="882.5" x2="117.5" y2="755.6"/>
+            <line x1="117.5" y1="755.6" x2="48.8" y2="589.7"/>
+            <line x1="48.8" y1="589.7" x2="48.8" y2="410.3"/>
+            <line x1="48.8" y1="410.3" x2="117.5" y2="244.4"/>
+            <line x1="117.5" y1="244.4" x2="244.4" y2="117.5"/>
+            <line x1="244.4" y1="117.5" x2="410.3" y2="48.8"/>
+            <line x1="410.3" y1="48.8" x2="589.7" y2="48.8"/>
+            <line x1="589.7" y1="48.8" x2="755.6" y2="117.5"/>
+            <line x1="755.6" y1="117.5" x2="882.5" y2="244.4"/>
+            <line x1="882.5" y1="244.4" x2="951.2" y2="410.3"/>
+            <line x1="951.2" y1="410.3" x2="951.2" y2="589.7"/>
+          </g>
+          <g fill="currentColor">
+            <circle cx="951.2" cy="589.7" r="7"/>
+            <circle cx="882.5" cy="755.6" r="7"/>
+            <circle cx="755.6" cy="882.5" r="7"/>
+            <circle cx="589.7" cy="951.2" r="7"/>
+            <circle cx="410.3" cy="951.2" r="7"/>
+            <circle cx="244.4" cy="882.5" r="7"/>
+            <circle cx="117.5" cy="755.6" r="7"/>
+            <circle cx="48.8" cy="589.7" r="7"/>
+            <circle cx="48.8" cy="410.3" r="7"/>
+            <circle cx="117.5" cy="244.4" r="7"/>
+            <circle cx="244.4" cy="117.5" r="7"/>
+            <circle cx="410.3" cy="48.8" r="7"/>
+            <circle cx="589.7" cy="48.8" r="7"/>
+            <circle cx="755.6" cy="117.5" r="7"/>
+            <circle cx="882.5" cy="244.4" r="7"/>
+            <circle cx="951.2" cy="410.3" r="7"/>
+          </g>
+          <g stroke="#ffbe69" stroke-width="2.6" fill="none" opacity=".7">
+            <line x1="270.0" y1="138.6" x2="423.3" y2="138.6"/>
+            <line x1="423.3" y1="138.6" x2="576.7" y2="138.6"/>
+            <line x1="576.7" y1="138.6" x2="730.0" y2="138.6"/>
+            <line x1="730.0" y1="138.6" x2="653.3" y2="259.0"/>
+            <line x1="653.3" y1="259.0" x2="576.7" y2="379.5"/>
+            <line x1="576.7" y1="379.5" x2="500.0" y2="500.0"/>
+            <line x1="500.0" y1="500.0" x2="423.3" y2="379.5"/>
+            <line x1="423.3" y1="379.5" x2="346.7" y2="259.0"/>
+            <line x1="346.7" y1="259.0" x2="270.0" y2="138.6"/>
+          </g>
+          <g fill="#ffbe69">
+            <circle cx="270.0" cy="138.6" r="9"/>
+            <circle cx="423.3" cy="138.6" r="9"/>
+            <circle cx="576.7" cy="138.6" r="9"/>
+            <circle cx="730.0" cy="138.6" r="9"/>
+            <circle cx="653.3" cy="259.0" r="9"/>
+            <circle cx="576.7" cy="379.5" r="9"/>
+            <circle cx="500.0" cy="500.0" r="9"/>
+            <circle cx="423.3" cy="379.5" r="9"/>
+            <circle cx="346.7" cy="259.0" r="9"/>
+          </g>
+          <g stroke="#dd5769" stroke-width="2.6" fill="none" opacity=".7">
+            <line x1="928.0" y1="481.5" x2="851.3" y2="614.3"/>
+            <line x1="851.3" y1="614.3" x2="774.7" y2="747.1"/>
+            <line x1="774.7" y1="747.1" x2="698.0" y2="879.9"/>
+            <line x1="698.0" y1="879.9" x2="632.0" y2="753.3"/>
+            <line x1="632.0" y1="753.3" x2="566.0" y2="626.6"/>
+            <line x1="566.0" y1="626.6" x2="500.0" y2="500.0"/>
+            <line x1="500.0" y1="500.0" x2="642.7" y2="493.8"/>
+            <line x1="642.7" y1="493.8" x2="785.3" y2="487.7"/>
+            <line x1="785.3" y1="487.7" x2="928.0" y2="481.5"/>
+          </g>
+          <g fill="#dd5769">
+            <circle cx="928.0" cy="481.5" r="9"/>
+            <circle cx="851.3" cy="614.3" r="9"/>
+            <circle cx="774.7" cy="747.1" r="9"/>
+            <circle cx="698.0" cy="879.9" r="9"/>
+            <circle cx="632.0" cy="753.3" r="9"/>
+            <circle cx="566.0" cy="626.6" r="9"/>
+            <circle cx="500.0" cy="500.0" r="9"/>
+            <circle cx="642.7" cy="493.8" r="9"/>
+            <circle cx="785.3" cy="487.7" r="9"/>
+          </g>
+          <g stroke="#468d81" stroke-width="2.6" fill="none" opacity=".7">
+            <line x1="302.0" y1="879.9" x2="225.3" y2="747.1"/>
+            <line x1="225.3" y1="747.1" x2="148.7" y2="614.3"/>
+            <line x1="148.7" y1="614.3" x2="72.0" y2="481.5"/>
+            <line x1="72.0" y1="481.5" x2="214.7" y2="487.7"/>
+            <line x1="214.7" y1="487.7" x2="357.3" y2="493.8"/>
+            <line x1="357.3" y1="493.8" x2="500.0" y2="500.0"/>
+            <line x1="500.0" y1="500.0" x2="434.0" y2="626.6"/>
+            <line x1="434.0" y1="626.6" x2="368.0" y2="753.3"/>
+            <line x1="368.0" y1="753.3" x2="302.0" y2="879.9"/>
+          </g>
+          <g fill="#468d81">
+            <circle cx="302.0" cy="879.9" r="9"/>
+            <circle cx="225.3" cy="747.1" r="9"/>
+            <circle cx="148.7" cy="614.3" r="9"/>
+            <circle cx="72.0" cy="481.5" r="9"/>
+            <circle cx="214.7" cy="487.7" r="9"/>
+            <circle cx="357.3" cy="493.8" r="9"/>
+            <circle cx="500.0" cy="500.0" r="9"/>
+            <circle cx="434.0" cy="626.6" r="9"/>
+            <circle cx="368.0" cy="753.3" r="9"/>
+          </g>
+        </svg>
+        <svg data-v="quartus" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" role="img" aria-label="Estres, Retículo">
+          <title>Estres — Retículo</title>
+          <g stroke="currentColor" stroke-width="2.4" fill="none" opacity=".55">
+            <line x1="951.2" y1="589.7" x2="882.5" y2="755.6"/>
+            <line x1="882.5" y1="755.6" x2="755.6" y2="882.5"/>
+            <line x1="755.6" y1="882.5" x2="589.7" y2="951.2"/>
+            <line x1="589.7" y1="951.2" x2="410.3" y2="951.2"/>
+            <line x1="410.3" y1="951.2" x2="244.4" y2="882.5"/>
+            <line x1="244.4" y1="882.5" x2="117.5" y2="755.6"/>
+            <line x1="117.5" y1="755.6" x2="48.8" y2="589.7"/>
+            <line x1="48.8" y1="589.7" x2="48.8" y2="410.3"/>
+            <line x1="48.8" y1="410.3" x2="117.5" y2="244.4"/>
+            <line x1="117.5" y1="244.4" x2="244.4" y2="117.5"/>
+            <line x1="244.4" y1="117.5" x2="410.3" y2="48.8"/>
+            <line x1="410.3" y1="48.8" x2="589.7" y2="48.8"/>
+            <line x1="589.7" y1="48.8" x2="755.6" y2="117.5"/>
+            <line x1="755.6" y1="117.5" x2="882.5" y2="244.4"/>
+            <line x1="882.5" y1="244.4" x2="951.2" y2="410.3"/>
+            <line x1="951.2" y1="410.3" x2="951.2" y2="589.7"/>
+          </g>
+          <g fill="currentColor">
+            <circle cx="951.2" cy="589.7" r="7"/>
+            <circle cx="882.5" cy="755.6" r="7"/>
+            <circle cx="755.6" cy="882.5" r="7"/>
+            <circle cx="589.7" cy="951.2" r="7"/>
+            <circle cx="410.3" cy="951.2" r="7"/>
+            <circle cx="244.4" cy="882.5" r="7"/>
+            <circle cx="117.5" cy="755.6" r="7"/>
+            <circle cx="48.8" cy="589.7" r="7"/>
+            <circle cx="48.8" cy="410.3" r="7"/>
+            <circle cx="117.5" cy="244.4" r="7"/>
+            <circle cx="244.4" cy="117.5" r="7"/>
+            <circle cx="410.3" cy="48.8" r="7"/>
+            <circle cx="589.7" cy="48.8" r="7"/>
+            <circle cx="755.6" cy="117.5" r="7"/>
+            <circle cx="882.5" cy="244.4" r="7"/>
+            <circle cx="951.2" cy="410.3" r="7"/>
+          </g>
+          <g stroke="#ffbe69" stroke-width="2.6" fill="none" opacity=".7">
+            <line x1="170.0" y1="328.4" x2="335.0" y2="328.4"/>
+            <line x1="335.0" y1="328.4" x2="500.0" y2="328.4"/>
+            <line x1="500.0" y1="328.4" x2="417.5" y2="458.1"/>
+            <line x1="417.5" y1="458.1" x2="335.0" y2="587.7"/>
+            <line x1="335.0" y1="587.7" x2="252.5" y2="458.1"/>
+            <line x1="252.5" y1="458.1" x2="170.0" y2="328.4"/>
+          </g>
+          <g fill="#ffbe69">
+            <circle cx="170.0" cy="328.4" r="9"/>
+            <circle cx="335.0" cy="328.4" r="9"/>
+            <circle cx="500.0" cy="328.4" r="9"/>
+            <circle cx="417.5" cy="458.1" r="9"/>
+            <circle cx="335.0" cy="587.7" r="9"/>
+            <circle cx="252.5" cy="458.1" r="9"/>
+          </g>
+          <g stroke="#dd5769" stroke-width="2.6" fill="none" opacity=".7">
+            <line x1="500.0" y1="328.4" x2="665.0" y2="328.4"/>
+            <line x1="665.0" y1="328.4" x2="830.0" y2="328.4"/>
+            <line x1="830.0" y1="328.4" x2="747.5" y2="458.1"/>
+            <line x1="747.5" y1="458.1" x2="665.0" y2="587.7"/>
+            <line x1="665.0" y1="587.7" x2="582.5" y2="458.1"/>
+            <line x1="582.5" y1="458.1" x2="500.0" y2="328.4"/>
+          </g>
+          <g fill="#dd5769">
+            <circle cx="500.0" cy="328.4" r="9"/>
+            <circle cx="665.0" cy="328.4" r="9"/>
+            <circle cx="830.0" cy="328.4" r="9"/>
+            <circle cx="747.5" cy="458.1" r="9"/>
+            <circle cx="665.0" cy="587.7" r="9"/>
+            <circle cx="582.5" cy="458.1" r="9"/>
+          </g>
+          <g stroke="#468d81" stroke-width="2.6" fill="none" opacity=".7">
+            <line x1="335.0" y1="587.7" x2="500.0" y2="587.7"/>
+            <line x1="500.0" y1="587.7" x2="665.0" y2="587.7"/>
+            <line x1="665.0" y1="587.7" x2="582.5" y2="717.4"/>
+            <line x1="582.5" y1="717.4" x2="500.0" y2="847.0"/>
+            <line x1="500.0" y1="847.0" x2="417.5" y2="717.4"/>
+            <line x1="417.5" y1="717.4" x2="335.0" y2="587.7"/>
+          </g>
+          <g fill="#468d81">
+            <circle cx="335.0" cy="587.7" r="9"/>
+            <circle cx="500.0" cy="587.7" r="9"/>
+            <circle cx="665.0" cy="587.7" r="9"/>
+            <circle cx="582.5" cy="717.4" r="9"/>
+            <circle cx="500.0" cy="847.0" r="9"/>
+            <circle cx="417.5" cy="717.4" r="9"/>
           </g>
         </svg>
       </div>
     </button>
 
     <div class="switcher">
-      <button class="pip" data-go="0" aria-current="true" aria-label="Versión 1: eco"></button>
-      <button class="pip" data-go="1" aria-label="Versión 2: anidado"></button>
-      <button class="pip" data-go="2" aria-label="Versión 3: tríada"></button>
-      <span class="hint" id="hint">eco · tocá para cambiar</span>
+      <button class="pip" data-go="0" aria-current="true" aria-label="Versión 1: Orión"></button>
+      <button class="pip" data-go="1" aria-label="Versión 2: Corona Austral"></button>
+      <button class="pip" data-go="2" aria-label="Versión 3: Triángulo Austral"></button>
+      <button class="pip" data-go="3" aria-label="Versión 4: Pavo"></button>
+      <button class="pip" data-go="4" aria-label="Versión 5: Retículo"></button>
+      <span class="hint">tocá para cambiar</span>
     </div>
     <p class="sr" id="live" role="status" aria-live="polite"></p>
 
@@ -404,10 +603,10 @@
 
 <script>
 (function () {
-  var NAMES = ["eco", "anidado", "tríada"];
+  var NAMES = ["Orión", "Corona Austral", "Triángulo Austral", "Pavo", "Retículo"];
   var svgs = Array.prototype.slice.call(document.querySelectorAll("#frames svg"));
   var pips = Array.prototype.slice.call(document.querySelectorAll(".pip"));
-  var hint = document.getElementById("hint");
+  var conste = document.getElementById("conste");
   var live = document.getElementById("live");
   var i = 0;
 
@@ -415,7 +614,7 @@
     i = (n + svgs.length) % svgs.length;
     svgs.forEach(function (s, k) { s.classList.toggle("is-on", k === i); });
     pips.forEach(function (p, k) { p.setAttribute("aria-current", k === i ? "true" : "false"); });
-    hint.textContent = NAMES[i] + " · tocá para cambiar";
+    conste.textContent = NAMES[i];
     live.textContent = "Versión " + (i + 1) + " de " + svgs.length + ": " + NAMES[i];
   }
 
