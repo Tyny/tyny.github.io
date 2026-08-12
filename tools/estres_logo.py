@@ -94,7 +94,10 @@ def raw_layout(kind):
             poly = tri_points(C, C + S * 0.03, S * (0.66 - 0.17 * i))
             groups.append((col,) + subdivide(poly, 4 - i))
     elif kind == "triad":
-        w = S * 0.50
+        # Authored at the exact-meeting distance, so the meeting factor reads
+        # k = 1 here and k = 1.7293 at Pavo. Width matches the whole family so
+        # Pavo still fits the ring.
+        w = S * 0.46
         h = w * TRI_RATIO
         # Offset chosen so the three triangles meet exactly, instead of merely
         # nearly. Each pair shares one dot: the 2/3 point of one edge and the
@@ -188,11 +191,14 @@ def max_reach(groups):
                for (_, dots, _) in groups for (x, y) in dots)
 
 
-def to_svg(kind, label="Estres", ring_color="currentColor"):
+def to_svg(kind, label="Estres", ring_color="currentColor", kmarks=None):
     groups, _ = balanced(kind)
+    kt = ";".join(f"{p},{v:.4f}" for p, v in ktable(groups))
+    km = ";".join(f"{k:.5f},{n}" for k, n in (kmarks or []))
     ring_dots, ring_segs = subdivide(ngon(C, C, R_RING), 1)
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {S:.0f} {S:.0f}" '
-         f'role="img" aria-label="{label}">',
+         f'role="img" aria-label="{label}" data-ktable="{kt}"'
+         + (f' data-kmarks="{km}"' if km else '') + '>',
          f'  <title>{label}</title>',
          f'  <g stroke="{ring_color}" stroke-width="{RING_STROKE}" fill="none" opacity=".55">']
     for (p, q) in ring_segs:
@@ -203,7 +209,8 @@ def to_svg(kind, label="Estres", ring_color="currentColor"):
     o.append('  </g>')
     for (col, dots, segs) in groups:
         gx, gy = group_centroid(dots, segs)
-        o.append(f'  <g class="tri" data-cx="{gx:.3f}" data-cy="{gy:.3f}">')
+        o.append(f'  <g class="tri" data-cx="{gx:.3f}" data-cy="{gy:.3f}" '
+                 f'data-vx="{gx - C:.3f}" data-vy="{gy - C:.3f}">')
         o.append(f'    <g stroke="{col}" stroke-width="{TRI_STROKE}" fill="none" opacity=".7">')
         for (p, q) in segs:
             o.append(f'      <line x1="{p[0]:.1f}" y1="{p[1]:.1f}" x2="{q[0]:.1f}" y2="{q[1]:.1f}"/>')
@@ -349,4 +356,65 @@ def family_dmax(phi_deg, limit=R_RING):
 def family_dmax_table(step=5, span=60):
     """|φ| -> d_max, sampled; the viewer interpolates between samples."""
     return [(p, family_dmax(float(p))) for p in range(0, span + 1, step)]
+
+# --- meeting factor --------------------------------------------------------
+# Every arrangement is three triangles sitting at some displacement from the
+# figure's centre. Scaling those displacements by a factor k is the general
+# form of "how much they meet": k = 1 is the arrangement as authored, k = 0
+# collapses all three onto the centre. It is a rigid translation per triangle,
+# so nothing is recomputed and each triangle's own centre of gravity travels
+# with it — the balance survives.
+def displacements(groups):
+    """Each triangle's centre of gravity relative to the figure centre."""
+    return [(gx - C, gy - C) for gx, gy in
+            (group_centroid(dots, segs) for (_, dots, segs) in groups)]
+
+
+def scaled_reach(groups, k, phi_deg):
+    r = math.radians(phi_deg)
+    ca, sa = math.cos(r), math.sin(r)
+    worst = 0.0
+    for (col, dots, segs) in groups:
+        gx, gy = group_centroid(dots, segs)
+        tx, ty = (k - 1.0) * (gx - C), (k - 1.0) * (gy - C)
+        for (x, y) in dots:
+            X, Y = x - gx, y - gy
+            px = gx + X * ca - Y * sa + tx
+            py = gy + X * sa + Y * ca + ty
+            worst = max(worst, math.hypot(px - C, py - C) + TRI_DOT_R)
+    return worst
+
+
+def kmax(groups, phi_deg, limit=R_RING):
+    if scaled_reach(groups, 0.0, phi_deg) > limit:
+        return 0.0
+    lo, hi = 0.0, 6.0
+    for _ in range(60):
+        mid = (lo + hi) / 2
+        if scaled_reach(groups, mid, phi_deg) <= limit:
+            lo = mid
+        else:
+            hi = mid
+    return lo
+
+
+def ktable(groups, step=5, span=60):
+    return [(p, kmax(groups, float(p))) for p in range(0, span + 1, step)]
+
+
+def triad_kmarks():
+    """Where the named meetings fall on the meeting factor.
+
+    k scales each triangle's displacement measured from its own centre of
+    GRAVITY, and that point sits 61.97 units inside the triangle (not h/6 =
+    60.24 — ink weighs the long base more than the vertices do), so the factor
+    is not simply d/d_TA. Accounting for it puts Pavo at k = 1.4578, where the
+    three apexes land on the centre together.
+    """
+    w, h = FAMILY_W, FAMILY_H
+    poly = tri_points(C, C, w, 0.0)
+    dots, segs = subdivide(poly, 3)
+    c = C - group_centroid(dots, segs)[1]
+    d_ta = h / 6 + w * math.sqrt(3) / 18
+    return [(1.0, "Triángulo Austral"), ((h / 2 + c) / (d_ta + c), "Pavo")]
 
