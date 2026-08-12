@@ -6,22 +6,25 @@
 
 Provenance
 ----------
-The polygon below was measured from Lawal_Iso_w_rojo.png (1000x1000), not
+The polygons below were measured from Lawal_Iso_w_rojo.png (1000x1000), not
 traced by hand:
 
-  1. The largest connected ink component was isolated — the source file also
-     carries a detached ▽ to the right of the W, which is excluded.
-  2. Its boundary was walked (Moore tracing) and reduced with Douglas-Peucker,
-     which settled on 8 vertices across every tolerance from 2.0 to 3.0 px.
+  1. The ink splits into two connected components: the W stroke (27801px) and
+     a detached ▽ at the upper right (6076px). Both belong to the mark — with
+     the ▽ included the bounding box is 364px wide, matching the ▽-only logos
+     in the same family exactly.
+  2. Each boundary was walked (Moore tracing) and reduced with Douglas-Peucker,
+     which settled on 8 and 3 vertices respectively, stable across every
+     tolerance from 1.0 to 3.0 px.
   3. Each edge was then re-fitted at sub-pixel accuracy: the anti-aliased
      coverage was scanned along the edge normal, the 50% crossing taken as the
      true edge position, and a total-least-squares line fitted through those
      samples. Corners are the intersections of consecutive lines.
 
-Fidelity of the result against the source pixels: IoU 98.76%, with the residual
-being a one-pixel fringe along the edges (symmetric: 173px of the model outside
-the source, 173px of the source outside the model) — i.e. anti-aliasing, not
-shape error. Mean edge displacement is about 0.17px.
+Fidelity against the source pixels: IoU 98.76% for the W, 98.16% for the ▽.
+The residual is a one-pixel fringe along the edges, symmetric (for the W: 173px
+of model outside the source, 173px of source outside the model) — anti-aliasing,
+not shape error. Mean edge displacement is about 0.17px.
 """
 import argparse
 import math
@@ -39,6 +42,15 @@ W_POLY = [
     (450.109, 603.364),
 ]
 
+# The detached ▽ at the upper right, part of the same mark.
+TRI_POLY = [
+    (558.000, 394.000),
+    (681.000, 394.000),
+    (622.584, 490.551),
+]
+
+SHAPES = [W_POLY, TRI_POLY]
+
 RED = "#dd5769"          # Lawal red, sampled from the source PNG
 DOT_R = 15.0             # dot radius, in output viewBox units
 STROKE = 4.0
@@ -46,13 +58,16 @@ PAD = 40.0               # margin around the mark, output units
 SIZE = 1000.0            # output viewBox is SIZE wide
 
 
-def normalise(poly, size=SIZE, pad=PAD):
-    """Fit the polygon to a viewBox of the given width, keeping aspect."""
-    xs = [p[0] for p in poly]
-    ys = [p[1] for p in poly]
-    w, h = max(xs) - min(xs), max(ys) - min(ys)
+def normalise(shapes, size=SIZE, pad=PAD):
+    """Fit every shape to a viewBox of the given width on one shared transform,
+    so the parts keep their relative placement."""
+    xs = [p[0] for poly in shapes for p in poly]
+    ys = [p[1] for poly in shapes for p in poly]
+    x0, y0 = min(xs), min(ys)
+    w, h = max(xs) - x0, max(ys) - y0
     s = (size - 2 * pad) / w
-    out = [((x - min(xs)) * s + pad, (y - min(ys)) * s + pad) for (x, y) in poly]
+    out = [[((x - x0) * s + pad, (y - y0) * s + pad) for (x, y) in poly]
+           for poly in shapes]
     return out, size, h * s + 2 * pad
 
 
@@ -74,8 +89,12 @@ def place_dots(poly, spacing):
 
 
 def to_svg(spacing=64.0, label="Lawal", color=RED, dot_r=DOT_R, stroke=STROKE):
-    poly, vw, vh = normalise(W_POLY)
-    dots, segs = place_dots(poly, spacing)
+    shapes, vw, vh = normalise(SHAPES)
+    dots, segs = [], []
+    for poly in shapes:
+        d, s = place_dots(poly, spacing)
+        dots += d
+        segs += s
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {vw:.0f} {vh:.0f}" '
          f'role="img" aria-label="{label}">',
          f'  <title>{label}</title>',
@@ -100,13 +119,18 @@ def main():
     ap.add_argument("--color", default=RED)
     args = ap.parse_args()
 
-    poly, vw, vh = normalise(W_POLY)
-    dots, _ = place_dots(poly, args.spacing)
-    per = sum(math.hypot(poly[(i + 1) % len(poly)][0] - poly[i][0],
-                         poly[(i + 1) % len(poly)][1] - poly[i][1])
-              for i in range(len(poly)))
-    print(f"viewBox {vw:.0f}x{vh:.0f}, perimeter {per:.0f}, "
-          f"{len(dots)} dots (8 corners + {len(dots)-8} on edges)", file=sys.stderr)
+    shapes, vw, vh = normalise(SHAPES)
+    ndots = corners = 0
+    per = 0.0
+    for poly in shapes:
+        d, _ = place_dots(poly, args.spacing)
+        ndots += len(d)
+        corners += len(poly)
+        per += sum(math.hypot(poly[(i + 1) % len(poly)][0] - poly[i][0],
+                              poly[(i + 1) % len(poly)][1] - poly[i][1])
+                   for i in range(len(poly)))
+    print(f"viewBox {vw:.0f}x{vh:.0f}, {len(shapes)} shapes, perimeter {per:.0f}, "
+          f"{ndots} dots ({corners} corners + {ndots-corners} on edges)", file=sys.stderr)
 
     svg = to_svg(args.spacing, args.label, args.color)
     if args.out:
