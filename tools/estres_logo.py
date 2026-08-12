@@ -240,3 +240,52 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+# --- the meeting axis ------------------------------------------------------
+# Triángulo Austral and Pavo are not two arrangements but two points on one
+# continuous family: three ▽ rotated 120° apart, pushed out from the centre by
+# a distance d. Because the rotation is fixed per triangle and the figure stays
+# centred by symmetry, changing d translates each triangle rigidly — every dot
+# of a triangle moves by exactly d·(sin θ, −cos θ). So the whole axis is a
+# translation, and a viewer can walk it with three transforms and no recompute.
+FAMILY_W = S * 0.46
+FAMILY_H = FAMILY_W * TRI_RATIO
+FAMILY_DMAX = 207.2                      # farthest that still fits the ring
+LANDMARKS = [
+    (FAMILY_H / 6 + FAMILY_W * math.sqrt(3) / 18, "Triángulo Austral"),
+    (FAMILY_H / 2, "Pavo"),
+]
+
+
+def family_svg(label="Estres", ring_color="currentColor"):
+    """The meeting axis as one SVG: each triangle in a group that carries its
+    own unit direction, so a slider only has to set three translations."""
+    ring_dots, ring_segs = subdivide(ngon(C, C, R_RING), 1)
+    o = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {S:.0f} {S:.0f}" '
+         f'role="img" aria-label="{label}" data-family '
+         f'data-dmax="{FAMILY_DMAX}" '
+         f'data-marks="{";".join(f"{d:.4f},{n}" for d, n in LANDMARKS)}">',
+         f'  <title>{label}</title>',
+         f'  <g stroke="{ring_color}" stroke-width="{RING_STROKE}" fill="none" opacity=".55">']
+    for (p, q) in ring_segs:
+        o.append(f'    <line x1="{p[0]:.1f}" y1="{p[1]:.1f}" x2="{q[0]:.1f}" y2="{q[1]:.1f}"/>')
+    o += ['  </g>', f'  <g fill="{ring_color}">']
+    for (x, y) in ring_dots:
+        o.append(f'    <circle cx="{x:.1f}" cy="{y:.1f}" r="{RING_DOT_R:.0f}"/>')
+    o.append('  </g>')
+    for i, col in enumerate(COLORS):
+        rot = i * 2 * math.pi / 3
+        ux, uy = math.sin(rot), -math.cos(rot)
+        poly = tri_points(C, C, FAMILY_W, rot)      # d = 0; the slider adds d·u
+        dots, segs = subdivide(poly, 3)
+        o.append(f'  <g class="tri" data-ux="{ux:.6f}" data-uy="{uy:.6f}">')
+        o.append(f'    <g stroke="{col}" stroke-width="{TRI_STROKE}" fill="none" opacity=".7">')
+        for (p, q) in segs:
+            o.append(f'      <line x1="{p[0]:.1f}" y1="{p[1]:.1f}" x2="{q[0]:.1f}" y2="{q[1]:.1f}"/>')
+        o += ['    </g>', f'    <g fill="{col}">']
+        for (x, y) in dots:
+            o.append(f'      <circle cx="{x:.1f}" cy="{y:.1f}" r="{TRI_DOT_R:.0f}"/>')
+        o += ['    </g>', '  </g>']
+    o.append('</svg>')
+    return "\n".join(o) + "\n"
