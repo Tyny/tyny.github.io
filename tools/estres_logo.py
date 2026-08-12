@@ -138,6 +138,21 @@ def raw_layout(kind):
     return groups
 
 
+def group_centroid(dots, segs):
+    """Centre of gravity of a single triangle's marks, same definition as the
+    whole-figure one: dots by disc area, segments by length. Rotating a triangle
+    about this point leaves it fixed, so the figure's balance survives any
+    rotation."""
+    sx = sy = sw = 0.0
+    dot_w = math.pi * TRI_DOT_R * TRI_DOT_R
+    for (x, y) in dots:
+        sx += x * dot_w; sy += y * dot_w; sw += dot_w
+    for (p, q) in segs:
+        w = math.hypot(q[0] - p[0], q[1] - p[1]) * TRI_STROKE
+        sx += (p[0] + q[0]) / 2 * w; sy += (p[1] + q[1]) / 2 * w; sw += w
+    return sx / sw, sy / sw
+
+
 def ink_centroid(groups):
     """Centre of gravity of the drawn marks: dots by disc area, segments by length."""
     sx = sy = sw = 0.0
@@ -187,13 +202,15 @@ def to_svg(kind, label="Estres", ring_color="currentColor"):
         o.append(f'    <circle cx="{x:.1f}" cy="{y:.1f}" r="{RING_DOT_R:.0f}"/>')
     o.append('  </g>')
     for (col, dots, segs) in groups:
-        o.append(f'  <g stroke="{col}" stroke-width="{TRI_STROKE}" fill="none" opacity=".7">')
+        gx, gy = group_centroid(dots, segs)
+        o.append(f'  <g class="tri" data-cx="{gx:.3f}" data-cy="{gy:.3f}">')
+        o.append(f'    <g stroke="{col}" stroke-width="{TRI_STROKE}" fill="none" opacity=".7">')
         for (p, q) in segs:
-            o.append(f'    <line x1="{p[0]:.1f}" y1="{p[1]:.1f}" x2="{q[0]:.1f}" y2="{q[1]:.1f}"/>')
-        o += ['  </g>', f'  <g fill="{col}">']
+            o.append(f'      <line x1="{p[0]:.1f}" y1="{p[1]:.1f}" x2="{q[0]:.1f}" y2="{q[1]:.1f}"/>')
+        o += ['    </g>', f'    <g fill="{col}">']
         for (x, y) in dots:
-            o.append(f'    <circle cx="{x:.1f}" cy="{y:.1f}" r="{TRI_DOT_R:.0f}"/>')
-        o.append('  </g>')
+            o.append(f'      <circle cx="{x:.1f}" cy="{y:.1f}" r="{TRI_DOT_R:.0f}"/>')
+        o += ['    </g>', '  </g>']
     o.append('</svg>')
     return "\n".join(o) + "\n"
 
@@ -265,7 +282,8 @@ def family_svg(label="Estres", ring_color="currentColor"):
     o = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {S:.0f} {S:.0f}" '
          f'role="img" aria-label="{label}" data-family '
          f'data-dmax="{FAMILY_DMAX}" '
-         f'data-marks="{";".join(f"{d:.4f},{n}" for d, n in LANDMARKS)}">',
+         f'data-marks="{";".join(f"{d:.4f},{n}" for d, n in LANDMARKS)}" '
+         f'data-dtable="{";".join(f"{p},{v:.2f}" for p, v in family_dmax_table())}">',
          f'  <title>{label}</title>',
          f'  <g stroke="{ring_color}" stroke-width="{RING_STROKE}" fill="none" opacity=".55">']
     for (p, q) in ring_segs:
@@ -279,7 +297,9 @@ def family_svg(label="Estres", ring_color="currentColor"):
         ux, uy = math.sin(rot), -math.cos(rot)
         poly = tri_points(C, C, FAMILY_W, rot)      # d = 0; the slider adds d·u
         dots, segs = subdivide(poly, 3)
-        o.append(f'  <g class="tri" data-ux="{ux:.6f}" data-uy="{uy:.6f}">')
+        gx, gy = group_centroid(dots, segs)
+        o.append(f'  <g class="tri" data-ux="{ux:.6f}" data-uy="{uy:.6f}" '
+                 f'data-cx="{gx:.3f}" data-cy="{gy:.3f}">')
         o.append(f'    <g stroke="{col}" stroke-width="{TRI_STROKE}" fill="none" opacity=".7">')
         for (p, q) in segs:
             o.append(f'      <line x1="{p[0]:.1f}" y1="{p[1]:.1f}" x2="{q[0]:.1f}" y2="{q[1]:.1f}"/>')
@@ -289,3 +309,44 @@ def family_svg(label="Estres", ring_color="currentColor"):
         o += ['    </g>', '  </g>']
     o.append('</svg>')
     return "\n".join(o) + "\n"
+
+def family_reach(phi_deg, d):
+    """Farthest drawn point from the centre, with each triangle rotated about
+    its own centre of gravity and then pushed out by d."""
+    r = math.radians(phi_deg)
+    ca, sa = math.cos(r), math.sin(r)
+    worst = 0.0
+    for i in range(3):
+        a = i * 2 * math.pi / 3
+        ux, uy = math.sin(a), -math.cos(a)
+        poly = tri_points(C, C, FAMILY_W, a)
+        dots, segs = subdivide(poly, 3)
+        gx, gy = group_centroid(dots, segs)
+        for (x, y) in dots:
+            X, Y = x - gx, y - gy
+            px = gx + X * ca - Y * sa + d * ux
+            py = gy + X * sa + Y * ca + d * uy
+            worst = max(worst, math.hypot(px - C, py - C) + TRI_DOT_R)
+    return worst
+
+
+def family_dmax(phi_deg, limit=R_RING):
+    """Largest separation that still fits the ring at this rotation. Rotating
+    the triangles swings their corners outward, so the axis has to be shortened
+    or the mark spills: at ±60° only d=130 fits, against d=207 at 0°."""
+    if family_reach(phi_deg, 0.0) > limit:
+        return 0.0
+    lo, hi = 0.0, 300.0
+    for _ in range(60):
+        mid = (lo + hi) / 2
+        if family_reach(phi_deg, mid) <= limit:
+            lo = mid
+        else:
+            hi = mid
+    return lo
+
+
+def family_dmax_table(step=5, span=60):
+    """|φ| -> d_max, sampled; the viewer interpolates between samples."""
+    return [(p, family_dmax(float(p))) for p in range(0, span + 1, step)]
+
