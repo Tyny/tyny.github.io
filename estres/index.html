@@ -10,7 +10,7 @@
   :root {
     --bg: #f4f1ea; --card: #fffdf8; --ink: #1c1a17; --muted: #6b655c;
     --line: #e5ded1; --pc: #c26a1c;
-    --reserve: 374px;            /* room the title block needs below the logo */
+    --reserve: 412px;            /* room the title block needs below the logo */
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -30,7 +30,7 @@
   /* wide enough that a square logo is never width-bound before it reaches 80vh */
   .wrap { width: 100%; max-width: 1200px; }
   /* the lede wraps to more lines on narrow screens, so it needs more room */
-  @media (max-width: 620px) { :root { --reserve: 424px; } }
+  @media (max-width: 620px) { :root { --reserve: 496px; } }
 
   /* The stage is the tap target: anywhere on it advances to the next version. */
   .stage {
@@ -53,6 +53,8 @@
 
   /* text stays a readable column even though the stage is wide */
   .switcher, h1, .lede { max-width: 620px; }
+  .fam-ui { flex-wrap: wrap; max-width: 620px; }
+  .fam-ui input[type="range"] { min-width: 96px; max-width: 150px; }
   .switcher { display: flex; align-items: center; gap: 10px; margin-top: 14px; }
   .pip {
     width: 9px; height: 9px; padding: 0; border-radius: 50%;
@@ -495,11 +497,15 @@
       <button class="pip" data-go="3" aria-label="Conformación 4: Retículo"></button>
       <span class="hint">tocá para cambiar</span>
     </div>
-    <div class="dots-ui" id="meet" hidden>
+    <div class="dots-ui fam-ui" id="meet" hidden>
       <label for="meet-range">encuentro</label>
       <input id="meet-range" type="range" min="0" max="207.2" step="0.1"
              aria-label="Cuánto se encuentran los tres triángulos">
       <output for="meet-range" id="meet-out"></output>
+      <label for="rot-range">rotación</label>
+      <input id="rot-range" type="range" min="-60" max="60" step="0.25"
+             aria-label="Rotación aplicada a los tres triángulos a la vez">
+      <output for="rot-range" id="rot-out"></output>
     </div>
     <p class="sr" id="live" role="status" aria-live="polite"></p>
 
@@ -562,6 +568,8 @@
   var meet = document.getElementById("meet");
   var meetRange = document.getElementById("meet-range");
   var meetOut = document.getElementById("meet-out");
+  var rotRange = document.getElementById("rot-range");
+  var rotOut = document.getElementById("rot-out");
   var family = document.querySelector("svg[data-family]");
   var tris = family ? family.querySelectorAll(".tri") : [];
   var marks = [];
@@ -581,24 +589,35 @@
     return best;
   }
 
-  function setMeet(d) {
+  // Both parameters are rigid motions of each triangle, so the whole family is
+  // two transforms per group and nothing is recomputed: rotate about the figure
+  // centre (where all three sit when d = 0, hence "the same rotation applied to
+  // all three at once"), then push out by d along that triangle's direction.
+  function applyFamily() {
+    var d = parseFloat(meetRange.value);
+    var phi = parseFloat(rotRange.value);
     for (var k = 0; k < tris.length; k++) {
       var ux = parseFloat(tris[k].getAttribute("data-ux"));
       var uy = parseFloat(tris[k].getAttribute("data-uy"));
       tris[k].setAttribute("transform",
-        "translate(" + (d * ux).toFixed(3) + "," + (d * uy).toFixed(3) + ")");
+        "translate(" + (d * ux).toFixed(3) + "," + (d * uy).toFixed(3) + ") " +
+        "rotate(" + phi.toFixed(3) + ",500,500)");
     }
     var m = nearestMark(d);
-    meetOut.textContent = Math.abs(m.d - d) < 0.6 ? m.name : d.toFixed(0);
-    if (svgs[i] && svgs[i].hasAttribute("data-family")) { conste.textContent = m.name; }
+    var onMark = Math.abs(m.d - d) < 0.6 && Math.abs(phi) < 0.13;
+    meetOut.textContent = onMark ? m.name : d.toFixed(0);
+    rotOut.textContent = phi.toFixed(1) + "\u00b0";
+    if (svgs[i] && svgs[i].hasAttribute("data-family")) {
+      conste.textContent = onMark ? m.name : m.name + " ·";
+    }
   }
 
   if (family) {
     meetRange.value = String(marks[0].d);   // opens on Triángulo Austral
-    setMeet(marks[0].d);
-    meetRange.addEventListener("input", function () {
-      setMeet(parseFloat(meetRange.value));
-    });
+    rotRange.value = "0";
+    applyFamily();
+    meetRange.addEventListener("input", applyFamily);
+    rotRange.addEventListener("input", applyFamily);
   }
 
   show(0);
