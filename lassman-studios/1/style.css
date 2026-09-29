@@ -1,0 +1,156 @@
+/* Option 1 — BRUTAL EVIL
+   Black canvas, high-contrast italic display serif, gothic editorial. */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500;1,700;1,900&family=Archivo:wght@400;500;700&display=swap');
+
+:root {
+  --bg: #0a0a0a; --ink: #f3f1ec; --muted: #857f75; --line: #23211d;
+  --panel: #131210; --accent: #f3f1ec;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'Archivo', 'Helvetica Neue', Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--sans); line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.site { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+a { color: inherit; }
+
+/* topbar */
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 30px 0; border-bottom: 1px solid var(--line);
+}
+.brand {
+  font-family: var(--serif); font-style: italic; font-weight: 700;
+  font-size: 22px; text-decoration: none; letter-spacing: .01em;
+}
+.nav { display: flex; gap: 30px; }
+.nav a {
+  text-decoration: none; text-transform: uppercase; letter-spacing: .18em;
+  font-size: 11px; color: var(--muted);
+}
+.nav a:hover { color: var(--ink); }
+
+/* hero */
+.hero { padding: 96px 0 72px; }
+.eyebrow {
+  text-transform: uppercase; letter-spacing: .32em; font-size: 11px;
+  color: var(--muted); margin: 0 0 26px;
+}
+.hero-title {
+  font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: clamp(52px, 11vw, 132px); line-height: .96; letter-spacing: -.01em;
+  margin: 0; max-width: 14ch;
+}
+.hero-sub {
+  font-size: 18px; color: var(--muted); max-width: 48ch; margin: 34px 0 40px;
+}
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+
+/* buttons */
+.btn {
+  display: inline-block; text-decoration: none; font-size: 12px;
+  text-transform: uppercase; letter-spacing: .2em; padding: 16px 30px;
+  border: 1px solid var(--ink); border-radius: 0; transition: .18s ease;
+}
+.btn--primary { background: var(--ink); color: var(--bg); }
+.btn--primary:hover { background: transparent; color: var(--ink); }
+.btn--ghost { background: transparent; color: var(--ink); }
+.btn--ghost:hover { background: var(--ink); color: var(--bg); }
+
+/* statement */
+.statement { padding: 40px 0 84px; border-top: 1px solid var(--line); }
+.statement p {
+  font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: clamp(24px, 3.6vw, 40px); line-height: 1.3; max-width: 22ch;
+  margin: 40px 0 0;
+}
+
+/* gallery */
+.gallery {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+  padding-bottom: 96px;
+}
+.shot { aspect-ratio: 3 / 4; background: var(--panel); border: 1px solid var(--line); }
+.shot--1 { background: linear-gradient(160deg, #1c1a17, #050505); }
+.shot--2 { background: linear-gradient(160deg, #2a2622, #0c0b0a); grid-row: span 1; }
+.shot--3 { background: linear-gradient(160deg, #17150f, #000); }
+.shot--4 { background: linear-gradient(160deg, #211d18, #060606); }
+.shot--5 { background: linear-gradient(160deg, #100f0d, #000); }
+.shot--6 { background: linear-gradient(160deg, #262019, #0a0908); }
+
+/* services */
+.services {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  border-top: 1px solid var(--line);
+}
+.service {
+  padding: 48px 40px 48px 0; border-bottom: 1px solid var(--line);
+}
+.service:nth-child(odd) { padding-right: 60px; border-right: 1px solid var(--line); padding-left: 4px; }
+.service:nth-child(even) { padding-left: 40px; }
+.service-index {
+  font-size: 11px; letter-spacing: .2em; color: var(--muted);
+}
+.service h2 {
+  font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: 30px; margin: 14px 0 12px;
+}
+.service p { color: var(--muted); margin: 0; font-size: 15px; max-width: 34ch; }
+
+/* quote */
+.quote { padding: 110px 0; text-align: center; }
+.quote blockquote {
+  font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: clamp(28px, 5vw, 56px); line-height: 1.2; margin: 0 auto;
+  max-width: 20ch;
+}
+.quote cite {
+  display: block; margin-top: 30px; font-style: normal;
+  text-transform: uppercase; letter-spacing: .24em; font-size: 11px; color: var(--muted);
+}
+
+/* cta */
+.cta { padding: 96px 0; border-top: 1px solid var(--line); text-align: left; }
+.cta h2 {
+  font-family: var(--serif); font-style: italic; font-weight: 500;
+  font-size: clamp(36px, 7vw, 76px); line-height: 1; margin: 0 0 20px; max-width: 16ch;
+}
+.cta p { color: var(--muted); font-size: 18px; margin: 0 0 34px; }
+
+/* footer */
+.site-footer {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 40px 0; border-top: 1px solid var(--line);
+  font-size: 12px; color: var(--muted);
+}
+.site-footer .brand { font-size: 15px; }
+.site-footer .year { letter-spacing: .1em; }
+
+/* back link + direction badge (text comes from CSS only) */
+.back {
+  position: fixed; left: 20px; bottom: 18px; z-index: 5;
+  text-decoration: none; font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase; color: var(--muted);
+  background: var(--bg); padding: 8px 12px; border: 1px solid var(--line);
+}
+.back:hover { color: var(--ink); border-color: var(--ink); }
+.back::after { content: "\2190  All directions"; }
+.badge {
+  position: fixed; right: 20px; bottom: 18px; z-index: 5;
+  font-size: 11px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--bg); background: var(--ink); padding: 8px 14px;
+}
+.badge::after { content: "Brutal Evil"; }
+
+@media (max-width: 720px) {
+  .nav { display: none; }
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .services { grid-template-columns: 1fr; }
+  .service:nth-child(odd) { border-right: none; padding-right: 0; }
+  .service:nth-child(even) { padding-left: 0; }
+}
