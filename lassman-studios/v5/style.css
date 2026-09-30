@@ -22,9 +22,9 @@ h1,h2,h3,p,figure,ol{margin:0}
 .muted{color:var(--muted)}
 .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--blue)}
 
-h1{font-family:var(--display);font-weight:900;font-size:clamp(52px,8vw,128px);line-height:1.0;letter-spacing:-.03em;overflow-wrap:break-word}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(44px,6.6vw,104px);line-height:1.14;letter-spacing:-.03em;overflow-wrap:break-word}
 h1 em{font-style:normal;font-weight:900;color:var(--blue)}
-h1 .hl{background:var(--warm);color:var(--paper);padding:.02em .1em;border-radius:6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+h1 .hl{background:var(--warm);color:var(--paper);padding:0 .1em;border-radius:6px;-webkit-box-decoration-break:clone;box-decoration-break:clone}
 h2{font-family:var(--display);font-weight:800;font-size:clamp(32px,4.6vw,62px);line-height:1.0;letter-spacing:-.02em;overflow-wrap:break-word}
 h3{font-family:var(--display);font-weight:800;font-size:21px}
 
@@ -200,3 +200,14 @@ dialog::backdrop{background:#0b0d12b0;backdrop-filter:blur(6px)}
 .site-header .text-button:hover{color:#0c0e11}
 .site-header .header-actions .btn{background:var(--blue);color:#fff;border-color:var(--blue)}
 .site-header .menu-toggle{border-color:#d5d8dc;color:#333}
+/* dark-page header: blue gradient card to match the closing band */
+.site-header{background:linear-gradient(120deg,var(--blue-2),var(--blue-ink));border:0;border-radius:28px}
+.site-header .brand{background:#fff;border-radius:16px;width:min(500px,70%);margin:26px auto 18px;padding:16px 26px}
+.site-header .brand-logo{height:112px;filter:none}
+.site-header .header-bottom{border-top:1px solid #ffffff2e}
+.site-header .desktop-nav a{color:#dceafb}
+.site-header .desktop-nav a:hover{color:#fff}
+.site-header .text-button{color:#dceafb}
+.site-header .text-button:hover{color:#fff}
+.site-header .header-actions .btn{background:#fff;color:var(--blue-ink);border-color:#fff}
+.site-header .menu-toggle{border-color:#ffffff55;color:#fff}

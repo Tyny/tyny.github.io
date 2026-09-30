@@ -153,3 +153,14 @@ dialog::backdrop{background:#0a0c0fbf;backdrop-filter:blur(6px)}
 .site-header .text-button:hover{color:#0c0e11}
 .site-header .header-actions .btn{background:var(--blue);color:#fff;border-color:var(--blue)}
 .site-header .menu-toggle{border-color:#d5d8dc;color:#333}
+/* dark-page header: blue gradient card to match the closing band */
+.site-header{background:linear-gradient(120deg,#1f8fc9,#0a4d73);border:0;border-radius:28px}
+.site-header .brand{background:#fff;border-radius:16px;width:min(500px,70%);margin:26px auto 18px;padding:16px 26px}
+.site-header .brand-logo{height:112px;filter:none}
+.site-header .header-bottom{border-top:1px solid #ffffff2e}
+.site-header .desktop-nav a{color:#dceafb}
+.site-header .desktop-nav a:hover{color:#fff}
+.site-header .text-button{color:#dceafb}
+.site-header .text-button:hover{color:#fff}
+.site-header .header-actions .btn{background:#fff;color:#0a4d73;border-color:#fff}
+.site-header .menu-toggle{border-color:#ffffff55;color:#fff}
