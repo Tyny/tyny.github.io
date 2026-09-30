@@ -4,7 +4,7 @@
 
 :root{
   --paper:#0c0e11; --ink:#f3f5f7; --muted:#9aa3ad; --line:#23282e;
-  --blue:#17a6e0; --blue-deep:#7cc9ec; --warm:#f08a4f; --on-accent:#0c0e11;
+  --blue:#17a6e0; --blue-deep:#7cc9ec; --warm:#e0a52c; --on-accent:#0c0e11;
   --duo:grayscale(1) brightness(1.02) contrast(1.02) sepia(.32) hue-rotate(158deg) saturate(1.25);
   --sans:'Inter',system-ui,-apple-system,Arial,sans-serif;
 }

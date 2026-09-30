@@ -6,7 +6,7 @@
 :root{
   --paper:#0b0d12; --ink:#f4f6f9; --muted:#9aa4b0; --line:#232a33;
   --blue:#17a6e0; --blue-2:#0f7cb8; --blue-3:#0a5580; --blue-ink:#08344f;
-  --warm:#f0894a; --card:#12161d;
+  --warm:#ff6a4a; --card:#12161d;
   --display:'Archivo','Helvetica Neue',Arial,sans-serif; --sans:'Inter',system-ui,Arial,sans-serif;
 }
 *{box-sizing:border-box}

@@ -4,7 +4,7 @@
 
 :root{
   --paper:#f7f9fb; --ink:#161a20; --muted:#586069; --line:#e0e7ee;
-  --blue:#17a6e0; --blue-deep:#0c6c9e; --blue-band:#0e4d6d; --warm:#e2703c;
+  --blue:#17a6e0; --blue-deep:#0c6c9e; --blue-band:#0e4d6d; --warm:#8a7d34;
   --panel:#eef3f8; --on-accent:#ffffff;
   --serif:'Spectral',Georgia,serif; --sans:'Inter',system-ui,Arial,sans-serif;
 }
