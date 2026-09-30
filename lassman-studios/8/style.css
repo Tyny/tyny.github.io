@@ -52,7 +52,7 @@ dialog{color:#252923;background:#fafaf5;border:0;border-radius:18px;width:min(51
 .reference .hero>.photo{height:620px;border:1px solid var(--line);border-radius:17px}
 .reference .hero>.photo img{object-position:67% center}
 .reference .photo-caption{font-size:13px;letter-spacing:.5px;bottom:28px}
-.reference .service-strip{background:#fff;border:1px solid var(--line);border-radius:17px;margin:24px 0 0;padding:27px 30px;grid-template-columns:1.2fr 1fr 1fr;gap:24px}
+.reference .service-strip{background:#fff;border:1px solid var(--line);border-radius:17px;margin:24px 0 0;padding:27px 30px;grid-template-columns:repeat(3,1fr);gap:24px}
 .reference .service-strip>*+*{border-left:1px solid var(--line);padding-left:24px}
 .reference .service-strip strong{font-size:17px}
 .reference .section{background:#fff;border:1px solid var(--line);border-radius:17px;padding:55px;margin-top:24px}
