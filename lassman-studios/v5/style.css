@@ -211,3 +211,6 @@ dialog::backdrop{background:#0b0d12b0;backdrop-filter:blur(6px)}
 .site-header .text-button:hover{color:#fff}
 .site-header .header-actions .btn{background:#fff;color:var(--blue-ink);border-color:#fff}
 .site-header .menu-toggle{border-color:#ffffff55;color:#fff}
+/* align body content with the header card's content line */
+main{padding:0 30px}
+@media(max-width:760px){main{padding:0 16px}}

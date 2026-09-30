@@ -149,3 +149,6 @@ dialog::backdrop{background:#0f1216a6;backdrop-filter:blur(6px)}
 .site-header .desktop-nav{justify-self:auto}
 .site-header .header-actions{justify-self:auto}
 @media(max-width:760px){.site-header .brand{width:min(420px,84%);margin:16px auto 6px}.site-header .brand-logo{height:92px}.site-header .header-bottom{padding:10px 16px}}
+/* align body content with the header card's content line */
+main{padding:0 30px}
+@media(max-width:760px){main{padding:0 16px}}
