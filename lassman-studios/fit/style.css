@@ -15,12 +15,12 @@ img{display:block;width:100%;height:100%;object-fit:cover}
 a{color:inherit;text-decoration:none}
 h1,h2,p,figure{margin:0}
 
-.screen{height:100vh;display:flex;flex-direction:column;padding:clamp(18px,2.4vh,30px) clamp(24px,3vw,48px);gap:clamp(12px,1.6vh,20px)}
+.screen{height:100vh;max-width:1280px;margin:0 auto;display:flex;flex-direction:column;padding:clamp(18px,2.4vh,30px) clamp(24px,3vw,44px);gap:clamp(12px,1.6vh,20px)}
 
 /* top bar */
 .bar{display:flex;align-items:center;justify-content:space-between;gap:24px;flex:0 0 auto}
 .brand{flex:0 0 auto}
-.brand-logo{display:block;width:auto;height:clamp(40px,6vh,58px);object-fit:contain;mix-blend-mode:multiply}
+.brand-logo{display:block;width:auto;height:clamp(54px,8.5vh,84px);object-fit:contain;mix-blend-mode:multiply}
 .bar-nav{display:flex;align-items:center;gap:clamp(16px,2vw,30px);font-size:13px}
 .bar-nav>a{color:var(--muted)}
 .bar-nav>a:hover{color:var(--ink)}
