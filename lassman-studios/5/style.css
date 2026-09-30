@@ -48,7 +48,7 @@ h3{font-family:var(--serif);font-weight:700;font-size:23px}
 .key-icon{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:var(--panel);color:var(--accent);margin-bottom:24px}
 .key-icon svg{width:26px;height:26px}
 .hero-copy .eyebrow{display:block;margin-bottom:22px}
-.hero-copy>p{max-width:400px;color:var(--muted);font-size:18px;font-weight:500;margin-top:24px}
+.hero-copy>p:not(.eyebrow){max-width:400px;color:var(--muted);font-size:18px;font-weight:500;margin-top:24px}
 .actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:30px}
 .support-links{display:flex;flex-direction:column;gap:10px;margin-top:26px;font-size:14px}
 .support-links a{color:var(--muted);background:var(--panel);border-radius:30px;padding:11px 18px}
@@ -69,7 +69,7 @@ h3{font-family:var(--serif);font-weight:700;font-size:23px}
 .section{padding:90px 0}
 .section-head{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:38px}
 .section-head .eyebrow{display:block;margin-bottom:14px}
-.section-head p{max-width:350px;color:var(--muted)}
+.section-head>p{max-width:350px;color:var(--muted)}
 .gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .gallery-item{text-align:left;overflow:hidden;border-radius:22px}
 .gallery-item .gallery-image{height:360px;overflow:hidden;border-radius:22px}
@@ -124,7 +124,7 @@ body::after{content:"Warmth";position:fixed;right:18px;bottom:18px;z-index:40;ba
   .photo{height:400px}
   .service-strip{grid-template-columns:1fr}
   .section{padding:56px 0}
-  .section-head{display:block}.section-head p{margin-top:16px}
+  .section-head{display:block}.section-head>p{margin-top:16px}
   .gallery-grid{grid-template-columns:1fr;gap:16px}.gallery-item .gallery-image{height:260px}
   .steps{grid-template-columns:1fr;gap:16px}
   .faq-layout{grid-template-columns:1fr;gap:28px}

@@ -47,7 +47,7 @@ h3{font-family:var(--cond);font-weight:700;text-transform:uppercase;font-size:22
 .key-icon{display:grid;place-items:center;width:54px;height:54px;border:3px solid var(--ink);color:var(--ink);margin-bottom:22px}
 .key-icon svg{width:26px;height:26px}
 .hero-copy .eyebrow{display:block;margin-bottom:18px}
-.hero-copy>p{max-width:400px;color:var(--muted);font-size:18px;margin-top:22px}
+.hero-copy>p:not(.eyebrow){max-width:400px;color:var(--muted);font-size:18px;margin-top:22px}
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
 .support-links{display:flex;flex-direction:column;gap:10px;margin-top:24px;font-size:14px}
 .support-links a{color:var(--muted);text-decoration:underline;text-underline-offset:4px}
@@ -69,7 +69,7 @@ h3{font-family:var(--cond);font-weight:700;text-transform:uppercase;font-size:22
 .section{padding:90px 0}
 .section-head{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:34px}
 .section-head .eyebrow{display:block;margin-bottom:12px}
-.section-head p{max-width:350px;color:var(--muted)}
+.section-head>p{max-width:350px;color:var(--muted)}
 .gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .gallery-item{text-align:left;overflow:hidden;border:3px solid var(--ink)}
 .gallery-item .gallery-image{height:360px;overflow:hidden}
@@ -128,7 +128,7 @@ body::after{content:"Outdoor Micro";position:fixed;right:16px;bottom:16px;z-inde
   .service-strip>*{border-right:0;border-bottom:3px solid var(--ink)}
   .service-strip>*:last-child{border-bottom:0}
   .section{padding:56px 0}
-  .section-head{display:block}.section-head p{margin-top:16px}
+  .section-head{display:block}.section-head>p{margin-top:16px}
   .gallery-grid{grid-template-columns:1fr;gap:8px}.gallery-item .gallery-image{height:260px}
   .steps{grid-template-columns:1fr}.step{border-right:0;border-bottom:3px solid var(--ink)}.step:last-child{border-bottom:0}
   .faq-layout{grid-template-columns:1fr;gap:26px}
