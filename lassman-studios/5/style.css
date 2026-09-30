@@ -27,7 +27,7 @@ h3{font-family:var(--serif);font-weight:700;font-size:23px}
 /* header */
 .site-header{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:30px 0}
 .brand{flex-shrink:0;display:block}
-.brand-logo{display:block;width:auto;height:40px;object-fit:contain;mix-blend-mode:multiply}
+.brand-logo{display:block;width:auto;height:56px;object-fit:contain;mix-blend-mode:multiply}
 .header-bottom{display:flex;align-items:center;gap:30px}
 .desktop-nav{display:flex;gap:28px;font-size:15px;font-weight:600}
 .desktop-nav a{color:var(--muted)}

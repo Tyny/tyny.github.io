@@ -27,7 +27,7 @@ h3{font-weight:700;font-size:21px;letter-spacing:-.01em}
 /* header */
 .site-header{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:24px 0}
 .brand{flex-shrink:0;display:flex;align-items:center;background:#fff;padding:9px 16px;border-radius:10px;box-shadow:0 4px 14px #0b1a7033}
-.brand-logo{display:block;width:auto;height:22px;object-fit:contain}
+.brand-logo{display:block;width:auto;height:56px;object-fit:contain}
 .header-bottom{display:flex;align-items:center;gap:8px}
 .desktop-nav{display:flex;gap:6px;background:var(--panel);padding:6px;border-radius:999px}
 .desktop-nav a{color:var(--muted);font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px}
