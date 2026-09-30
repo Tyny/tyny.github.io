@@ -134,3 +134,22 @@ dialog::backdrop{background:#0a0c0fbf;backdrop-filter:blur(6px)}
 }
 /* balance: 3-zone header */
 .site-header .brand{justify-self:start}.site-header .desktop-nav{justify-self:center}.site-header .header-actions{justify-self:end}
+
+/* shared centered logo lockup header (consistent across all styles) */
+.site-header{display:block;grid-template-columns:none;background:#141922;border:1px solid var(--line);border-radius:16px;margin:30px 0 26px;padding:0;overflow:visible}
+.site-header .brand{display:block;justify-self:auto;flex-shrink:1;width:min(560px,78%);margin:24px auto 14px}
+.site-header .brand-logo{display:block;width:100%;height:148px;object-fit:contain;filter:invert(1) hue-rotate(180deg);}
+.site-header .header-bottom{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:14px 30px;border-top:1px solid var(--line)}
+.site-header .desktop-nav{justify-self:auto}
+.site-header .header-actions{justify-self:auto}
+@media(max-width:760px){.site-header .brand{width:min(420px,84%);margin:16px auto 6px}.site-header .brand-logo{height:92px}.site-header .header-bottom{padding:10px 16px}}
+/* white lockup plate for a consistent header across dark styles */
+.site-header{background:#fff;border-color:#e6e8ea}
+.site-header .brand-logo{filter:none}
+.site-header .header-bottom{border-top-color:#e6e8ea}
+.site-header .desktop-nav a{color:#4a4f57}
+.site-header .desktop-nav a:hover{color:#0c0e11}
+.site-header .text-button{color:#4a4f57}
+.site-header .text-button:hover{color:#0c0e11}
+.site-header .header-actions .btn{background:var(--blue);color:#fff;border-color:var(--blue)}
+.site-header .menu-toggle{border-color:#d5d8dc;color:#333}
