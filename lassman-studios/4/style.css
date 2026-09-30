@@ -19,15 +19,15 @@ h1,h2,h3,p,figure{margin:0}
 .muted{color:var(--muted)}
 .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.01em;color:var(--deep);background:var(--accent);padding:6px 14px;border-radius:999px}
 
-h1{font-weight:800;font-size:clamp(48px,6.4vw,96px);line-height:1.02;letter-spacing:-.03em}
+h1{font-weight:800;font-size:clamp(44px,6vw,92px);line-height:1.02;letter-spacing:-.03em;overflow-wrap:break-word}
 h1 em{font-style:normal;font-weight:800}
 h2{font-weight:800;font-size:clamp(32px,4vw,54px);line-height:1.05;letter-spacing:-.03em}
 h3{font-weight:700;font-size:21px;letter-spacing:-.01em}
 
 /* header */
 .site-header{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:24px 0}
-.brand{flex-shrink:0;display:block}
-.brand-logo{display:block;width:auto;height:32px;object-fit:contain;background:#fff;padding:8px 14px;border-radius:12px}
+.brand{flex-shrink:0;display:flex;align-items:center;background:#fff;padding:9px 16px;border-radius:10px;box-shadow:0 4px 14px #0b1a7033}
+.brand-logo{display:block;width:auto;height:22px;object-fit:contain}
 .header-bottom{display:flex;align-items:center;gap:8px}
 .desktop-nav{display:flex;gap:6px;background:var(--panel);padding:6px;border-radius:999px}
 .desktop-nav a{color:var(--muted);font-size:14px;font-weight:600;padding:8px 16px;border-radius:999px}
@@ -35,8 +35,8 @@ h3{font-weight:700;font-size:21px;letter-spacing:-.01em}
 .header-actions{display:flex;gap:14px;align-items:center;margin-left:14px}
 .text-button{font-size:14px;font-weight:600;color:var(--muted)}
 .text-button:hover{color:var(--ink)}
-.btn{display:inline-flex;align-items:center;gap:12px;min-height:48px;padding:14px 28px;border:2px solid transparent;background:var(--accent);color:var(--deep);font-size:15px;font-weight:700;border-radius:999px;transition:.18s}
-.btn:hover{transform:translateY(-2px)}
+.btn{display:inline-flex;align-items:center;gap:12px;min-height:48px;padding:14px 28px;border:2px solid transparent;background:#fff;color:var(--deep);font-size:15px;font-weight:700;border-radius:999px;transition:.18s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 22px #0b1a7040}
 .btn.secondary{background:transparent;color:var(--ink);border-color:var(--line)}
 .btn .arrow{font-size:17px}
 .menu-toggle{display:none;border:2px solid var(--line);padding:10px 14px;border-radius:12px;color:var(--ink)}
@@ -44,6 +44,7 @@ h3{font-weight:700;font-size:21px;letter-spacing:-.01em}
 
 /* hero */
 .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding:56px 0}
+.hero-copy{min-width:0}
 .key-icon{display:grid;place-items:center;width:56px;height:56px;border-radius:16px;background:var(--panel);color:var(--accent);margin-bottom:24px}
 .key-icon svg{width:26px;height:26px}
 .hero-copy .eyebrow{margin-bottom:24px}
@@ -76,7 +77,7 @@ h3{font-weight:700;font-size:21px;letter-spacing:-.01em}
 .gallery-item:hover img{transform:scale(1.04)}
 .gallery-item .caption{display:flex;justify-content:space-between;font-size:15px;font-weight:600;padding:14px 4px}
 .more-portraits{margin-top:22px}
-.more-portraits a{color:var(--accent);font-weight:600}
+.more-portraits a{color:#fff;font-weight:600;text-decoration:underline;text-underline-offset:5px;text-decoration-color:var(--accent)}
 
 /* steps */
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:38px}
@@ -95,9 +96,9 @@ details[open] summary:after{content:'\2212'}
 details p{color:var(--muted);padding-top:14px;font-size:15px;font-weight:500}
 
 /* closing */
-.closing{padding:70px 60px;background:var(--accent);color:var(--deep);display:flex;justify-content:space-between;align-items:center;gap:30px;border-radius:26px;margin-top:20px}
-.closing .eyebrow{background:var(--deep);color:var(--accent)}
-.closing .btn{background:var(--deep);color:var(--accent)}
+.closing{padding:70px 60px;background:#fff;color:var(--deep);display:flex;justify-content:space-between;align-items:center;gap:30px;border-radius:26px;margin-top:20px}
+.closing .eyebrow{background:var(--accent);color:var(--deep)}
+.closing .btn{background:var(--deep);color:#fff}
 
 footer{padding:40px 0 70px;display:flex;gap:25px;justify-content:space-between;color:var(--muted);font-size:14px;font-weight:500}
 footer a:hover{color:var(--ink)}

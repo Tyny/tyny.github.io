@@ -20,7 +20,7 @@ h1,h2,h3,p,figure{margin:0}
 .muted{color:var(--muted)}
 .eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--cardink);background:var(--yellow);padding:6px 14px;border-radius:999px}
 
-h1{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(52px,7vw,132px);line-height:.9;letter-spacing:-.03em}
+h1{font-family:var(--display);font-weight:900;text-transform:uppercase;font-size:clamp(40px,6vw,96px);line-height:.92;letter-spacing:-.03em;overflow-wrap:break-word}
 h1 em{font-style:normal;font-weight:900}
 h2{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(32px,4.4vw,60px);line-height:.98;letter-spacing:-.02em}
 h3{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:20px}
@@ -45,9 +45,10 @@ h3{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size
 
 /* hero */
 .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding:58px 0}
+.hero-copy{min-width:0}
 .key-icon{display:grid;place-items:center;width:56px;height:56px;border-radius:16px;background:var(--green);color:var(--cardink);margin-bottom:24px}
 .key-icon svg{width:26px;height:26px}
-.hero-copy .eyebrow{margin-bottom:24px}
+.hero-copy .eyebrow{margin-bottom:24px;color:#0a0a0c;letter-spacing:.08em}
 .hero-copy>p{max-width:400px;color:var(--muted);font-size:19px;margin-top:22px}
 .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
 .support-links{display:flex;flex-direction:column;gap:10px;margin-top:24px;font-size:14px}

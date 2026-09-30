@@ -19,7 +19,7 @@ h1,h2,h3,p,figure{margin:0}
 .muted{color:var(--muted)}
 .eyebrow{font-family:var(--serif);font-style:italic;font-weight:500;font-size:17px;color:var(--muted);text-transform:none;letter-spacing:.01em}
 
-h1{font-family:var(--serif);font-weight:700;font-size:clamp(50px,6.2vw,100px);line-height:1.02;letter-spacing:-.02em}
+h1{font-family:var(--serif);font-weight:700;font-size:clamp(46px,6vw,96px);line-height:1.02;letter-spacing:-.02em;overflow-wrap:break-word}
 h1 em{font-style:italic;font-weight:600}
 h2{font-family:var(--serif);font-weight:700;font-size:clamp(32px,4.2vw,56px);line-height:1.08;letter-spacing:-.01em}
 h3{font-family:var(--serif);font-weight:700;font-size:23px}
@@ -44,6 +44,7 @@ h3{font-family:var(--serif);font-weight:700;font-size:23px}
 
 /* hero */
 .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center;padding:60px 0 70px}
+.hero-copy{min-width:0}
 .key-icon{display:grid;place-items:center;width:58px;height:58px;border-radius:50%;background:var(--panel);color:var(--accent);margin-bottom:24px}
 .key-icon svg{width:26px;height:26px}
 .hero-copy .eyebrow{display:block;margin-bottom:22px}
