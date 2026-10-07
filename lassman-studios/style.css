@@ -64,6 +64,21 @@ dialog{color:#252923;background:#fafaf5;border:0;border-radius:18px;width:min(51
 .reference .mobile-nav.open{top:265px;border-radius:12px}
 @media(max-width:1050px){.reference .hero{grid-template-columns:1fr .8fr}.reference .hero-copy{padding:38px 25px}.reference .hero>.photo{height:570px}.reference .header-bottom{padding:14px 22px}.reference .desktop-nav{gap:15px}.reference .header-actions{gap:12px}}
 @media(max-width:760px){.reference .wrap{width:calc(100% - 28px)}.reference .site-header{margin:14px 0 18px}.reference .brand{width:min(450px,85%);margin:8px auto}.reference .brand-logo{height:120px}.reference .header-bottom{padding:10px 16px}.reference .header-actions .text-button{display:none}.reference .hero{display:flex;flex-direction:column;gap:15px;padding:0}.reference .hero-copy{padding:42px 26px}.reference .hero>.photo{height:390px}.reference h1{font-size:47px}.reference .service-strip{margin-top:15px;padding:24px;grid-template-columns:1fr}.reference .service-strip>*+*{border-left:0;border-top:1px solid var(--line);padding:15px 0 0}.reference .section{padding:35px 24px;margin-top:15px}.reference .mobile-nav.open{top:180px;left:14px;right:14px}}
+
+/* Customer gallery entry on the editorial reference mock. */
+.reference .header-actions>.btn{width:248px}
+.reference .photos-cta{--accent:#159bd7;--on-accent:#fff}
+.photos-dialog{position:relative;color:#252923;background:#fff;border:1px solid #dedede;border-radius:16px;width:min(470px,calc(100% - 32px));padding:38px;box-shadow:0 24px 80px #0003}
+.photos-dialog::backdrop{background:#111a16a6;backdrop-filter:blur(5px)}
+.photos-dialog .close{position:absolute;right:14px;top:10px;background:none;border:0;font-size:28px;line-height:1;padding:8px}
+.photos-dialog .eyebrow{color:#159bd7;font-size:10px;margin-bottom:10px}
+.photos-dialog h2{font-size:34px;margin-bottom:12px}
+.photos-dialog>p:not(.eyebrow){color:#62685f;font-size:14px}
+.photos-dialog label{display:block;font-size:13px;margin:20px 0 8px}
+.photos-dialog input{width:100%;padding:13px;border:1px solid #c7cdc1;border-radius:6px;color:#242923;background:#fff}
+.photos-dialog input:focus{outline:2px solid #159bd7;outline-offset:2px}
+.photos-dialog form .btn{--accent:#159bd7;--on-accent:#fff;width:100%;margin-top:24px;border-radius:9px;min-height:55px;padding:14px 25px;font-size:15px;gap:26px}
+@media(max-width:1050px){.reference .header-actions>.btn{width:auto}}
 @media(max-width:760px){.reference .mobile-book{justify-content:center}.reference .mobile-book>span{display:none}.reference .mobile-book .btn{width:100%;white-space:nowrap;gap:12px}}
 /* white/black/blue refresh: unify headings to the hero sans, warm the emotional word, style the FAQ aside */
 .reference h2{font-family:DIN,Arial,sans-serif;font-weight:700;letter-spacing:-1px}
