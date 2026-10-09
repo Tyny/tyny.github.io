@@ -156,7 +156,7 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
 .page-btn.current span{color:#fff;font-size:13px;font-weight:600}
 
 /* overlay */
-.overlay{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:32px;background:rgba(10,10,15,.92);backdrop-filter:blur(12px);transition:opacity .5s;cursor:pointer}
+.overlay{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:32px;background:#0A0A0F;transition:opacity .5s;cursor:pointer}
 .overlay.hidden{opacity:0;pointer-events:none}
 .overlay-title{color:#F1F1F4;font-size:14px;font-weight:600;letter-spacing:1.5px;opacity:.6}
 .overlay-keys{display:flex;align-items:center;gap:40px}
@@ -433,6 +433,16 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
   const canvas=document.getElementById('terrain');
   let current=0;
   const total=6;
+  const overlay=document.getElementById('overlay');
+  let overlayVisible=true;
+  function dismissOverlay(){
+    if(overlayVisible){
+      overlayVisible=false;
+      overlay.classList.add('hidden');
+      setTimeout(()=>overlay.remove(),500);
+    }
+  }
+  overlay.addEventListener('click',dismissOverlay);
 
   function go(i){
     current=Math.max(0,Math.min(total-1,i));
@@ -443,22 +453,17 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
   }
 
   document.addEventListener('keydown',e=>{
-    if(e.key==='ArrowRight'||e.key==='Right'){e.preventDefault();go(current+1)}
-    if(e.key==='ArrowLeft'||e.key==='Left'){e.preventDefault();go(current-1)}
+    if(e.key==='ArrowRight'||e.key==='Right'||e.key==='ArrowLeft'||e.key==='Left'){
+      e.preventDefault();
+      if(overlayVisible){dismissOverlay();return}
+      if(e.key==='ArrowRight'||e.key==='Right')go(current+1);
+      else go(current-1);
+    }
   });
   dots.forEach(d=>d.addEventListener('click',()=>go(+d.dataset.i)));
   let startX=0;
   document.addEventListener('touchstart',e=>{startX=e.touches[0].clientX},{passive:true});
-  document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-startX;if(Math.abs(dx)>50){dx<0?go(current+1):go(current-1)}});
-  const overlay=document.getElementById('overlay');
-  function dismissOverlay(){
-    if(!overlay.classList.contains('hidden')){
-      overlay.classList.add('hidden');
-      setTimeout(()=>overlay.remove(),500);
-    }
-  }
-  overlay.addEventListener('click',dismissOverlay);
-  document.addEventListener('keydown',function once(){dismissOverlay();document.removeEventListener('keydown',once)},{once:true});
+  document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-startX;if(Math.abs(dx)>50){if(overlayVisible){dismissOverlay();return}dx<0?go(current+1):go(current-1)}});
 })();
 </script>
 </body>
