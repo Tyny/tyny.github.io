@@ -155,6 +155,25 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
 .page-btn.current{background:#6366F1;padding:6px 12px;border:none}
 .page-btn.current span{color:#fff;font-size:13px;font-weight:600}
 
+/* use cases screen */
+.proj-header{display:flex;align-items:center;gap:16px}
+.steps-card{background:#16161E;border:1px solid #2A2A3C;border-radius:12px;overflow:hidden}
+.steps-card-header{display:flex;align-items:center;gap:12px;padding:20px 24px;border-bottom:1px solid #2A2A3C;color:#818CF8;font-size:15px;font-weight:600}
+.steps-card-header svg{color:#818CF8;flex-shrink:0}
+.step-row{display:flex;align-items:center;gap:16px;padding:16px 24px}
+.step-row+.step-row{border-top:1px solid #1E1E2A}
+.step-num{width:32px;height:32px;border-radius:16px;background:#1E1E2A;display:flex;justify-content:center;align-items:center;font-size:13px;font-weight:700;color:#4A4A5C;flex-shrink:0}
+.step-num.active{background:rgba(99,102,241,.13);color:#818CF8}
+.step-info{flex:1;display:flex;flex-direction:column;gap:2px}
+.step-label{font-size:14px;color:#4A4A5C}
+.step-label.active{color:#F1F1F4;font-weight:600}
+.step-desc{font-size:12px;color:#4A4A5C}
+.step-ready .step-desc{color:#8B8B9E}
+.lock-ico{color:#4A4A5C;flex-shrink:0}
+.info-note{display:flex;align-items:center;gap:12px;padding:16px 20px;background:#16161E;border:1px solid #2A2A3C;border-radius:10px}
+.info-note svg{color:#4A4A5C;flex-shrink:0}
+.info-note span{color:#8B8B9E;font-size:13px}
+
 /* overlay */
 .overlay{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:32px;background:#0A0A0F;transition:opacity .5s;cursor:pointer}
 .overlay.hidden{opacity:0;pointer-events:none}
@@ -195,6 +214,7 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
   <div class="nav-dot" data-i="3"></div>
   <div class="nav-dot" data-i="4"></div>
   <div class="nav-dot" data-i="5"></div>
+  <div class="nav-dot" data-i="6"></div>
 </div>
 
 <div class="screens" id="screens">
@@ -391,6 +411,50 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
     </div>
   </div>
 
+  <!-- Screen 7: Use Cases Analysis -->
+  <div class="screen dash">
+    <div class="dash-layout">
+      <div class="terrain-accent"></div>
+      <nav class="sidebar">
+        <div class="s-logo"><img src="w-amarillo.png" alt="W" style="width:28px;height:28px;object-fit:contain"><span class="s-brand">Factoría</span></div>
+        <div class="nav-item active"><svg class="nav-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><circle cx="12" cy="13" r="2"/><path d="M12 15v2"/></svg>Proyectos</div>
+      </nav>
+      <main class="dash-main">
+        <div class="dash-topbar"><span class="page-title">Casos de Uso</span><div class="profile"><span class="profile-email">user@gmail.com</span><div class="avatar">U</div></div></div>
+        <div class="dash-content">
+          <div class="proj-header">
+            <div class="proj-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><circle cx="12" cy="13" r="2"/><path d="M12 15v2"/></svg></div>
+            <div class="proj-info"><div class="proj-name">factoria-core</div><div class="proj-meta"><span>lawal-coop</span><span class="sep">·</span><span>Análisis de Casos de Uso</span></div></div>
+          </div>
+          <div class="steps-card">
+            <div class="steps-card-header"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 18H3"/><path d="m15 18 2 2 4-4"/><path d="M16 12H3"/><path d="M16 6H3"/></svg><span>Pipeline de Análisis</span></div>
+            <div class="step-row step-ready">
+              <div class="step-num active">1</div>
+              <div class="step-info"><div class="step-label active">Detección de Actores</div><div class="step-desc">Identificar los actores que interactúan con el sistema</div></div>
+              <button class="action-btn primary"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>Iniciar</button>
+            </div>
+            <div class="step-row step-locked">
+              <div class="step-num">2</div>
+              <div class="step-info"><div class="step-label">Identificación de Casos de Uso</div><div class="step-desc">Extraer los casos de uso del código fuente</div></div>
+              <svg class="lock-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div class="step-row step-locked">
+              <div class="step-num">3</div>
+              <div class="step-info"><div class="step-label">Especificación de Flujos</div><div class="step-desc">Definir flujos principales y alternativos</div></div>
+              <svg class="lock-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <div class="step-row step-locked">
+              <div class="step-num">4</div>
+              <div class="step-info"><div class="step-label">Diagrama de Casos de Uso</div><div class="step-desc">Generar el diagrama UML resultante</div></div>
+              <svg class="lock-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+          </div>
+          <div class="info-note"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg><span>El análisis se ejecuta de forma secuencial. Cada paso debe completarse antes de continuar al siguiente.</span></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
 </div>
 
 <script>
@@ -432,7 +496,7 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
   const hint=document.querySelector('.nav-hint');
   const canvas=document.getElementById('terrain');
   let current=0;
-  const total=6;
+  const total=7;
   const overlay=document.getElementById('overlay');
   let overlayVisible=true;
   function dismissOverlay(){
