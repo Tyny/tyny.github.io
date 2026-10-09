@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Factoría — Mock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;font-family:'Inter',system-ui,sans-serif;background:radial-gradient(70% 55% at 50% 48%,#1C2731,#0F1319 75%)}
+
+canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+.screens{position:relative;z-index:1;display:flex;width:300vw;height:100vh;transition:transform .5s cubic-bezier(.4,0,.2,1)}
+.screen{width:100vw;height:100vh;display:flex;flex-direction:column;flex-shrink:0;position:relative}
+
+/* top bar */
+.top-bar{display:flex;justify-content:space-between;align-items:center;padding:24px 40px;position:relative;z-index:2}
+.top-logo{display:flex;align-items:center;gap:8px}
+.top-dot{width:8px;height:8px;border-radius:4px;background:#6366F1}
+.top-logo-text{color:#8B8B9E;font-size:14px;font-weight:600}
+.help-link{color:#8B8B9E;font-size:13px;cursor:pointer}
+.avatar{width:32px;height:32px;border-radius:16px;background:linear-gradient(135deg,#6366F1,#A78BFA)}
+
+/* center */
+.center{flex:1;display:flex;justify-content:center;align-items:center;position:relative;z-index:2}
+
+/* cards */
+.card{background:#16161E;border:1px solid #2A2A3C;border-radius:16px;display:flex;flex-direction:column;align-items:center}
+.login-card{width:420px;padding:48px 48px 40px;gap:32px}
+.cli-card{width:520px;padding:48px 48px 40px;gap:32px}
+.connected-card{width:480px;padding:56px 48px 48px;gap:36px}
+
+/* logo */
+.logo-row{display:flex;align-items:center;gap:12px}
+.logo-mark{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,#6366F1,#A78BFA)}
+.brand-name{color:#F1F1F4;font-size:22px;font-weight:700}
+
+/* headings */
+.header-block{display:flex;flex-direction:column;gap:8px;align-items:center;width:100%}
+.title{color:#F1F1F4;font-weight:700}
+.title-28{font-size:28px}
+.title-24{font-size:24px}
+.title-22{font-size:22px}
+.subtitle{color:#8B8B9E;font-size:15px;text-align:center;width:100%}
+
+/* google button */
+.action-block{display:flex;flex-direction:column;gap:16px;width:100%}
+.google-btn{display:flex;justify-content:center;align-items:center;gap:12px;width:100%;height:52px;background:#fff;border:1px solid #E2E2E8;border-radius:10px;cursor:pointer;font-family:inherit}
+.google-btn span{color:#1F1F1F;font-size:15px;font-weight:600}
+.google-icon{width:20px;height:20px}
+
+/* icon wrap */
+.icon-wrap{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,rgba(99,102,241,.19),rgba(167,139,250,.13));border:1px solid rgba(99,102,241,.25);display:flex;justify-content:center;align-items:center}
+.icon-wrap svg{color:#818CF8}
+
+/* steps */
+.steps{display:flex;flex-direction:column;gap:20px;width:100%}
+.step{display:flex;gap:16px;align-items:flex-start;width:100%}
+.step-num{width:28px;height:28px;border-radius:14px;background:rgba(99,102,241,.13);display:flex;justify-content:center;align-items:center;flex-shrink:0;color:#818CF8;font-size:13px;font-weight:700}
+.step-content{display:flex;flex-direction:column;gap:6px;flex:1;min-width:0}
+.step-title{color:#F1F1F4;font-size:14px;font-weight:500}
+.code-box{display:flex;align-items:center;justify-content:space-between;background:#0A0A14;border:1px solid #2A2A3C;border-radius:8px;padding:10px 14px}
+.code-text{color:#818CF8;font-size:13px;font-family:'JetBrains Mono',monospace;font-weight:500}
+.copy-icon{color:#4A4A5C;cursor:pointer;flex-shrink:0}
+
+/* prism */
+.prism-wrap{position:relative;width:120px;height:120px;display:flex;justify-content:center;align-items:center}
+.prism-glow{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle,rgba(99,102,241,.25) 0%,rgba(99,102,241,0) 80%)}
+.prism-ring{width:80px;height:80px;border-radius:40px;border:3px solid transparent;background-image:conic-gradient(#6366F1,#A78BFA,transparent,transparent,#6366F1);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;padding:3px;display:flex;justify-content:center;align-items:center;position:relative}
+.prism-ring-wrap{width:80px;height:80px;border-radius:40px;display:flex;justify-content:center;align-items:center;position:relative;overflow:hidden}
+.prism-ring-border{position:absolute;inset:0;border-radius:40px;padding:3px;background:conic-gradient(#6366F1,#A78BFA,transparent,transparent,#6366F1);-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+.prism-inner{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,rgba(99,102,241,.19),rgba(167,139,250,.13));border:1px solid rgba(99,102,241,.31);display:flex;justify-content:center;align-items:center;position:relative;z-index:1}
+.prism-inner svg{color:#818CF8}
+
+/* status badge */
+.status-badge{display:flex;align-items:center;gap:8px;padding:10px 20px;border-radius:100px;background:rgba(22,163,74,.09);border:1px solid rgba(22,163,74,.25)}
+.status-badge svg{color:#4ADE80}
+.status-text{color:#4ADE80;font-size:13px;font-weight:600}
+
+/* CTA */
+.cta-btn{display:flex;justify-content:center;align-items:center;gap:8px;width:100%;height:48px;background:linear-gradient(180deg,#6366F1,#4F46E5);border-radius:10px;border:none;cursor:pointer;font-family:inherit}
+.cta-btn span{color:#fff;font-size:15px;font-weight:600}
+.cta-btn svg{color:#fff}
+
+/* nav hint */
+.nav-hint{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:10;display:flex;align-items:center;gap:12px;padding:10px 20px;background:rgba(22,22,30,.85);border:1px solid #2A2A3C;border-radius:10px;backdrop-filter:blur(8px);color:#8B8B9E;font-size:13px;transition:opacity .4s}
+.nav-hint kbd{display:inline-flex;align-items:center;justify-content:center;min-width:28px;height:24px;padding:0 6px;background:#2A2A3C;border-radius:5px;color:#F1F1F4;font-size:12px;font-family:inherit;font-weight:600}
+.nav-dots{position:fixed;bottom:72px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:8px}
+.nav-dot{width:8px;height:8px;border-radius:4px;background:#2A2A3C;transition:background .3s,width .3s}
+.nav-dot.active{background:#6366F1;width:24px}
+</style>
+</head>
+<body>
+<canvas id="terrain"></canvas>
+
+<div class="nav-dots">
+  <div class="nav-dot active" data-i="0"></div>
+  <div class="nav-dot" data-i="1"></div>
+  <div class="nav-dot" data-i="2"></div>
+</div>
+<div class="nav-hint">
+  <kbd>&larr;</kbd> <kbd>&rarr;</kbd> para navegar
+</div>
+
+<div class="screens" id="screens">
+
+  <!-- Screen 1: Login -->
+  <div class="screen">
+    <div class="top-bar">
+      <div class="top-logo"><div class="top-dot"></div><span class="top-logo-text">factory.lawal.com</span></div>
+      <span class="help-link">¿Necesitás ayuda?</span>
+    </div>
+    <div class="center">
+      <div class="card login-card">
+        <div class="logo-row">
+          <div class="logo-mark"></div>
+          <span class="brand-name">Factoría</span>
+        </div>
+        <div class="header-block">
+          <div class="title title-28">Bienvenido</div>
+          <div class="subtitle">Iniciá sesión con tu cuenta de Google</div>
+        </div>
+        <div class="action-block">
+          <button class="google-btn">
+            <svg class="google-icon" viewBox="0 0 20 20" fill="none"><path d="M18.17 10.2c0-.63-.06-1.25-.16-1.84H10v3.48h4.58a3.92 3.92 0 0 1-1.7 2.57v2.13h2.74c1.6-1.48 2.53-3.65 2.53-6.34Z" fill="#3E82F6"/><path d="M10 18.5c2.3 0 4.23-.76 5.64-2.07l-2.74-2.13c-.77.51-1.74.82-2.9.82-2.23 0-4.12-1.5-4.8-3.53H2.38v2.2A8.5 8.5 0 0 0 10 18.5Z" fill="#34A953"/><path d="M5.2 11.59a5.1 5.1 0 0 1 0-3.23v-2.2H2.38a8.5 8.5 0 0 0 0 7.63l2.82-2.2Z" fill="#FBBC04"/><path d="M10 4.76c1.26 0 2.38.43 3.27 1.28l2.44-2.44A7.57 7.57 0 0 0 10 1.5 8.5 8.5 0 0 0 2.38 6.17l2.82 2.2c.68-2.04 2.57-3.6 4.8-3.6Z" fill="#EC4032"/></svg>
+            <span>Continuar con Google</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen 2: Connect CLI -->
+  <div class="screen">
+    <div class="top-bar">
+      <div class="top-logo"><div class="top-dot"></div><span class="top-logo-text">factory.lawal.com</span></div>
+      <div class="avatar"></div>
+    </div>
+    <div class="center">
+      <div class="card cli-card">
+        <div class="icon-wrap">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+        </div>
+        <div class="header-block">
+          <div class="title title-24">Conectá tu CLI</div>
+          <div class="subtitle">Para empezar, conectá la Factoría CLI con tu cuenta.</div>
+        </div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">Ejecutá el comando en tu terminal</div>
+              <div class="code-box">
+                <span class="code-text">factoria-cli login</span>
+                <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">Se abrirá una URL en tu navegador</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">Autorizá con tu cuenta de Google</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Screen 3: Connected -->
+  <div class="screen">
+    <div class="top-bar">
+      <div class="top-logo"><div class="top-dot"></div><span class="top-logo-text">factory.lawal.com</span></div>
+      <div class="avatar"></div>
+    </div>
+    <div class="center">
+      <div class="card connected-card">
+        <div class="prism-wrap">
+          <div class="prism-glow"></div>
+          <div class="prism-ring-wrap">
+            <div class="prism-ring-border"></div>
+            <div class="prism-inner">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="header-block">
+          <div class="title title-22">Tu CLI está conectada</div>
+          <div class="subtitle">Factoría CLI se conectó correctamente a tu cuenta.</div>
+        </div>
+        <div class="status-badge">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span class="status-text">Conectado</span>
+        </div>
+        <button class="cta-btn">
+          <span>Ir al dashboard</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// Terrain animation (adapted from lawalcoop.github.io)
+(()=>{
+  const canvas=document.getElementById('terrain');
+  const ctx=canvas.getContext('2d');
+  const reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+
+  // Perlin noise
+  const perm=(()=>{
+    let seed=2166136261;
+    for(const ch of 'factoria') seed=Math.imul(seed^ch.codePointAt(0),16777619);
+    const rand=()=>{seed=(seed+0x6d2b79f5)|0;let t=Math.imul(seed^(seed>>>15),1|seed);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296};
+    const p=[...Array(256).keys()];
+    for(let i=255;i>0;i--){const j=Math.floor(rand()*(i+1));[p[i],p[j]]=[p[j],p[i]]}
+    const P=new Uint8Array(512);
+    for(let i=0;i<512;i++)P[i]=p[i&255];
+    return{rand,P};
+  })();
+  const{rand,P}=perm;
+  const offset={x:rand()*100,y:rand()*100};
+
+  const fade=t=>t*t*t*(t*(t*6-15)+10);
+  const lerp=(a,b,t)=>a+t*(b-a);
+  const grad=(h,x,y,z)=>{h&=15;const u=h<8?x:y;const v=h<4?y:h===12||h===14?x:z;return(h&1?-u:u)+(h&2?-v:v)};
+  function noise(x,y,z){
+    const X=Math.floor(x)&255,Y=Math.floor(y)&255,Z=Math.floor(z)&255;
+    x-=Math.floor(x);y-=Math.floor(y);z-=Math.floor(z);
+    const u=fade(x),v=fade(y),w=fade(z);
+    const A=P[X]+Y,AA=P[A]+Z,AB=P[A+1]+Z;
+    const B=P[X+1]+Y,BA=P[B]+Z,BB=P[B+1]+Z;
+    return lerp(lerp(lerp(grad(P[AA],x,y,z),grad(P[BA],x-1,y,z),u),lerp(grad(P[AB],x,y-1,z),grad(P[BB],x-1,y-1,z),u),v),lerp(lerp(grad(P[AA+1],x,y,z-1),grad(P[BA+1],x-1,y,z-1),u),lerp(grad(P[AB+1],x,y-1,z-1),grad(P[BB+1],x-1,y-1,z-1),u),v),w);
+  }
+
+  function contour(ctx,field,cols,rows,cell,level){
+    const seg=(p,q)=>{ctx.moveTo(p[0],p[1]);ctx.lineTo(q[0],q[1])};
+    for(let j=0;j<rows-1;j++){
+      for(let i=0;i<cols-1;i++){
+        const a=field[j*cols+i],b=field[j*cols+i+1];
+        const c=field[(j+1)*cols+i+1],d=field[(j+1)*cols+i];
+        const idx=(a>level?8:0)|(b>level?4:0)|(c>level?2:0)|(d>level?1:0);
+        if(idx===0||idx===15)continue;
+        const x=i*cell,y=j*cell;
+        const T=()=>[x+(cell*(level-a))/(b-a),y];
+        const R=()=>[x+cell,y+(cell*(level-b))/(c-b)];
+        const Bo=()=>[x+(cell*(level-d))/(c-d),y+cell];
+        const L=()=>[x,y+(cell*(level-a))/(d-a)];
+        switch(idx){
+          case 1:case 14:seg(L(),Bo());break;
+          case 2:case 13:seg(Bo(),R());break;
+          case 3:case 12:seg(L(),R());break;
+          case 4:case 11:seg(T(),R());break;
+          case 5:seg(L(),T());seg(Bo(),R());break;
+          case 6:case 9:seg(T(),Bo());break;
+          case 7:case 8:seg(L(),T());break;
+          case 10:seg(L(),Bo());seg(T(),R());break;
+        }
+      }
+    }
+  }
+
+  const CELL=8;
+  let W=0,H=0,cols=0,rows=0,dpr=1,field=new Float32Array(0);
+  let cx=0,cy=0,S=1,reach=1;
+
+  function resize(){
+    dpr=Math.min(devicePixelRatio||1,2);
+    W=innerWidth;H=innerHeight;
+    canvas.width=Math.round(W*dpr);
+    canvas.height=Math.round(H*dpr);
+    canvas.style.width=W+'px';
+    canvas.style.height=H+'px';
+    cols=Math.ceil(W/CELL)+1;
+    rows=Math.ceil(H/CELL)+1;
+    field=new Float32Array(cols*rows);
+    cx=W/2;cy=H*0.45;
+    S=Math.min(W,H)*1.1;
+    reach=Math.hypot(Math.max(cx,W-cx),Math.max(cy,H-cy));
+  }
+
+  function sample(t){
+    const s=1/170;
+    for(let j=0;j<rows;j++){
+      for(let i=0;i<cols;i++){
+        const x=i*CELL,y=j*CELL;
+        const d=Math.hypot(x-cx,y-cy);
+        const nx=x*s+offset.x,ny=y*s+offset.y;
+        const warp=noise(nx,ny,t)*0.11+noise(nx*2.3,ny*2.3,t*1.4)*0.04;
+        field[j*cols+i]=-d/S+warp*Math.min(1,d/160);
+      }
+    }
+  }
+
+  const STEP=0.04,SPEED=0.05,PULSE=9;
+
+  function draw(sec){
+    sample(sec*0.05);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,W,H);
+    ctx.lineCap='round';
+    const travel=reduce?0:sec*SPEED;
+    const shift=Math.floor(travel/STEP);
+    const phase=travel-shift*STEP;
+    const lowest=-(reach/S)-0.4;
+    const count=Math.ceil(-lowest/STEP)+2;
+    for(let k=0;k<count;k++){
+      const lv=-k*STEP-phase+STEP;
+      const r=-lv*S;
+      const t=Math.max(0,r/reach);
+      const fadeOut=Math.max(0,1-t*0.85);
+      const id=(((k-shift)%PULSE)+PULSE)%PULSE;
+      ctx.beginPath();
+      contour(ctx,field,cols,rows,CELL,lv);
+      if(id===0){
+        ctx.strokeStyle=`rgba(255,190,105,${(0.95*fadeOut).toFixed(3)})`;
+        ctx.lineWidth=2;
+      }else if(id===PULSE-1){
+        ctx.strokeStyle=`rgba(196,120,160,${(0.55*fadeOut).toFixed(3)})`;
+        ctx.lineWidth=1.2;
+      }else{
+        ctx.strokeStyle=`rgba(118,178,166,${((id%3?0.3:0.55)*fadeOut).toFixed(3)})`;
+        ctx.lineWidth=1;
+      }
+      ctx.stroke();
+    }
+  }
+
+  resize();
+  addEventListener('resize',resize);
+
+  if(reduce){draw(0)}else{
+    const start=performance.now();
+    let running=true,last=0;
+    const frame=now=>{
+      if(!running)return;
+      requestAnimationFrame(frame);
+      if(now-last<33)return;
+      last=now;
+      draw((now-start)/1000);
+    };
+    requestAnimationFrame(frame);
+    document.addEventListener('visibilitychange',()=>{running=!document.hidden;if(running)requestAnimationFrame(frame)});
+  }
+})();
+
+// Navigation
+(()=>{
+  const screens=document.getElementById('screens');
+  const dots=document.querySelectorAll('.nav-dot');
+  const hint=document.querySelector('.nav-hint');
+  let current=0;
+  const total=3;
+
+  function go(i){
+    current=Math.max(0,Math.min(total-1,i));
+    screens.style.transform=`translateX(-${current*100}vw)`;
+    dots.forEach((d,idx)=>d.classList.toggle('active',idx===current));
+  }
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='Right'){e.preventDefault();go(current+1)}
+    if(e.key==='ArrowLeft'||e.key==='Left'){e.preventDefault();go(current-1)}
+  });
+
+  dots.forEach(d=>d.addEventListener('click',()=>go(+d.dataset.i)));
+
+  let startX=0;
+  document.addEventListener('touchstart',e=>{startX=e.touches[0].clientX},{passive:true});
+  document.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-startX;
+    if(Math.abs(dx)>50){dx<0?go(current+1):go(current-1)}
+  });
+
+  setTimeout(()=>{hint.style.opacity='0';setTimeout(()=>hint.remove(),500)},4000);
+})();
+</script>
+</body>
+</html>
