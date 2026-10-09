@@ -21,7 +21,9 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
 .top-dot{width:8px;height:8px;border-radius:4px;background:#6366F1}
 .top-logo-text{color:#8B8B9E;font-size:14px;font-weight:600}
 .help-link{color:#8B8B9E;font-size:13px;cursor:pointer}
-.avatar{width:32px;height:32px;border-radius:16px;background:linear-gradient(135deg,#6366F1,#A78BFA)}
+.avatar{width:32px;height:32px;border-radius:16px;background:#4285F4;display:flex;justify-content:center;align-items:center;color:#fff;font-size:14px;font-weight:600;line-height:1}
+.profile{display:flex;align-items:center;gap:10px}
+.profile-email{color:#8B8B9E;font-size:13px}
 .center{flex:1;display:flex;justify-content:center;align-items:center;position:relative;z-index:2}
 .card{background:#16161E;border:1px solid #2A2A3C;border-radius:16px;display:flex;flex-direction:column;align-items:center}
 .login-card{width:420px;padding:48px 48px 40px;gap:32px}
@@ -69,7 +71,6 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
 .s-logo{display:flex;align-items:center;gap:10px;padding:0 4px 20px}
 .s-logo-mark{width:28px;height:28px;border-radius:6px;background:linear-gradient(135deg,#6366F1,#A78BFA)}
 .s-brand{color:#F1F1F4;font-size:18px;font-weight:700}
-.nav-label{color:#4A4A5C;font-size:11px;font-weight:600;letter-spacing:1.2px;padding:16px 4px 4px}
 .nav-item{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:8px;color:#8B8B9E;font-size:14px;cursor:pointer;transition:background .2s}
 .nav-item:hover{background:rgba(99,102,241,.08)}
 .nav-item.active{background:rgba(99,102,241,.1);color:#F1F1F4;font-weight:600}
@@ -224,7 +225,7 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
   <div class="screen auth">
     <div class="top-bar">
       <div class="top-logo"><div class="top-dot"></div><span class="top-logo-text">factory.lawal.com</span></div>
-      <div class="avatar"></div>
+      <div class="profile"><span class="profile-email">user@gmail.com</span><div class="avatar">U</div></div>
     </div>
     <div class="center">
       <div class="card cli-card">
@@ -248,7 +249,7 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
   <div class="screen auth">
     <div class="top-bar">
       <div class="top-logo"><div class="top-dot"></div><span class="top-logo-text">factory.lawal.com</span></div>
-      <div class="avatar"></div>
+      <div class="profile"><span class="profile-email">user@gmail.com</span><div class="avatar">U</div></div>
     </div>
     <div class="center">
       <div class="card connected-card">
@@ -269,14 +270,10 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
       <div class="terrain-accent"></div>
       <nav class="sidebar">
         <div class="s-logo"><div class="s-logo-mark"></div><span class="s-brand">Factoría</span></div>
-        <div class="nav-label">PLATAFORMA</div>
-        <div class="nav-item"><svg class="nav-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</div>
         <div class="nav-item active"><svg class="nav-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><circle cx="12" cy="13" r="2"/><path d="M12 15v2"/></svg>Proyectos</div>
-        <div class="nav-item"><svg class="nav-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>Análisis</div>
-        <div class="nav-item"><svg class="nav-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Configuración</div>
       </nav>
       <main class="dash-main">
-        <div class="dash-topbar"><span class="page-title">Proyectos</span><div class="avatar"></div></div>
+        <div class="dash-topbar"><span class="page-title">Proyectos</span><div class="profile"><span class="profile-email">user@gmail.com</span><div class="avatar">U</div></div></div>
         <div class="dash-content">
           <div class="import-bar">
             <div class="import-left">
@@ -302,14 +299,10 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
       <div class="terrain-accent"></div>
       <nav class="sidebar">
         <div class="s-logo"><div class="s-logo-mark"></div><span class="s-brand">Factoría</span></div>
-        <div class="nav-label">PLATAFORMA</div>
-        <div class="nav-item"><svg class="nav-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</div>
         <div class="nav-item active"><svg class="nav-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><circle cx="12" cy="13" r="2"/><path d="M12 15v2"/></svg>Proyectos</div>
-        <div class="nav-item"><svg class="nav-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>Análisis</div>
-        <div class="nav-item"><svg class="nav-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Configuración</div>
       </nav>
       <main class="dash-main">
-        <div class="dash-topbar"><span class="page-title">Proyectos</span><div class="avatar"></div></div>
+        <div class="dash-topbar"><span class="page-title">Proyectos</span><div class="profile"><span class="profile-email">user@gmail.com</span><div class="avatar">U</div></div></div>
         <div class="dash-content">
           <div class="import-bar">
             <div class="import-left">
@@ -350,14 +343,10 @@ canvas#terrain{position:fixed;inset:0;z-index:0;pointer-events:none}
       <div class="terrain-accent"></div>
       <nav class="sidebar">
         <div class="s-logo"><div class="s-logo-mark"></div><span class="s-brand">Factoría</span></div>
-        <div class="nav-label">PLATAFORMA</div>
-        <div class="nav-item"><svg class="nav-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</div>
         <div class="nav-item active"><svg class="nav-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/><circle cx="12" cy="13" r="2"/><path d="M12 15v2"/></svg>Proyectos</div>
-        <div class="nav-item"><svg class="nav-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg>Análisis</div>
-        <div class="nav-item"><svg class="nav-ico" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>Configuración</div>
       </nav>
       <main class="dash-main">
-        <div class="dash-topbar"><span class="page-title">Proyectos</span><div class="avatar"></div></div>
+        <div class="dash-topbar"><span class="page-title">Proyectos</span><div class="profile"><span class="profile-email">user@gmail.com</span><div class="avatar">U</div></div></div>
         <div class="dash-content">
           <div class="import-bar">
             <div class="import-left">
