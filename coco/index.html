@@ -236,71 +236,38 @@ La Correntosa 🌊💫</textarea>
     return s;
   }
 
-  // --- Guess which columns hold email / name / product range / total ---
-  // Classifies each column from the DATA rows (header excluded) and picks the
-  // most likely role. Everything returned is a suggestion the user can edit.
+  // --- Find each column by matching its HEADER with a regex ---
+  // Based on the header names the CSV uses today. email / nombre / total are
+  // matched directly; the product range is derived: from just after the
+  // email+nombre block up to just before the total column. All are suggestions
+  // the user can still edit.
+  const HEADER_RE = {
+    email: /correo\s*electr[oó]nico|correo|e-?mail/i,
+    name:  /nombre\s*y\s*apellido|nombre|apellido/i,
+    total: /subtotal|total/i,
+  };
   function suggestColumns(rows) {
-    const header = rows[0] || [];
-    const data = rows.slice(1, 201);               // sample up to 200 customer rows
+    const header = (rows[0] || []).map(h => (h || "").trim());
     const N = header.length;
-    const emailRe = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-    const numRe = /^\d{1,3}(\.\d{3})+$|^\d+$/;     // "1500" or "1.500"
-    const cols = [];
-    for (let c = 0; c < N; c++) {
-      let ne = 0, em = 0, num = 0, max = 0, txtCnt = 0, txtLen = 0;
-      for (const row of data) {
-        const v = (row[c] || "").trim();
-        if (!v) continue;
-        ne++;
-        if (emailRe.test(v)) { em++; continue; }
-        if (numRe.test(v)) { num++; const x = parseInt(v.replace(/\./g, ""), 10) || 0; if (x > max) max = x; }
-        else { txtCnt++; txtLen += v.length; }
-      }
-      cols.push({
-        c, h: (header[c] || "").trim().toLowerCase(), ne, max,
-        emailFrac: ne ? em / ne : 0, numFrac: ne ? num / ne : 0,
-        avgTxt: txtCnt ? txtLen / txtCnt : 0,
-      });
-    }
+    const find = re => header.findIndex(h => re.test(h));
+
+    const emailIdx = find(HEADER_RE.email);
+    const nameIdx  = find(HEADER_RE.name);
+    let totalIdx   = header.findIndex(h => /subtotal/i.test(h));   // prefer "Subtotal"
+    if (totalIdx < 0) totalIdx = find(HEADER_RE.total);
 
     const sug = {};
-    // Email: strongest email-content column (header keyword as a boost/fallback).
-    let best = null, bestScore = 0.4;
-    for (const s of cols) {
-      const score = s.emailFrac + (/mail|correo/.test(s.h) ? 0.5 : 0);
-      if (s.emailFrac >= 0.4 && score > bestScore) { bestScore = score; best = s; }
-    }
-    if (!best) best = cols.find(s => /mail|correo/.test(s.h));
-    if (best) sug.email = best.c + 1;
+    if (emailIdx >= 0) sug.email = emailIdx + 1;
+    if (nameIdx  >= 0) sug.name  = nameIdx + 1;
+    if (totalIdx >= 0) sug.total = totalIdx + 1;
 
-    // Name: header keyword first, else the first texty column that isn't the email.
-    let nameC = cols.find(s => /nombre|name|cliente|apellido|raz[oó]n/.test(s.h));
-    if (!nameC) nameC = cols.find(s =>
-      s.ne > 0 && s.emailFrac < 0.2 && s.numFrac < 0.5 && s.avgTxt >= 2 && (!best || s.c !== best.c));
-    if (nameC) sug.name = nameC.c + 1;
+    // First product = column right after the email/nombre metadata block.
+    const metaEnd = Math.max(emailIdx, nameIdx);
+    if (metaEnd >= 0 && metaEnd + 1 < N) sug.first = metaEnd + 2;
+    // Last product = column right before the total (or the last column).
+    const lastIdx = (totalIdx >= 0 ? totalIdx : N) - 1;
+    if (lastIdx >= 0) sug.last = lastIdx + 1;
 
-    // Total: header keyword first, else the numeric column with the largest values.
-    let totalC = cols.find(s => /total|importe|monto|precio/.test(s.h));
-    if (!totalC) { let m = -1; for (const s of cols) if (s.numFrac >= 0.5 && s.max > m) { m = s.max; totalC = s; } }
-
-    // Products: the longest contiguous run of numeric columns (quantities).
-    let run = null, start = -1;
-    for (let c = 0; c <= N; c++) {
-      const isNum = c < N && cols[c].numFrac >= 0.5 && cols[c].emailFrac < 0.2;
-      if (isNum) { if (start < 0) start = c; }
-      else if (start >= 0) {
-        const len = c - start;
-        if (!run || len > run.len) run = { a: start, b: c - 1, len };
-        start = -1;
-      }
-    }
-    if (run) {
-      let a = run.a, b = run.b;
-      if (totalC && totalC.c === b && b > a) b--;        // trim a total sitting at the run's edge
-      else if (totalC && totalC.c === a && b > a) a++;
-      sug.first = a + 1; sug.last = b + 1;
-    }
-    if (totalC) sug.total = totalC.c + 1;
     return sug;
   }
 
