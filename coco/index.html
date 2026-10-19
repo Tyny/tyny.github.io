@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coco — Generador de emails de pedidos</title>
+<meta name="description" content="Coco: a partir de un CSV de pedidos y una plantilla, genera un email por cliente con su pedido y total.">
+<style>
+  :root {
+    --bg: #f4f1ea; --card: #fffdf8; --ink: #1c1a17; --muted: #6b655c;
+    --line: #e5ded1; --accent: #7a5230; --accent-ink: #fff;
+    --field: #fffdf8; --pre: #faf6ee; --ok: #2f8f6b; --warn: #c2306e;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 30px rgba(0,0,0,.06);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14120f; --card: #1e1b17; --ink: #f2ede4; --muted: #a39b8d;
+      --line: #302b23; --accent: #c89b6a; --accent-ink: #1c1a17;
+      --field: #17140f; --pre: #16130e; --ok: #5fbf98; --warn: #ea86b0;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 40px rgba(0,0,0,.4);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--bg); color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased; line-height: 1.55;
+    min-height: 100vh; padding: 40px 20px;
+  }
+  .wrap { width: 100%; max-width: 920px; margin: 0 auto; }
+  .back { color: var(--muted); text-decoration: none; font-size: .9rem; font-weight: 600; }
+  .back:hover { color: var(--ink); }
+  header { margin: 10px 0 24px; }
+  .brand { font-size: 2.4rem; font-weight: 800; letter-spacing: -.03em; margin: 0; }
+  .brand .dot { color: var(--accent); }
+  .lead { color: var(--muted); margin: 6px 0 0; max-width: 60ch; }
+  .card {
+    background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+    padding: 22px; box-shadow: var(--shadow); margin-bottom: 18px;
+  }
+  .card h2 { font-size: 1.05rem; margin: 0 0 14px; letter-spacing: -.01em; }
+  .card h2 .n {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 1.5rem; height: 1.5rem; margin-right: 8px; border-radius: 50%;
+    background: var(--accent); color: var(--accent-ink); font-size: .85rem; font-weight: 800;
+  }
+  label { display: block; font-weight: 600; font-size: .85rem; margin-bottom: 6px; }
+  .hint { color: var(--muted); font-weight: 400; }
+  input[type="text"], input[type="file"], textarea {
+    width: 100%; font: inherit; color: var(--ink); background: var(--field);
+    border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px;
+  }
+  input[type="file"] { padding: 9px 12px; }
+  textarea { min-height: 180px; resize: vertical; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .9rem; line-height: 1.5; }
+  input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+  .cols { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .cols .field label { white-space: nowrap; }
+  .cols input { text-transform: uppercase; }
+  @media (max-width: 640px) { .cols { grid-template-columns: repeat(2, 1fr); } }
+  .field + .field { margin-top: 14px; }
+  .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    font: inherit; font-weight: 700; cursor: pointer; border-radius: 12px;
+    padding: 12px 20px; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-ink);
+    transition: transform .12s ease, opacity .12s ease;
+  }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; }
+  .btn.ghost { background: transparent; color: var(--accent); }
+  .status { font-size: .9rem; margin: 2px 0 0; }
+  .status.ok { color: var(--ok); } .status.warn { color: var(--warn); }
+  pre {
+    background: var(--pre); border: 1px solid var(--line); border-radius: 12px;
+    padding: 16px; overflow: auto; max-height: 520px; white-space: pre-wrap;
+    word-break: break-word; font-size: .88rem; line-height: 1.5; margin: 0;
+  }
+  .muted-note { color: var(--muted); font-size: .82rem; margin-top: 10px; }
+  footer { margin-top: 26px; color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="../">← Tyny</a>
+    <header>
+      <h1 class="brand">Coco<span class="dot">.</span></h1>
+      <p class="lead">A partir de un CSV de pedidos y una plantilla, genera un email por cliente con el detalle de su pedido y el total. Todo corre en tu navegador: nada se sube a ningún servidor.</p>
+    </header>
+
+    <!-- 1. CSV -->
+    <section class="card">
+      <h2><span class="n">1</span>Archivo CSV de pedidos</h2>
+      <div class="field">
+        <label for="csv">La primera fila son los nombres de los productos; cada fila siguiente es un cliente.</label>
+        <input type="file" id="csv" accept=".csv,text/csv">
+      </div>
+      <p class="status" id="csv-status"></p>
+    </section>
+
+    <!-- 2. Columns -->
+    <section class="card">
+      <h2><span class="n">2</span>Columnas <span class="hint">(letras de planilla, ej. B, D, I, DW)</span></h2>
+      <div class="cols">
+        <div class="field"><label for="col-email">Email</label><input type="text" id="col-email" value="B"></div>
+        <div class="field"><label for="col-name">Nombre</label><input type="text" id="col-name" value="D"></div>
+        <div class="field"><label for="col-first">Primer producto</label><input type="text" id="col-first" value="I"></div>
+        <div class="field"><label for="col-last">Último producto</label><input type="text" id="col-last" value="DW"></div>
+        <div class="field"><label for="col-total">Total</label><input type="text" id="col-total" value="DW"></div>
+      </div>
+    </section>
+
+    <!-- 3. Template -->
+    <section class="card">
+      <h2><span class="n">3</span>Plantilla del email</h2>
+      <div class="field">
+        <label for="tpl">Usá <code>$usuario</code>, <code>$pedidos</code> y <code>$total</code> como marcadores. <span class="hint">Podés cargar un archivo o editar acá abajo.</span></label>
+        <input type="file" id="tpl-file" accept=".txt,text/plain" style="margin-bottom:12px">
+        <textarea id="tpl" spellcheck="false">Hola $usuario,
+
+Gracias por tu pedido. Esto es lo que preparamos para vos:
+
+$pedidos
+
+Total: $total
+
+¡Nos vemos!</textarea>
+      </div>
+    </section>
+
+    <!-- 4. Generate -->
+    <section class="card">
+      <h2><span class="n">4</span>Generar</h2>
+      <div class="field">
+        <label for="outname">Nombre del archivo de salida</label>
+        <input type="text" id="outname" value="coco.salida.txt" style="max-width:320px">
+      </div>
+      <div class="field">
+        <div class="row">
+          <button class="btn" id="gen">Generar emails</button>
+          <button class="btn ghost" id="copy" disabled>Copiar</button>
+          <button class="btn ghost" id="download" disabled>Descargar</button>
+        </div>
+        <p class="status" id="gen-status"></p>
+      </div>
+      <pre id="out" aria-live="polite"></pre>
+    </section>
+
+    <footer>
+      Port de <code>coco.py</code> · <a href="https://github.com/Tyny" style="color:var(--muted)">github.com/Tyny</a>
+    </footer>
+  </div>
+
+<script>
+(() => {
+  "use strict";
+
+  // --- Spreadsheet column letters <-> 1-based number (A=1, B=2, ... AA=27) ---
+  function colToNum(col) {
+    let num = 0;
+    for (const ch of col.trim().toUpperCase()) {
+      if (ch >= "A" && ch <= "Z") num = num * 26 + (ch.charCodeAt(0) - 64);
+    }
+    return num;
+  }
+
+  // --- Minimal RFC-4180-ish CSV parser (comma delimiter, quoted fields) ---
+  function parseCSV(text) {
+    const rows = [];
+    let row = [], field = "", inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; }
+          else inQuotes = false;
+        } else field += c;
+      } else if (c === '"') {
+        inQuotes = true;
+      } else if (c === ",") {
+        row.push(field); field = "";
+      } else if (c === "\n") {
+        row.push(field); rows.push(row); row = []; field = "";
+      } else if (c === "\r") {
+        // ignore; \n handles the newline
+      } else field += c;
+    }
+    // trailing field/row (no final newline)
+    if (field.length > 0 || row.length > 0) { row.push(field); rows.push(row); }
+    return rows;
+  }
+
+  function parseInt10(v) {
+    const n = parseInt(String(v).trim(), 10);
+    return Number.isNaN(n) ? -1 : n;   // coco.py: parse_int returns -1 on failure
+  }
+
+  // Python str.title(): lowercase everything, uppercase first letter of each word.
+  function titleCase(s) {
+    return s.toLowerCase().replace(/(^|[^0-9a-zà-ÿ])([a-zà-ÿ])/giu,
+      (_, pre, ch) => pre + ch.toUpperCase());
+  }
+
+  // es-AR integer grouping: 12345 -> "12.345"
+  const arFmt = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 });
+  function formatTotal(raw) {
+    const n = parseInt(String(raw).trim(), 10);
+    return "$" + (Number.isNaN(n) ? String(raw).trim() : arFmt.format(n));
+  }
+
+  // string.Template.substitute for $usuario / ${usuario} / $$ -> $
+  function substitute(tpl, map) {
+    return tpl.replace(/\$(\$|\{[A-Za-z_][A-Za-z0-9_]*\}|[A-Za-z_][A-Za-z0-9_]*)/g, (m, g) => {
+      if (g === "$") return "$";
+      const key = g[0] === "{" ? g.slice(1, -1) : g;
+      return Object.prototype.hasOwnProperty.call(map, key) ? map[key] : m;
+    });
+  }
+
+  const SEP = "-".repeat(51);
+
+  // --- State & DOM ---
+  const $ = id => document.getElementById(id);
+  let csvRows = null, result = "";
+
+  function setStatus(el, msg, cls) {
+    el.textContent = msg;
+    el.className = "status" + (cls ? " " + cls : "");
+  }
+
+  $("csv").addEventListener("change", e => {
+    const file = e.target.files[0];
+    if (!file) { csvRows = null; return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      csvRows = parseCSV(reader.result).filter(r => r.some(c => c.trim() !== ""));
+      setStatus($("csv-status"), `${file.name} — ${Math.max(csvRows.length - 1, 0)} filas de clientes (+ encabezado).`, "ok");
+    };
+    reader.onerror = () => { csvRows = null; setStatus($("csv-status"), "No se pudo leer el archivo.", "warn"); };
+    reader.readAsText(file, "utf-8");
+  });
+
+  $("tpl-file").addEventListener("change", e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => { $("tpl").value = reader.result; };
+    reader.readAsText(file, "utf-8");
+  });
+
+  function generate() {
+    if (!csvRows || csvRows.length < 2) {
+      setStatus($("gen-status"), "Primero elegí un CSV con al menos un encabezado y una fila de cliente.", "warn");
+      return;
+    }
+    const emailCol = colToNum($("col-email").value);
+    const nameCol  = colToNum($("col-name").value);
+    const firstCol = colToNum($("col-first").value);
+    const lastCol  = colToNum($("col-last").value);
+    const totalCol = colToNum($("col-total").value);
+
+    if (!emailCol || !nameCol || !firstCol || !lastCol) {
+      setStatus($("gen-status"), "Revisá las columnas: alguna letra no es válida.", "warn");
+      return;
+    }
+
+    const tpl = $("tpl").value;
+    const header = csvRows[0];
+    const products = header.slice(firstCol - 1, lastCol);   // inclusive of last col
+
+    const blocks = [];
+    let skipped = 0;
+    for (let r = 1; r < csvRows.length; r++) {
+      const rowArr = csvRows[r];
+      const email = (rowArr[emailCol - 1] || "").trim();
+      if (!email) { skipped++; continue; }            // coco.py skips rows with no email
+
+      const qtys = rowArr.slice(firstCol - 1, lastCol);
+      const lines = [];
+      for (let i = 0; i < products.length; i++) {
+        const qty = parseInt10(qtys[i]);
+        if (qty > 0) lines.push(`${qty} u. ${String(products[i]).toUpperCase()}`);
+      }
+
+      const body = substitute(tpl, {
+        usuario: titleCase((rowArr[nameCol - 1] || "").trim()),
+        pedidos: lines.join("\n"),
+        total: formatTotal(rowArr[totalCol - 1] || "0"),
+      });
+
+      blocks.push(`Enviar a: ${email}\n\n${body}`);
+    }
+
+    result = blocks.map(b => b + SEP + "\n\n").join("");
+    $("out").textContent = result || "(ningún cliente con email)";
+    $("copy").disabled = $("download").disabled = !result;
+    const skipMsg = skipped ? ` (${skipped} fila(s) sin email omitidas)` : "";
+    setStatus($("gen-status"), `${blocks.length} email(s) generado(s)${skipMsg}. ¡Encontrá el resultado abajo! :)`, "ok");
+  }
+
+  $("gen").addEventListener("click", generate);
+
+  $("copy").addEventListener("click", async () => {
+    try { await navigator.clipboard.writeText(result); setStatus($("gen-status"), "Copiado al portapapeles.", "ok"); }
+    catch { setStatus($("gen-status"), "No se pudo copiar automáticamente.", "warn"); }
+  });
+
+  $("download").addEventListener("click", () => {
+    const name = ($("outname").value.trim() || "coco.salida.txt");
+    const blob = new Blob([result], { type: "text/plain;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  });
+})();
+</script>
+</body>
+</html>
