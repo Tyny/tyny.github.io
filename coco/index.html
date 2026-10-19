@@ -54,9 +54,10 @@
   input[type="file"] { padding: 9px 12px; }
   textarea { min-height: 180px; resize: vertical; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: .9rem; line-height: 1.5; }
   input:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
-  .cols { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .cols { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; align-items: end; }
   .cols .field label { white-space: nowrap; }
   .cols input { text-transform: uppercase; }
+  .cols .field + .field { margin-top: 0; }
   @media (max-width: 640px) { .cols { grid-template-columns: repeat(2, 1fr); } }
   .field + .field { margin-top: 14px; }
   .row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
@@ -114,17 +115,33 @@
     <section class="card">
       <h2><span class="n">3</span>Plantilla del email</h2>
       <div class="field">
-        <label for="tpl">Usá <code>$usuario</code>, <code>$pedidos</code> y <code>$total</code> como marcadores. <span class="hint">Podés cargar un archivo o editar acá abajo.</span></label>
-        <input type="file" id="tpl-file" accept=".txt,text/plain" style="margin-bottom:12px">
-        <textarea id="tpl" spellcheck="false">Hola $usuario,
+        <label for="tpl">Usá <code>$usuario</code>, <code>$pedidos</code> y <code>$total</code> como marcadores. <span class="hint">Editá el texto acá abajo.</span></label>
+        <textarea id="tpl" spellcheck="false">Hola $usuario!
 
-Gracias por tu pedido. Esto es lo que preparamos para vos:
+Gracias por ser parte de la Compra Comunitaria de Agosto organizado por La Mutual La Correntosa🌊💫.
+
+Este es el pedido que cargaste en el formulario por favor revisá precios y cantidades:
 
 $pedidos
 
-Total: $total
+El saldo aprox es $total
 
-¡Nos vemos!</textarea>
+
+Avisos importantes:
+
+- La entrega de los será este SÁBADO 22/8 HORARIO 16.00 a 18.00 hs EN LA DESPENSA (Millaqueo 124)
+- La compra se puede abonar en efectivo, débito o transferencia bancaria el día de la entrega.
+- El valor de los pollos es aproximado, cada uno viene con su peso y ahí podemos saber el valor final.
+- Los descuentos serán aplicados el día de la entrega
+- Habrá además feria de productores locales, fruta y verdura agroecológica a demanda
+- Traé tu bolsa de tela :)
+
+
+Contamos con vos 👋
+
+¡Muchas gracias!
+
+La Correntosa 🌊💫</textarea>
       </div>
     </section>
 
@@ -332,14 +349,6 @@ Total: $total
     if (found.length) setStatus($("col-note"), "Sugeridas automáticamente (revisalas) — " + found.join(" · "), "ok");
     else setStatus($("col-note"), "No pude sugerir columnas; configuralas a mano.", "warn");
   }
-
-  $("tpl-file").addEventListener("change", e => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = () => { $("tpl").value = reader.result; };
-    reader.readAsText(file, "utf-8");
-  });
 
   function generate() {
     if (!csvRows || csvRows.length < 2) {
