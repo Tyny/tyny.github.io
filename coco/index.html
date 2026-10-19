@@ -78,6 +78,34 @@
   }
   .muted-note { color: var(--muted); font-size: .82rem; margin-top: 10px; }
   footer { margin-top: 26px; color: var(--muted); font-size: .85rem; }
+
+  /* Results overlay */
+  .overlay {
+    position: fixed; inset: 0; z-index: 50; padding: 24px;
+    background: rgba(0,0,0,.55); display: flex; align-items: center; justify-content: center;
+  }
+  .overlay[hidden] { display: none; }
+  .modal {
+    background: var(--card); border: 1px solid var(--line); border-radius: 18px;
+    box-shadow: var(--shadow); width: 100%; max-width: 920px; max-height: 86vh;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .modal-head {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 18px; border-bottom: 1px solid var(--line); flex-wrap: wrap;
+  }
+  .modal-head strong { font-size: 1rem; }
+  .modal-head .count { color: var(--muted); font-weight: 400; font-size: .85rem; margin-left: 8px; }
+  .modal-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .modal-actions .btn { padding: 8px 14px; }
+  .modal pre {
+    border: 0; border-radius: 0; margin: 0; flex: 1 1 auto; min-height: 0;
+    max-height: none; overflow: auto;
+  }
+  @media (max-width: 640px) {
+    .overlay { padding: 0; }
+    .modal { max-width: none; max-height: 100vh; height: 100vh; border-radius: 0; }
+  }
 </style>
 </head>
 <body>
@@ -153,19 +181,28 @@ La Correntosa 🌊💫</textarea>
         <input type="text" id="outname" value="coco.salida.txt" style="max-width:320px">
       </div>
       <div class="field">
-        <div class="row">
-          <button class="btn" id="gen">Generar emails</button>
-          <button class="btn ghost" id="copy" disabled>Copiar</button>
-          <button class="btn ghost" id="download" disabled>Descargar</button>
-        </div>
+        <button class="btn" id="gen">Generar emails</button>
         <p class="status" id="gen-status"></p>
       </div>
-      <pre id="out" aria-live="polite"></pre>
     </section>
 
     <footer>
       Port de <code>coco.py</code> · <a href="https://github.com/Tyny" style="color:var(--muted)">github.com/Tyny</a>
     </footer>
+  </div>
+
+  <div class="overlay" id="overlay" hidden>
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-head">
+        <strong id="modal-title">Emails generados<span class="count" id="modal-count"></span></strong>
+        <div class="modal-actions">
+          <button class="btn ghost" id="copy">Copiar</button>
+          <button class="btn ghost" id="download">Descargar</button>
+          <button class="btn" id="close">Cerrar</button>
+        </div>
+      </div>
+      <pre id="out"></pre>
+    </div>
   </div>
 
 <script>
@@ -394,17 +431,38 @@ La Correntosa 🌊💫</textarea>
     }
 
     result = blocks.map(b => b + SEP + "\n\n").join("");
-    $("out").textContent = result || "(ningún cliente con email)";
-    $("copy").disabled = $("download").disabled = !result;
     const skipMsg = skipped ? ` (${skipped} fila(s) sin email omitidas)` : "";
-    setStatus($("gen-status"), `${blocks.length} email(s) generado(s)${skipMsg}. ¡Encontrá el resultado abajo! :)`, "ok");
+    if (!result) {
+      setStatus($("gen-status"), `No se generó ningún email${skipMsg}.`, "warn");
+      return;
+    }
+    setStatus($("gen-status"), `${blocks.length} email(s) generado(s)${skipMsg}.`, "ok");
+    $("out").textContent = result;
+    $("modal-count").textContent = `${blocks.length} email(s)${skipMsg}`;
+    openOverlay();
+  }
+
+  function openOverlay() {
+    $("overlay").hidden = false;
+    document.body.style.overflow = "hidden";
+    $("out").scrollTop = 0;
+    $("close").focus();
+  }
+  function closeOverlay() {
+    $("overlay").hidden = true;
+    document.body.style.overflow = "";
   }
 
   $("gen").addEventListener("click", generate);
+  $("close").addEventListener("click", closeOverlay);
+  $("overlay").addEventListener("click", e => { if (e.target === $("overlay")) closeOverlay(); });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !$("overlay").hidden) closeOverlay(); });
 
   $("copy").addEventListener("click", async () => {
-    try { await navigator.clipboard.writeText(result); setStatus($("gen-status"), "Copiado al portapapeles.", "ok"); }
-    catch { setStatus($("gen-status"), "No se pudo copiar automáticamente.", "warn"); }
+    const btn = $("copy"), orig = btn.textContent;
+    try { await navigator.clipboard.writeText(result); btn.textContent = "¡Copiado!"; }
+    catch { btn.textContent = "No se pudo"; }
+    setTimeout(() => { btn.textContent = orig; }, 1500);
   });
 
   $("download").addEventListener("click", () => {
