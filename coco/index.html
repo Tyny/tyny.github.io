@@ -84,7 +84,8 @@
   .preview thead th { color: var(--muted); font-weight: 600; background: var(--pre); }
   .preview tbody th { font-weight: 700; }
   .preview .col-letter { color: var(--accent); font-weight: 700; text-transform: uppercase; }
-  .preview .val { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; max-width: 240px; overflow: hidden; text-overflow: ellipsis; }
+  .preview .hdr { white-space: normal; max-width: 280px; }
+  .preview .examples { white-space: normal; max-width: 380px; font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; color: var(--muted); }
   .preview .empty { color: var(--muted); font-style: italic; }
   footer { margin-top: 26px; color: var(--muted); font-size: .85rem; }
 
@@ -364,12 +365,12 @@ La Correntosa 🌊💫</textarea>
 
   const esc = s => String(s == null ? "" : s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
 
-  // Preview the suggested (or manually set) columns: header title + first 3 rows.
+  // Preview the suggested (or manually set) columns: for each role, its
+  // letter, the real header title, and a few example values from that column.
   function renderPreview() {
     const box = $("col-preview");
-    if (!csvRows || csvRows.length < 1) { box.innerHTML = ""; return; }
+    if (!csvRows || csvRows.length < 2) { box.innerHTML = ""; return; }
     const header = csvRows[0] || [];
-    const data = csvRows.slice(1, 4);
     const roles = [
       ["Email", colToNum($("col-email").value)],
       ["Nombre", colToNum($("col-name").value)],
@@ -377,19 +378,27 @@ La Correntosa 🌊💫</textarea>
       ["Último producto", colToNum($("col-last").value)],
       ["Total", colToNum($("col-total").value)],
     ];
+    // First few non-empty values in a column (skips blank/price-only rows).
+    const sample = (n, k = 3) => {
+      const out = [];
+      for (let r = 1; r < csvRows.length && out.length < k; r++) {
+        const v = (csvRows[r][n - 1] || "").trim();
+        if (v) out.push(v);
+      }
+      return out;
+    };
     let body = "";
     for (const [label, n] of roles) {
       if (!n) continue;
       const title = header[n - 1];
       const titleCell = (title == null || title === "") ? '<span class="empty">—</span>' : esc(title);
-      const cells = [0, 1, 2].map(i => {
-        const v = data[i] ? data[i][n - 1] : undefined;
-        return (v == null || v === "") ? '<td class="empty">—</td>' : `<td class="val">${esc(v)}</td>`;
-      }).join("");
-      body += `<tr><th>${esc(label)}</th><td class="col-letter">${esc(numToCol(n))}</td><td>${titleCell}</td>${cells}</tr>`;
+      const ex = sample(n);
+      const exCell = ex.length ? ex.map(esc).join(" · ") : '<span class="empty">(sin datos)</span>';
+      body += `<tr><th>${esc(label)}</th><td class="col-letter">${esc(numToCol(n))}</td>` +
+              `<td class="hdr">${titleCell}</td><td class="examples">${exCell}</td></tr>`;
     }
     box.innerHTML = body
-      ? `<div class="preview"><table><thead><tr><th>Rol</th><th>Col</th><th>Encabezado</th><th>Fila 1</th><th>Fila 2</th><th>Fila 3</th></tr></thead><tbody>${body}</tbody></table></div>`
+      ? `<div class="preview"><table><thead><tr><th>Rol</th><th>Col</th><th>Encabezado</th><th>Ejemplos</th></tr></thead><tbody>${body}</tbody></table></div>`
       : "";
   }
 
