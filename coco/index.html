@@ -245,6 +245,9 @@ La Correntosa 🌊💫</textarea>
     email: /correo\s*electr[oó]nico|correo|e-?mail/i,
     name:  /nombre\s*y\s*apellido|nombre|apellido/i,
     total: /subtotal|total/i,
+    // Trailing non-product columns: deposits/discounts/fees by keyword, or any
+    // column whose header carries a negative amount like "(-$10.000)".
+    tail:  /seña|sena|subtotal|descuento|env[ií]o|ajuste|redondeo|-\s*\$/i,
   };
   function suggestColumns(rows) {
     const header = (rows[0] || []).map(h => (h || "").trim());
@@ -264,8 +267,10 @@ La Correntosa 🌊💫</textarea>
     // First product = column right after the email/nombre metadata block.
     const metaEnd = Math.max(emailIdx, nameIdx);
     if (metaEnd >= 0 && metaEnd + 1 < N) sug.first = metaEnd + 2;
-    // Last product = column right before the total (or the last column).
-    const lastIdx = (totalIdx >= 0 ? totalIdx : N) - 1;
+    // Last product = last column before the total, skipping trailing
+    // non-product columns (seña, descuento, negative-amount lines, …).
+    let lastIdx = (totalIdx >= 0 ? totalIdx : N) - 1;
+    while (lastIdx > metaEnd + 1 && HEADER_RE.tail.test(header[lastIdx])) lastIdx--;
     if (lastIdx >= 0) sug.last = lastIdx + 1;
 
     return sug;
