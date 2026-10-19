@@ -77,6 +77,15 @@
     word-break: break-word; font-size: .88rem; line-height: 1.5; margin: 0;
   }
   .muted-note { color: var(--muted); font-size: .82rem; margin-top: 10px; }
+  .preview { margin-top: 14px; overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  .preview table { border-collapse: collapse; width: 100%; font-size: .85rem; }
+  .preview th, .preview td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  .preview tr:last-child th, .preview tr:last-child td { border-bottom: 0; }
+  .preview thead th { color: var(--muted); font-weight: 600; background: var(--pre); }
+  .preview tbody th { font-weight: 700; }
+  .preview .col-letter { color: var(--accent); font-weight: 700; text-transform: uppercase; }
+  .preview .val { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; max-width: 240px; overflow: hidden; text-overflow: ellipsis; }
+  .preview .empty { color: var(--muted); font-style: italic; }
   footer { margin-top: 26px; color: var(--muted); font-size: .85rem; }
 
   /* Results overlay */
@@ -137,6 +146,7 @@
         <div class="field"><label for="col-total">Total</label><input type="text" id="col-total" value="DW"></div>
       </div>
       <p class="status" id="col-note"></p>
+      <div id="col-preview"></div>
     </section>
 
     <!-- 3. Template -->
@@ -352,6 +362,37 @@ La Correntosa 🌊💫</textarea>
   const $ = id => document.getElementById(id);
   let csvRows = null, result = "";
 
+  const esc = s => String(s == null ? "" : s).replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+
+  // Preview the suggested (or manually set) columns: header title + first 3 rows.
+  function renderPreview() {
+    const box = $("col-preview");
+    if (!csvRows || csvRows.length < 1) { box.innerHTML = ""; return; }
+    const header = csvRows[0] || [];
+    const data = csvRows.slice(1, 4);
+    const roles = [
+      ["Email", colToNum($("col-email").value)],
+      ["Nombre", colToNum($("col-name").value)],
+      ["Primer producto", colToNum($("col-first").value)],
+      ["Último producto", colToNum($("col-last").value)],
+      ["Total", colToNum($("col-total").value)],
+    ];
+    let body = "";
+    for (const [label, n] of roles) {
+      if (!n) continue;
+      const title = header[n - 1];
+      const titleCell = (title == null || title === "") ? '<span class="empty">—</span>' : esc(title);
+      const cells = [0, 1, 2].map(i => {
+        const v = data[i] ? data[i][n - 1] : undefined;
+        return (v == null || v === "") ? '<td class="empty">—</td>' : `<td class="val">${esc(v)}</td>`;
+      }).join("");
+      body += `<tr><th>${esc(label)}</th><td class="col-letter">${esc(numToCol(n))}</td><td>${titleCell}</td>${cells}</tr>`;
+    }
+    box.innerHTML = body
+      ? `<div class="preview"><table><thead><tr><th>Rol</th><th>Col</th><th>Encabezado</th><th>Fila 1</th><th>Fila 2</th><th>Fila 3</th></tr></thead><tbody>${body}</tbody></table></div>`
+      : "";
+  }
+
   function setStatus(el, msg, cls) {
     el.textContent = msg;
     el.className = "status" + (cls ? " " + cls : "");
@@ -385,7 +426,12 @@ La Correntosa 🌊💫</textarea>
     }
     if (found.length) setStatus($("col-note"), "Sugeridas automáticamente (revisalas) — " + found.join(" · "), "ok");
     else setStatus($("col-note"), "No pude sugerir columnas; configuralas a mano.", "warn");
+    renderPreview();
   }
+
+  // Keep the preview in sync when the column letters are edited by hand.
+  ["col-email", "col-name", "col-first", "col-last", "col-total"]
+    .forEach(id => $(id).addEventListener("input", renderPreview));
 
   function generate() {
     if (!csvRows || csvRows.length < 2) {
