@@ -91,6 +91,13 @@
   /* make the station dot itself a touch brighter */
   .star-glow { filter: drop-shadow(0 0 4px #ffb3d6) drop-shadow(0 0 9px #ff3d8a); }
 
+  /* white-hot neon core down the center of every dot and line: pure white,
+     with a glow -- the pink body shows around it, the black void outside it */
+  .core {
+    pointer-events: none;
+    filter: drop-shadow(0 0 1.3px #fff) drop-shadow(0 0 3.4px #ff6ab0);
+  }
+
   /* clickable names on the eye / mouth / feet */
   .label { opacity: 0; transition: opacity .35s ease; cursor: pointer; }
   .label text {
@@ -123,20 +130,10 @@
   }
   .hint.faded { opacity: 0; }
 
-  /* top bar: a flat dark band across the top, like the reference */
-  .topbar {
-    position: fixed; left: 0; top: 0; z-index: 4;
-    width: 100%; height: 56px;
-    display: flex; align-items: center;
-    background: #190910;
-    border-bottom: 1px solid rgba(255,255,255,.05);
-    box-shadow: 0 2px 18px rgba(0,0,0,.45);
-  }
   .wordmark {
-    position: fixed; left: 26px; top: 0; z-index: 6;
-    height: 56px; display: flex; align-items: center;
+    position: fixed; left: 20px; top: 16px; z-index: 5;
     font-weight: 800; letter-spacing: -.03em; font-size: 1.25rem;
-    color: var(--ink);
+    color: var(--ink); mix-blend-mode: screen;
   }
   .wordmark .dot { color: var(--pink); }
 </style>
@@ -576,7 +573,6 @@
     </div>
   </div>
 
-  <div class="topbar" aria-hidden="true"></div>
   <div class="wordmark">Marihuel<span class="dot">.</span></div>
   <div class="hint" id="hint">
     <span><kbd>&larr;</kbd> <kbd>&rarr;</kbd> recorrer</span>
@@ -591,6 +587,7 @@
   var svg = document.getElementById("fish");
   var halosG = document.getElementById("halos");
   var hint = document.getElementById("hint");
+  var logoBg = document.querySelector(".logo-bg");
 
   // geometry groups
   var linesG = svg.querySelector("g[stroke]");
@@ -644,6 +641,27 @@
     g.appendChild(vDots);
     g.appendChild(vLines);
     svg.insertBefore(g, linesG);
+  })();
+
+  // --- white neon core -----------------------------------------------------
+  // A thin, perfectly white, glowing line down the center of each line, and a
+  // white center in each dot. Sits ON TOP of the pink body: white core, pink
+  // around it, black void outside. (drawn before #halos so stations stay on top)
+  (function () {
+    var wLines = linesG.cloneNode(true);
+    wLines.removeAttribute("opacity");
+    wLines.setAttribute("stroke", "#ffffff");
+    wLines.setAttribute("stroke-width", "0.7");   // thinner than the 1.6 pink line
+    wLines.setAttribute("class", "core");
+    var wDots = dotsG.cloneNode(true);
+    wDots.setAttribute("fill", "#ffffff");
+    wDots.setAttribute("class", "core");
+    Array.prototype.forEach.call(wDots.querySelectorAll("circle"), function (c) {
+      var r = parseFloat(c.getAttribute("r")) || 1;
+      c.setAttribute("r", String(Math.max(r * 0.4, 0.9)));   // white center, pink ring around
+    });
+    svg.insertBefore(wLines, halosG);
+    svg.insertBefore(wDots, halosG);
   })();
 
   // --- stations ---
@@ -752,6 +770,12 @@
     var tx = W / 2 - k * fx;
     var ty = H / 2 - k * fy + 5;   // nudge the fish down 5px
     world.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + k + ")";
+
+    // the logo background drifts up as you scroll (parallax)
+    if (logoBg) {
+      var up = overview ? 0 : window.scrollY * 0.4;
+      logoBg.style.transform = "translateX(-50%) translateY(" + (-up) + "px)";
+    }
 
     // highlight the nearest station to the current focus
     if (!overview) {
