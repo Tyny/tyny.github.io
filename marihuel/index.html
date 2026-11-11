@@ -30,10 +30,10 @@
     position: sticky; top: 0;
     height: 100vh; width: 100%;
     overflow: hidden;
-    /* spotlight: bright pool of light around the fish, night at the edges */
+    /* even wash of light -- no heavy dark band at the top */
     background:
-      radial-gradient(60% 45% at 50% 42%, #2a1530 0%, rgba(26,13,30,.6) 45%, rgba(10,7,16,0) 75%),
-      radial-gradient(130% 90% at 50% 0%, #140a1a 0%, var(--bg0) 60%);
+      radial-gradient(75% 60% at 50% 42%, #281430 0%, rgba(26,13,30,.5) 55%, rgba(10,7,16,0) 85%),
+      linear-gradient(to bottom, #150b1b 0%, var(--bg0) 70%);
   }
   /* faint teal swirl, echoing the record behind the fish in the photo */
   .stage::before {
@@ -51,23 +51,49 @@
     z-index: 2;              /* the fish sits in front of the logo */
   }
 
-  /* 'La Marihuel' logo behind the fish, near the bottom. SHARP -- no blur on
-     the background; its glow is baked into the pixels. raised 5px (bottom = -8vh + 5px) */
+  /* 'La Marihuel' logo behind the fish, near the bottom. SHARP, no top fade --
+     its glow + soft edges are already in the PNG. raised 5px (bottom = -8vh + 5px).
+     --u is the logo's displayed width, the unit the sparkles are sized in. */
   .logo-bg {
     position: absolute; left: 50%; bottom: calc(-8vh + 5px);
     transform: translateX(-50%);
-    width: min(100vw, 1480px);
+    width: min(100vw, 1480px); --u: min(100vw, 1480px);
     z-index: 1; pointer-events: none;
   }
-  .logo-bg img {
-    position: absolute; left: 0; bottom: 0; width: 100%;
-    display: block; mix-blend-mode: screen; user-select: none;
+  .logo-frame { position: relative; width: 100%; }
+  .logo-base {
+    display: block; width: 100%;
+    mix-blend-mode: screen; user-select: none;
+    filter: saturate(1.14); opacity: .9;
   }
-  /* single sharp layer; only its very top (flourishes/ghost) fades out */
-  .logo-base  {
-    filter: saturate(1.18); opacity: .82;
-    -webkit-mask-image: linear-gradient(to bottom, transparent 5%, #000 22%);
-            mask-image: linear-gradient(to bottom, transparent 5%, #000 22%);
+
+  /* animated glow sparkles, placed on the logo's real glints (detected in the
+     image), each twinkling on its own clock */
+  .sparkles { position: absolute; inset: 0; pointer-events: none; }
+  .sparkle {
+    position: absolute;
+    width: calc(var(--u) * 0.028 * var(--sc, 1));
+    aspect-ratio: 1;
+    margin: calc(var(--u) * -0.014 * var(--sc, 1));   /* center on its point */
+    background: radial-gradient(circle at 50% 50%,
+      rgba(255,255,255,.95) 0%, rgba(255,214,236,.55) 24%,
+      rgba(255,120,190,.22) 48%, transparent 72%);
+    mix-blend-mode: screen; opacity: 0;
+    animation: twinkle var(--dur, 3.4s) ease-in-out var(--d, 0s) infinite;
+  }
+  /* a crisp little 4-point star over the glow */
+  .sparkle::before {
+    content: ""; position: absolute; inset: 20%;
+    background: center/contain no-repeat
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50 1 C54 38 62 46 99 50 C62 54 54 62 50 99 C46 62 38 54 1 50 C38 46 46 38 50 1 Z' fill='white'/%3E%3C/svg%3E");
+    filter: drop-shadow(0 0 3px #fff) drop-shadow(0 0 7px #ff6ab0);
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0;  transform: scale(.35); }
+    10%      { opacity: 1;  transform: scale(1.2); }
+    30%      { opacity: .3; transform: scale(.8); }
+    55%      { opacity: .9; transform: scale(1.0); }
+    80%      { opacity: .2; transform: scale(.7); }
   }
   .world svg {
     display: block; width: 720.9px; height: 1000px;
@@ -112,6 +138,7 @@
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .halo { animation: none; opacity: .5; }
+    .sparkle { animation: none; opacity: .6; transform: scale(1); }
   }
 
   /* quiet keyboard hint, bottom center */
@@ -130,18 +157,15 @@
   }
   .hint.faded { opacity: 0; }
 
-  .wordmark {
-    position: fixed; left: 20px; top: 16px; z-index: 5;
-    font-weight: 800; letter-spacing: -.03em; font-size: 1.25rem;
-    color: var(--ink); mix-blend-mode: screen;
-  }
-  .wordmark .dot { color: var(--pink); }
 </style>
 </head>
 <body>
   <div class="stage">
     <div class="logo-bg" aria-hidden="true">
-      <img class="logo-base" src="marihuel-logo.png" alt="">
+      <div class="logo-frame">
+        <img class="logo-base" src="marihuel-logo.png" alt="">
+        <div class="sparkles" id="sparkles"></div>
+      </div>
     </div>
     <div class="world" id="world">
       <svg id="fish" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720.9 1000.0" role="img" aria-label="Marihuel: el pez">
@@ -573,7 +597,6 @@
     </div>
   </div>
 
-  <div class="wordmark">Marihuel<span class="dot">.</span></div>
   <div class="hint" id="hint">
     <span><kbd>&larr;</kbd> <kbd>&rarr;</kbd> recorrer</span>
     <span><kbd>espacio</kbd> ver entero</span>
@@ -588,6 +611,23 @@
   var halosG = document.getElementById("halos");
   var hint = document.getElementById("hint");
   var logoBg = document.querySelector(".logo-bg");
+
+  // --- animated glow sparkles on the logo's detected glints -----------------
+  var SPARKLES = [{"x": 0.5639, "y": 0.708, "r": 11.7}, {"x": 0.3763, "y": 0.2582, "r": 3.2}, {"x": 0.4638, "y": 0.2262, "r": 11.9}, {"x": 0.7478, "y": 0.6266, "r": 10.5}, {"x": 0.8854, "y": 0.5894, "r": 9.0}, {"x": 0.3221, "y": 0.6884, "r": 3}, {"x": 0.1087, "y": 0.6255, "r": 5.3}, {"x": 0.5562, "y": 0.2939, "r": 3}, {"x": 0.686, "y": 0.6911, "r": 14.8}, {"x": 0.1484, "y": 0.4044, "r": 8.7}, {"x": 0.6078, "y": 0.2275, "r": 8.3}, {"x": 0.5575, "y": 0.4211, "r": 3}, {"x": 0.6548, "y": 0.2618, "r": 8.5}, {"x": 0.8241, "y": 0.5192, "r": 3}];
+  (function () {
+    var host = document.getElementById("sparkles");
+    if (!host) return;
+    SPARKLES.forEach(function (s, i) {
+      var d = document.createElement("div");
+      d.className = "sparkle";
+      d.style.left = (s.x * 100).toFixed(3) + "%";
+      d.style.top  = (s.y * 100).toFixed(3) + "%";
+      d.style.setProperty("--sc", (0.65 + (s.r / 16) * 0.85).toFixed(2));  // bigger glint, bigger glow
+      d.style.setProperty("--dur", (2.6 + (i % 5) * 0.55).toFixed(2) + "s");
+      d.style.setProperty("--d", (-((i * 0.73) % 3.4)).toFixed(2) + "s");   // desync them
+      host.appendChild(d);
+    });
+  })();
 
   // geometry groups
   var linesG = svg.querySelector("g[stroke]");
