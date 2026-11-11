@@ -5,55 +5,118 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Marihuel — Tyny</title>
 <meta name="description" content="Marihuel — te pone a bailar.">
-<link rel="stylesheet" href="../dots.css">
 <style>
   :root {
-    --bg: #f4f1ea; --card: #fffdf8; --ink: #1c1a17; --muted: #6b655c;
-    --line: #e5ded1; --pc: #c2306e;
-    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 8px 30px rgba(0,0,0,.06);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #14120f; --card: #1e1b17; --ink: #f2ede4; --muted: #a39b8d;
-      --line: #302b23; --pc: #ea86b0;
-      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 40px rgba(0,0,0,.4);
-    }
+    --bg0: #0a0710;      /* deep night */
+    --bg1: #1a0d1e;      /* warm plum near the fish */
+    --pink: #ff3d8a;
+    --ink: #f6eef4;
+    --muted: #b79fb4;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; }
+  html { scroll-behavior: smooth; }
+  html, body { margin: 0; background: var(--bg0); }
   body {
-    background: var(--bg); color: var(--ink);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased; line-height: 1.55;
-    min-height: 100vh; display: flex; align-items: center; justify-content: center;
-    padding: 40px 20px;
-  }
-  .wrap { width: 100%; max-width: 900px; }
-  .logo-slot {
-    display: flex; align-items: center; justify-content: center;
-    padding: 10px 0;
-  }
-  .logo-slot svg {
-    display: block; width: auto; height: 80vh; max-width: 100%;
-    /* never taller than what is left once the title block is placed,
-       so the page fits the viewport without scrolling */
-    max-height: calc(100vh - 268px);
-    max-height: calc(100dvh - 268px);
+    /* 4 screens tall: the runway the camera walks down */
+    height: 400vh;
     color: var(--ink);
-    filter: drop-shadow(0 0 8px color-mix(in srgb, var(--pc) 55%, transparent));
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
   }
-  h1 { font-size: 2.2rem; font-weight: 800; letter-spacing: -.03em; margin: 26px 0 0; }
-  h1 .dot { color: var(--pc); }
-  .lede { color: var(--muted); margin: 8px 0 0; }
+
+  /* The window the fish is seen through. Stays put while the page scrolls. */
+  .stage {
+    position: sticky; top: 0;
+    height: 100vh; width: 100%;
+    overflow: hidden;
+    /* spotlight: bright pool of light around the fish, night at the edges */
+    background:
+      radial-gradient(60% 45% at 50% 42%, #2a1530 0%, rgba(26,13,30,.6) 45%, rgba(10,7,16,0) 75%),
+      radial-gradient(130% 90% at 50% 0%, #140a1a 0%, var(--bg0) 60%);
+  }
+  /* faint teal swirl, echoing the record behind the fish in the photo */
+  .stage::before {
+    content: ""; position: absolute; inset: -10%;
+    background:
+      radial-gradient(40% 30% at 38% 55%, rgba(39,194,194,.10), transparent 70%),
+      radial-gradient(45% 35% at 66% 40%, rgba(194,48,110,.12), transparent 72%);
+    pointer-events: none;
+  }
+
+  .world {
+    position: absolute; top: 0; left: 0;
+    transform-origin: 0 0;
+    will-change: transform;
+  }
+  .world svg {
+    display: block; width: 720.9px; height: 1000px;
+    filter: drop-shadow(0 0 10px rgba(255,61,138,.35));
+  }
+
+  /* glowing station halos, drawn into an overlay group by the script */
+  .halo {
+    fill: none;
+    stroke: #ff9ccb;
+    stroke-width: 2.4;
+    opacity: .0;
+    filter: drop-shadow(0 0 5px #ff5aa0) drop-shadow(0 0 11px #ff3d8a);
+    animation: pulse 2.6s ease-in-out infinite;
+  }
+  .halo.on { opacity: .9; stroke: #ffffff; animation-duration: 1.6s; }
+  @keyframes pulse {
+    0%, 100% { opacity: .28; }
+    50%      { opacity: .75; }
+  }
+  /* make the station dot itself a touch brighter */
+  .star-glow { filter: drop-shadow(0 0 4px #ffb3d6) drop-shadow(0 0 9px #ff3d8a); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .halo { animation: none; opacity: .5; }
+  }
+
+  /* quiet keyboard hint, bottom center */
+  .hint {
+    position: fixed; left: 50%; bottom: 18px; transform: translateX(-50%);
+    display: flex; gap: 14px; align-items: center;
+    color: var(--muted); font-size: .8rem; letter-spacing: .02em;
+    background: rgba(10,7,16,.5); border: 1px solid rgba(255,255,255,.08);
+    padding: 7px 14px; border-radius: 999px; backdrop-filter: blur(6px);
+    z-index: 5; transition: opacity .6s; user-select: none;
+  }
+  .hint kbd {
+    font: inherit; color: var(--ink);
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.14);
+    border-radius: 6px; padding: 1px 7px; line-height: 1.4;
+  }
+  .hint.faded { opacity: 0; }
+
+  .wordmark {
+    position: fixed; left: 20px; top: 16px; z-index: 5;
+    font-weight: 800; letter-spacing: -.03em; font-size: 1.25rem;
+    color: var(--ink); mix-blend-mode: screen;
+  }
+  .wordmark .dot { color: var(--pink); }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <!-- logo area: reemplazar el contenido de .logo-slot por el logo -->
-    <div class="logo-slot" id="logo" data-dots>
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720.9 1000.0" role="img" aria-label="Marihuel: figura constelación">
-      <title>Marihuel: figura constelación</title>
-      <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity="0.55">
+  <div class="stage">
+    <div class="world" id="world">
+      <svg id="fish" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720.9 1000.0" role="img" aria-label="Marihuel: el pez">
+        <defs>
+          <linearGradient id="grad" gradientUnits="userSpaceOnUse" x1="360" y1="0" x2="360" y2="1000">
+            <stop offset="0.00" stop-color="#ff5a6e"/>
+            <stop offset="0.12" stop-color="#ff3d7e"/>
+            <stop offset="0.26" stop-color="#f0369a"/>
+            <stop offset="0.42" stop-color="#d733a6"/>
+            <stop offset="0.58" stop-color="#b23bb4"/>
+            <stop offset="0.74" stop-color="#9a44c0"/>
+            <stop offset="0.88" stop-color="#ff6fae"/>
+            <stop offset="1.00" stop-color="#ffb0d6"/>
+          </linearGradient>
+        </defs>
+        <g fill="none" stroke="url(#grad)" stroke-width="1.6" stroke-linecap="round" opacity="0.55">
         <line x1="103.1" y1="70.4" x2="166.7" y2="36.1"/>
         <line x1="103.1" y1="70.4" x2="145.4" y2="125.2"/>
         <line x1="140.0" y1="70.4" x2="166.7" y2="36.1"/>
@@ -286,7 +349,7 @@
         <line x1="636.9" y1="586.6" x2="619.7" y2="605.1"/>
         <line x1="64.1" y1="643.6" x2="73.8" y2="669.6"/>
       </g>
-      <g fill="currentColor">
+      <g fill="url(#grad)">
         <circle cx="103.1" cy="70.4" r="6.4"/>
         <circle cx="140.0" cy="70.4" r="6.4"/>
         <circle cx="574.2" cy="882.7" r="6.4"/>
@@ -464,12 +527,152 @@
         <circle cx="506.1" cy="257.3" r="1.3"/>
         <circle cx="509.5" cy="541.2" r="1.8"/>
       </g>
-    </svg>
+        <g id="halos"></g>
+      </svg>
     </div>
-
-    <h1>Marihuel<span class="dot">.</span></h1>
-    <p class="lede">Te pone a bailar.</p>
   </div>
-  <script src="../dots.js" defer></script>
+
+  <div class="wordmark">Marihuel<span class="dot">.</span></div>
+  <div class="hint" id="hint">
+    <span><kbd>&larr;</kbd> <kbd>&rarr;</kbd> recorrer</span>
+    <span><kbd>espacio</kbd> ver entero</span>
+  </div>
+
+<script>
+(function () {
+  "use strict";
+  var VB_W = 720.9, VB_H = 1000;
+  var world = document.getElementById("world");
+  var svg = document.getElementById("fish");
+  var halosG = document.getElementById("halos");
+  var hint = document.getElementById("hint");
+
+  // --- pick stations: one circle near each of these vertical fractions ---
+  var FRACS = [0.055, 0.16, 0.28, 0.40, 0.52, 0.66, 0.80, 0.93];
+  var circles = Array.prototype.slice.call(svg.querySelectorAll("g[fill] circle"));
+  var stations = [];
+  var used = {};
+  FRACS.forEach(function (f) {
+    var ty = f * VB_H, best = null, bestD = 1e9, bi = -1;
+    circles.forEach(function (c, i) {
+      if (used[i]) return;
+      var cy = parseFloat(c.getAttribute("cy"));
+      var d = Math.abs(cy - ty);
+      if (d < bestD) { bestD = d; best = c; bi = i; }
+    });
+    if (best) {
+      used[bi] = true;
+      best.classList.add("star-glow");
+      stations.push({
+        x: parseFloat(best.getAttribute("cx")),
+        y: parseFloat(best.getAttribute("cy")),
+        r: parseFloat(best.getAttribute("r")) || 4
+      });
+    }
+  });
+  stations.sort(function (a, b) { return a.y - b.y; });
+
+  // halos
+  var haloEls = stations.map(function (s) {
+    var el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    el.setAttribute("cx", s.x); el.setAttribute("cy", s.y);
+    el.setAttribute("r", Math.max(s.r * 4.5, 14));
+    el.setAttribute("class", "halo");
+    halosG.appendChild(el);
+    return el;
+  });
+
+  var TOP_Y = stations[0].y, BOT_Y = stations[stations.length - 1].y;
+  var current = 0;
+  var overview = /(^|[#&?])all(=|$|&)/.test(location.hash + location.search);
+
+  function fitK() {
+    var W = window.innerWidth, H = window.innerHeight;
+    return Math.min(W / VB_W, H / VB_H);
+  }
+  function zoomK() {
+    var narrow = window.innerWidth < 760;
+    return fitK() * (narrow ? 1.8 : 2.35);
+  }
+
+  // Map scroll progress (0..1) to a focus Y that walks head -> feet.
+  function focusYFromScroll() {
+    var max = document.body.scrollHeight - window.innerHeight;
+    var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    return TOP_Y + (BOT_Y - TOP_Y) * p;
+  }
+
+  function render() {
+    var W = window.innerWidth, H = window.innerHeight;
+    var k, fx = VB_W / 2, fy;
+    if (overview) {
+      k = fitK() * 0.9;
+      fy = VB_H / 2;
+    } else {
+      k = zoomK();
+      fy = focusYFromScroll();
+    }
+    var tx = W / 2 - k * fx;
+    var ty = H / 2 - k * fy;
+    world.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + k + ")";
+
+    // highlight the nearest station to the current focus
+    if (!overview) {
+      var nearest = 0, nd = 1e9;
+      stations.forEach(function (s, i) {
+        var d = Math.abs(s.y - fy);
+        if (d < nd) { nd = d; nearest = i; }
+      });
+      current = nearest;
+    }
+    haloEls.forEach(function (el, i) {
+      el.classList.toggle("on", !overview && i === current);
+    });
+  }
+
+  function scrollToStation(i) {
+    i = Math.max(0, Math.min(stations.length - 1, i));
+    current = i;
+    var frac = (stations[i].y - TOP_Y) / (BOT_Y - TOP_Y || 1);
+    var max = document.body.scrollHeight - window.innerHeight;
+    window.scrollTo({ top: frac * max, behavior: "smooth" });
+  }
+
+  var ticking = false;
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(function () { render(); ticking = false; });
+    }
+    fadeHint();
+  }
+
+  var hintTimer;
+  function fadeHint() {
+    hint.classList.remove("faded");
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(function () { hint.classList.add("faded"); }, 3200);
+  }
+
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", render);
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      e.preventDefault(); if (overview) { overview = false; } scrollToStation(current + 1); fadeHint();
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault(); if (overview) { overview = false; } scrollToStation(current - 1); fadeHint();
+    } else if (e.key === " " || e.code === "Space") {
+      e.preventDefault();
+      overview = !overview;
+      render();
+      fadeHint();
+    }
+  });
+
+  render();
+  fadeHint();
+})();
+</script>
 </body>
 </html>
