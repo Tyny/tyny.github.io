@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Marihuel — Tyny</title>
 <meta name="description" content="Marihuel — te pone a bailar.">
+<link rel="preload" as="image" href="marihuel-logo.webp" type="image/webp" fetchpriority="high">
 <style>
   :root {
     --bg0: #0a0710;      /* deep night */
@@ -50,6 +51,11 @@
     will-change: transform;
     z-index: 2;              /* the fish sits in front of the logo */
   }
+
+  /* reveal gate: fish + logo come in TOGETHER once the logo is ready, over the
+     gradient -- so the page never shows the fish on an empty background */
+  .world, .logo-bg { opacity: 0; transition: opacity .55s ease; }
+  .stage.ready .world, .stage.ready .logo-bg { opacity: 1; }
 
   /* 'La Marihuel' logo behind the fish, near the bottom. SHARP, no top fade --
      its glow + soft edges are already in the PNG. raised 5px (bottom = -8vh + 5px).
@@ -170,7 +176,8 @@
   <div class="stage">
     <div class="logo-bg" aria-hidden="true">
       <div class="logo-frame">
-        <img class="logo-base" src="marihuel-logo.png" alt="">
+        <img class="logo-base" src="marihuel-logo.webp" alt="" fetchpriority="high"
+             onerror="this.onerror=null;this.src='marihuel-logo.png'">
         <div class="sparkles" id="sparkles"></div>
       </div>
     </div>
@@ -917,6 +924,22 @@
 
   render();
   fadeHint();
+
+  // reveal once the logo is ready (fallback if it's cached or slow)
+  (function () {
+    var stage = document.querySelector(".stage");
+    var img = document.querySelector(".logo-base");
+    var shown = false;
+    function reveal() { if (shown) return; shown = true; render(); stage.classList.add("ready"); }
+    // reveal only once the logo is DECODED and ready to paint (no half-drawn frame)
+    function whenReady() {
+      if (img && img.decode) { img.decode().then(reveal, reveal); }
+      else { reveal(); }
+    }
+    if (!img || img.complete) { whenReady(); }
+    else { img.addEventListener("load", whenReady); img.addEventListener("error", reveal); }
+    setTimeout(reveal, 2500);   // safety net
+  })();
 })();
 </script>
 </body>
