@@ -48,6 +48,37 @@
     position: absolute; top: 0; left: 0;
     transform-origin: 0 0;
     will-change: transform;
+    z-index: 2;              /* the fish sits in front of the logo */
+  }
+
+  /* 'La Marihuel' logo, glowing and blurred behind the fish, near the bottom */
+  .logo-bg {
+    position: absolute; left: 50%; bottom: -8vh;
+    transform: translateX(-50%);
+    width: min(100vw, 1480px);
+    z-index: 1; pointer-events: none;
+  }
+  .logo-bg img {
+    position: absolute; left: 0; bottom: 0; width: 100%;
+    display: block; mix-blend-mode: screen; user-select: none;
+  }
+  /* glow halo, grounded low so it melts up into the background */
+  .logo-glow  {
+    filter: blur(40px) saturate(1.35); opacity: .38;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 12%, #000 46%);
+            mask-image: linear-gradient(to bottom, transparent 12%, #000 46%);
+  }
+  /* the readable logo; only its very top (flourishes/ghost) fades out */
+  .logo-base  {
+    filter: blur(5px)  saturate(1.15); opacity: .58;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 5%, #000 22%);
+            mask-image: linear-gradient(to bottom, transparent 5%, #000 22%);
+  }
+  /* lower part blurs more, fading in from the middle down */
+  .logo-lower {
+    filter: blur(18px) saturate(1.25); opacity: .55;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 36%, #000 92%);
+            mask-image: linear-gradient(to bottom, transparent 36%, #000 92%);
   }
   .world svg {
     display: block; width: 720.9px; height: 1000px;
@@ -113,6 +144,11 @@
 </head>
 <body>
   <div class="stage">
+    <div class="logo-bg" aria-hidden="true">
+      <img class="logo-glow"  src="marihuel-logo.png" alt="">
+      <img class="logo-lower" src="marihuel-logo.png" alt="">
+      <img class="logo-base"  src="marihuel-logo.png" alt="">
+    </div>
     <div class="world" id="world">
       <svg id="fish" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720.9 1000.0" role="img" aria-label="Marihuel: el pez">
         <defs>
