@@ -729,7 +729,7 @@
       e.preventDefault();
       overview = !overview;
       if (!overview) { scrollToStation(current); }  // land on the chosen station
-      else { render(); }
+      render();   // always redraw: scrollTo above can be a no-op and never fire scroll
       fadeHint();
     }
   });
