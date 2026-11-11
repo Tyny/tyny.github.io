@@ -124,16 +124,11 @@
     filter: drop-shadow(0 0 1.3px #fff) drop-shadow(0 0 3.4px #ff6ab0);
   }
 
-  /* the mouth: a little lens that opens and closes, as if the fish is talking */
+  /* the mouth: a little lens that opens and closes, as if the fish is talking.
+     Animated via SMIL on `ry` (see the <animate> added in JS) so it's reliable. */
   .mouth {
-    fill: none; stroke: #ffffff; stroke-width: 1.1;
-    transform-box: fill-box; transform-origin: center;
-    filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 5px #ff5aa0);
-    animation: chomp 2.2s ease-in-out infinite;
-  }
-  @keyframes chomp {
-    0%, 18%, 100% { transform: scaleY(0.08); }   /* closed */
-    45%, 62%      { transform: scaleY(1); }       /* open  */
+    fill: rgba(255,90,160,.22); stroke: #ffffff; stroke-width: 1.3;
+    filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 6px #ff5aa0);
   }
 
   /* clickable names on the eye / mouth / feet */
@@ -771,6 +766,16 @@
     e.setAttribute("cx", m.x); e.setAttribute("cy", m.y);
     e.setAttribute("rx", "16"); e.setAttribute("ry", "9");
     e.setAttribute("class", "mouth");
+    // open/close via SMIL (robust in SVG): ry grows and shrinks on a loop
+    var an = document.createElementNS(SVGNS, "animate");
+    an.setAttribute("attributeName", "ry");
+    an.setAttribute("dur", "2s");
+    an.setAttribute("repeatCount", "indefinite");
+    an.setAttribute("values", "1.2;1.2;9;9;1.2");
+    an.setAttribute("keyTimes", "0;0.22;0.46;0.64;1");
+    an.setAttribute("calcMode", "spline");
+    an.setAttribute("keySplines", "0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1;0.4 0 0.6 1");
+    e.appendChild(an);
     halosG.appendChild(e);
   })();
 
