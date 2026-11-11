@@ -594,10 +594,35 @@
   var halosG = document.getElementById("halos");
   var hint = document.getElementById("hint");
 
+  // geometry groups
+  var linesG = svg.querySelector("g[stroke]");
+  var dotsG  = svg.querySelector('g[fill]:not([stroke])');
+
+  // --- contrast void -------------------------------------------------------
+  // Morphological dilation of the line art: clone the dots/lines, grow them by
+  // EXTRA px (stroke = Minkowski sum with a disc), paint them the background
+  // color, and lay them BEHIND the colored fish. That carves a clean dark
+  // margin around every dot and line so the fish stays legible over the logo.
+  (function () {
+    var EXTRA = 3;
+    var vLines = linesG.cloneNode(true);
+    vLines.removeAttribute("opacity");
+    vLines.setAttribute("fill", "none");
+    vLines.setAttribute("stroke", "#0a0710");
+    vLines.setAttribute("stroke-width", String(1.6 + 2 * EXTRA));
+    var vDots = dotsG.cloneNode(true);
+    vDots.setAttribute("fill", "#0a0710");
+    Array.prototype.forEach.call(vDots.querySelectorAll("circle"), function (c) {
+      c.setAttribute("r", String((parseFloat(c.getAttribute("r")) || 1) + EXTRA));
+    });
+    svg.insertBefore(vDots, linesG);
+    svg.insertBefore(vLines, linesG);
+  })();
+
   // --- stations ---
   var SVGNS = "http://www.w3.org/2000/svg";
   var XLINK = "http://www.w3.org/1999/xlink";
-  var circles = Array.prototype.slice.call(svg.querySelectorAll("g[fill] circle"));
+  var circles = Array.prototype.slice.call(dotsG.querySelectorAll("circle"));
   var used = {};
 
   // snap a target point to the nearest circle not yet taken
