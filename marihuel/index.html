@@ -764,16 +764,16 @@
     if (!m) return;
     var e = document.createElementNS(SVGNS, "ellipse");
     e.setAttribute("cx", m.x); e.setAttribute("cy", m.y);
-    e.setAttribute("rx", "18"); e.setAttribute("ry", "1");
+    e.setAttribute("rx", "22"); e.setAttribute("ry", "2.5");
     e.setAttribute("class", "mouth");
     halosG.appendChild(e);
     // open/close driven straight from JS (works everywhere -- no CSS transform
     // or SMIL needed): the mouth sits shut, then gapes wide open, on a loop.
     (function () {
       function frame(t) {
-        var ph = (t % 2200) / 2200;             // 0..1 over 2.2s
+        var ph = (t % 2000) / 2000;             // 0..1 over 2s
         var o = 0.5 - 0.5 * Math.cos(ph * 2 * Math.PI);  // 0..1..0, smooth
-        e.setAttribute("ry", (1 + 14 * o).toFixed(2));   // 1 (shut) .. 15 (wide)
+        e.setAttribute("ry", (2.5 + 18 * o).toFixed(2)); // 2.5 (shut) .. 20.5 (wide)
         requestAnimationFrame(frame);
       }
       requestAnimationFrame(frame);
@@ -833,7 +833,7 @@
       var p = mx > 0 ? Math.min(1, Math.max(0, window.scrollY / mx)) : 0;
       var intro = Math.max(0, 1 - p / 0.16);
       intro = intro * intro * (3 - 2 * intro);   // smoothstep
-      ty += intro * H * 0.32;                     // hide the fish down at the start
+      ty += intro * H * 0.22;                     // hide the fish down at the start
     }
     world.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + k + ")";
 
