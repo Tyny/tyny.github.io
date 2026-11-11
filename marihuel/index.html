@@ -614,7 +614,18 @@
     var fe = document.createElementNS(NS, "feGaussianBlur");
     fe.setAttribute("in", "SourceGraphic");
     fe.setAttribute("stdDeviation", String(EXTRA + 3));   // blur = margen + 3
+    fe.setAttribute("result", "blur");
     filt.appendChild(fe);
+    // más opacidad: amplifica el alfa del vacío difuminado para que el halo
+    // oscuro alrededor de puntos y líneas quede más denso (sin perder el borde suave)
+    var ct = document.createElementNS(NS, "feComponentTransfer");
+    ct.setAttribute("in", "blur");
+    var fa = document.createElementNS(NS, "feFuncA");
+    fa.setAttribute("type", "linear");
+    fa.setAttribute("slope", "2.2");
+    fa.setAttribute("intercept", "0");
+    ct.appendChild(fa);
+    filt.appendChild(ct);
     defs.appendChild(filt);
 
     var g = document.createElementNS(NS, "g");
@@ -623,10 +634,10 @@
     var vLines = linesG.cloneNode(true);
     vLines.removeAttribute("opacity");
     vLines.setAttribute("fill", "none");
-    vLines.setAttribute("stroke", "#0a0710");
+    vLines.setAttribute("stroke", "#000000");
     vLines.setAttribute("stroke-width", String(1.6 + 2 * EXTRA));
     var vDots = dotsG.cloneNode(true);
-    vDots.setAttribute("fill", "#0a0710");
+    vDots.setAttribute("fill", "#000000");
     Array.prototype.forEach.call(vDots.querySelectorAll("circle"), function (c) {
       c.setAttribute("r", String((parseFloat(c.getAttribute("r")) || 1) + EXTRA));
     });
