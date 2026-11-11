@@ -675,10 +675,13 @@
       current = nearest;
     }
     haloEls.forEach(function (el, i) {
-      var on = !overview && i === current;
+      var on = i === current;              // active station, in either mode
       el.classList.toggle("on", on);
-      // show the active label while zoomed in; show all names in overview
-      if (labelEls[i]) labelEls[i].style.opacity = (overview || on) ? "1" : "0";
+      if (labelEls[i]) {
+        // zoomed: only the active name. overview: all names, active brightest.
+        labelEls[i].style.opacity = overview ? (on ? "1" : "0.45") : (on ? "1" : "0");
+        labelEls[i].classList.toggle("active", on);
+      }
     });
   }
 
@@ -709,15 +712,23 @@
   window.addEventListener("scroll", onScroll, { passive: true });
   window.addEventListener("resize", render);
 
+  function step(dir) {
+    current = Math.max(0, Math.min(stations.length - 1, current + dir));
+    if (overview) { render(); }      // stay zoomed out, just move the highlight
+    else { scrollToStation(current); }
+    fadeHint();
+  }
+
   document.addEventListener("keydown", function (e) {
     if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-      e.preventDefault(); if (overview) { overview = false; } scrollToStation(current + 1); fadeHint();
+      e.preventDefault(); step(1);
     } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-      e.preventDefault(); if (overview) { overview = false; } scrollToStation(current - 1); fadeHint();
+      e.preventDefault(); step(-1);
     } else if (e.key === " " || e.code === "Space") {
       e.preventDefault();
       overview = !overview;
-      render();
+      if (!overview) { scrollToStation(current); }  // land on the chosen station
+      else { render(); }
       fadeHint();
     }
   });
