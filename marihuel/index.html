@@ -112,6 +112,11 @@
      halos/mouth OUT of this filter so their per-frame changes don't force a
      re-render of the entire filtered fish (void blur + core shadows). */
   .fishglow { filter: drop-shadow(0 0 10px rgba(255,61,138,.35)); }
+  /* the three line layers are <use> of one paint-free #geo-lines; each sets its
+     own paint here (no cloning): pink body, dark dilated void, white thin core */
+  .p-line { stroke: url(#grad); stroke-width: 1.6; opacity: .55; }
+  .v-line { stroke: #000000; stroke-width: 7.6; }
+  .c-line { stroke: #ffffff; stroke-width: 0.7; }
 
   /* glowing station halos, drawn into an overlay group by the script */
   .halo {
@@ -204,8 +209,7 @@
             <stop offset="0.88" stop-color="#ff6fae"/>
             <stop offset="1.00" stop-color="#ffb0d6"/>
           </linearGradient>
-        </defs>
-        <g class="fishglow"><g fill="none" stroke="url(#grad)" stroke-width="1.6" stroke-linecap="round" opacity="0.55">
+          <g id="geo-lines" fill="none" stroke-linecap="round">
         <line x1="103.1" y1="70.4" x2="166.7" y2="36.1"/>
         <line x1="103.1" y1="70.4" x2="145.4" y2="125.2"/>
         <line x1="140.0" y1="70.4" x2="166.7" y2="36.1"/>
@@ -438,7 +442,17 @@
         <line x1="636.9" y1="586.6" x2="619.7" y2="605.1"/>
         <line x1="64.1" y1="643.6" x2="73.8" y2="669.6"/>
       </g>
-      <g fill="url(#grad)">
+          <filter id="voidblur" x="-30%" y="-30%" width="160%" height="160%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="vb"/>
+            <feComponentTransfer in="vb"><feFuncA type="linear" slope="2.2" intercept="0"/></feComponentTransfer>
+          </filter>
+        </defs>
+        <g class="fishglow">
+          <g id="voidG" filter="url(#voidblur)">
+            <use href="#geo-lines" class="v-line"/>
+          </g>
+          <use href="#geo-lines" class="p-line"/>
+          <g id="geo-dots" fill="url(#grad)">
         <circle cx="103.1" cy="70.4" r="6.4"/>
         <circle cx="140.0" cy="70.4" r="6.4"/>
         <circle cx="574.2" cy="882.7" r="6.4"/>
@@ -615,7 +629,9 @@
         <circle cx="494.0" cy="245.1" r="1.9"/>
         <circle cx="506.1" cy="257.3" r="1.3"/>
         <circle cx="509.5" cy="541.2" r="1.8"/>
-      </g></g>
+      </g>
+          <use href="#geo-lines" class="c-line core"/>
+        </g>
         <g id="halos"></g>
       </svg>
     </div>
@@ -653,80 +669,42 @@
     });
   })();
 
-  // geometry groups
-  var linesG = svg.querySelector("g[stroke]");
-  var dotsG  = svg.querySelector('g[fill]:not([stroke])');
+  // geometry groups. Lines are a <use> of #geo-lines (in defs); the rendered
+  // pink DOTS group is #geo-dots -- we still clone it for the void & core dots.
+  var dotsG  = svg.querySelector('#geo-dots');
 
-  // --- contrast void -------------------------------------------------------
-  // Morphological dilation of the line art: clone the dots/lines, grow them by
-  // EXTRA units (stroke = Minkowski sum with a disc), paint them the background
-  // color, and lay them BEHIND the colored fish. That carves a dark margin
-  // around every dot and line so the fish stays legible over the sharp logo.
-  // ONLY this void is blurred -- by EXTRA + 3 (3 más que el margen) -- so its
-  // edge feathers softly into the background; the logo itself stays sharp.
+  // --- contrast void (dots only; the void LINE is a static <use class="v-line">) ---
+  // Dilate each dot by EXTRA (a black disc of radius r+EXTRA) and drop it into the
+  // blurred #voidG so it carves a dark, feathered margin behind the fish.
   (function () {
     var EXTRA = 3;
     var NS = "http://www.w3.org/2000/svg";
-    var defs = svg.querySelector("defs");
-    var filt = document.createElementNS(NS, "filter");
-    filt.setAttribute("id", "voidblur");
-    filt.setAttribute("x", "-30%"); filt.setAttribute("y", "-30%");
-    filt.setAttribute("width", "160%"); filt.setAttribute("height", "160%");
-    var fe = document.createElementNS(NS, "feGaussianBlur");
-    fe.setAttribute("in", "SourceGraphic");
-    fe.setAttribute("stdDeviation", String(EXTRA + 3));   // blur = margen + 3
-    fe.setAttribute("result", "blur");
-    filt.appendChild(fe);
-    // más opacidad: amplifica el alfa del vacío difuminado para que el halo
-    // oscuro alrededor de puntos y líneas quede más denso (sin perder el borde suave)
-    var ct = document.createElementNS(NS, "feComponentTransfer");
-    ct.setAttribute("in", "blur");
-    var fa = document.createElementNS(NS, "feFuncA");
-    fa.setAttribute("type", "linear");
-    fa.setAttribute("slope", "2.2");
-    fa.setAttribute("intercept", "0");
-    ct.appendChild(fa);
-    filt.appendChild(ct);
-    defs.appendChild(filt);
-
-    var g = document.createElementNS(NS, "g");
-    g.setAttribute("filter", "url(#voidblur)");
-
-    var vLines = linesG.cloneNode(true);
-    vLines.removeAttribute("opacity");
-    vLines.setAttribute("fill", "none");
-    vLines.setAttribute("stroke", "#000000");
-    vLines.setAttribute("stroke-width", String(1.6 + 2 * EXTRA));
+    var voidG = document.getElementById("voidG");
     var vDots = dotsG.cloneNode(true);
+    vDots.removeAttribute("id");
     vDots.setAttribute("fill", "#000000");
     Array.prototype.forEach.call(vDots.querySelectorAll("circle"), function (c) {
       c.setAttribute("r", String((parseFloat(c.getAttribute("r")) || 1) + EXTRA));
     });
-    g.appendChild(vDots);
-    g.appendChild(vLines);
-    linesG.parentNode.insertBefore(g, linesG);   // into the .fishglow group
+    voidG.insertBefore(vDots, voidG.firstChild);   // dots under the void line, like before
   })();
 
   // --- white neon core -----------------------------------------------------
   // A thin, perfectly white, glowing line down the center of each line, and a
   // white center in each dot. Sits ON TOP of the pink body: white core, pink
   // around it, black void outside. (drawn before #halos so stations stay on top)
+  // (the white core LINE is a static <use class="c-line core">; only the white
+  //  center DOTS are cloned, since each shrinks by its own radius * 0.4)
   (function () {
-    var wLines = linesG.cloneNode(true);
-    wLines.removeAttribute("opacity");
-    wLines.setAttribute("stroke", "#ffffff");
-    wLines.setAttribute("stroke-width", "0.7");   // thinner than the 1.6 pink line
-    wLines.setAttribute("class", "core");
     var wDots = dotsG.cloneNode(true);
+    wDots.removeAttribute("id");
     wDots.setAttribute("fill", "#ffffff");
     wDots.setAttribute("class", "core");
     Array.prototype.forEach.call(wDots.querySelectorAll("circle"), function (c) {
       var r = parseFloat(c.getAttribute("r")) || 1;
       c.setAttribute("r", String(Math.max(r * 0.4, 0.9)));   // white center, pink ring around
     });
-    var fishglow = linesG.parentNode;   // keep the core inside the glow group, on top of the pink body
-    fishglow.appendChild(wLines);
-    fishglow.appendChild(wDots);
+    dotsG.parentNode.appendChild(wDots);   // end of .fishglow, on top of the pink body
   })();
 
   // --- stations ---
