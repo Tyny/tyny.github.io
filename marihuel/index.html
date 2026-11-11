@@ -51,9 +51,10 @@
     z-index: 2;              /* the fish sits in front of the logo */
   }
 
-  /* 'La Marihuel' logo, glowing and blurred behind the fish, near the bottom */
+  /* 'La Marihuel' logo, glowing and blurred behind the fish, near the bottom.
+     raised 5px from before (bottom: -8vh + 5px) */
   .logo-bg {
-    position: absolute; left: 50%; bottom: -8vh;
+    position: absolute; left: 50%; bottom: calc(-8vh + 5px);
     transform: translateX(-50%);
     width: min(100vw, 1480px);
     z-index: 1; pointer-events: none;
@@ -64,19 +65,19 @@
   }
   /* glow halo, grounded low so it melts up into the background */
   .logo-glow  {
-    filter: blur(40px) saturate(1.35); opacity: .38;
+    filter: blur(30px) saturate(1.35); opacity: .40;
     -webkit-mask-image: linear-gradient(to bottom, transparent 12%, #000 46%);
             mask-image: linear-gradient(to bottom, transparent 12%, #000 46%);
   }
   /* the readable logo; only its very top (flourishes/ghost) fades out */
   .logo-base  {
-    filter: blur(5px)  saturate(1.15); opacity: .58;
+    filter: blur(4px)  saturate(1.15); opacity: .60;
     -webkit-mask-image: linear-gradient(to bottom, transparent 5%, #000 22%);
             mask-image: linear-gradient(to bottom, transparent 5%, #000 22%);
   }
   /* lower part blurs more, fading in from the middle down */
   .logo-lower {
-    filter: blur(18px) saturate(1.25); opacity: .55;
+    filter: blur(13px) saturate(1.25); opacity: .55;
     -webkit-mask-image: linear-gradient(to bottom, transparent 36%, #000 92%);
             mask-image: linear-gradient(to bottom, transparent 36%, #000 92%);
   }
@@ -134,10 +135,20 @@
   }
   .hint.faded { opacity: 0; }
 
+  /* top bar: a flat dark band across the top, like the reference */
+  .topbar {
+    position: fixed; left: 0; top: 0; z-index: 4;
+    width: 100%; height: 56px;
+    display: flex; align-items: center;
+    background: #190910;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+    box-shadow: 0 2px 18px rgba(0,0,0,.45);
+  }
   .wordmark {
-    position: fixed; left: 20px; top: 16px; z-index: 5;
+    position: fixed; left: 26px; top: 0; z-index: 6;
+    height: 56px; display: flex; align-items: center;
     font-weight: 800; letter-spacing: -.03em; font-size: 1.25rem;
-    color: var(--ink); mix-blend-mode: screen;
+    color: var(--ink);
   }
   .wordmark .dot { color: var(--pink); }
 </style>
@@ -579,6 +590,7 @@
     </div>
   </div>
 
+  <div class="topbar" aria-hidden="true"></div>
   <div class="wordmark">Marihuel<span class="dot">.</span></div>
   <div class="hint" id="hint">
     <span><kbd>&larr;</kbd> <kbd>&rarr;</kbd> recorrer</span>
@@ -723,7 +735,7 @@
       fy = focusYFromScroll();
     }
     var tx = W / 2 - k * fx;
-    var ty = H / 2 - k * fy;
+    var ty = H / 2 - k * fy + 5;   // nudge the fish down 5px
     world.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + k + ")";
 
     // highlight the nearest station to the current focus
