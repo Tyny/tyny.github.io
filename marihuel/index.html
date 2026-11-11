@@ -71,6 +71,17 @@
   /* make the station dot itself a touch brighter */
   .star-glow { filter: drop-shadow(0 0 4px #ffb3d6) drop-shadow(0 0 9px #ff3d8a); }
 
+  /* clickable names on the eye / mouth / feet */
+  .label { opacity: 0; transition: opacity .35s ease; cursor: pointer; }
+  .label text {
+    fill: #fff;
+    font: 800 30px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    letter-spacing: -.01em;
+    paint-order: stroke;
+    stroke: rgba(8,5,12,.85); stroke-width: 6px; stroke-linejoin: round;
+  }
+  .label:hover text { fill: #ffd0e6; }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     .halo { animation: none; opacity: .5; }
@@ -547,39 +558,77 @@
   var halosG = document.getElementById("halos");
   var hint = document.getElementById("hint");
 
-  // --- pick stations: one circle near each of these vertical fractions ---
-  var FRACS = [0.055, 0.16, 0.28, 0.40, 0.52, 0.66, 0.80, 0.93];
+  // --- stations ---
+  var SVGNS = "http://www.w3.org/2000/svg";
+  var XLINK = "http://www.w3.org/1999/xlink";
   var circles = Array.prototype.slice.call(svg.querySelectorAll("g[fill] circle"));
-  var stations = [];
   var used = {};
-  FRACS.forEach(function (f) {
-    var ty = f * VB_H, best = null, bestD = 1e9, bi = -1;
+
+  // snap a target point to the nearest circle not yet taken
+  function snap(tx, ty) {
+    var best = null, bestD = 1e9, bi = -1;
     circles.forEach(function (c, i) {
       if (used[i]) return;
-      var cy = parseFloat(c.getAttribute("cy"));
-      var d = Math.abs(cy - ty);
+      var x = parseFloat(c.getAttribute("cx")), y = parseFloat(c.getAttribute("cy"));
+      var d = (x - tx) * (x - tx) + (y - ty) * (y - ty);
       if (d < bestD) { bestD = d; best = c; bi = i; }
     });
-    if (best) {
-      used[bi] = true;
-      best.classList.add("star-glow");
-      stations.push({
-        x: parseFloat(best.getAttribute("cx")),
-        y: parseFloat(best.getAttribute("cy")),
-        r: parseFloat(best.getAttribute("r")) || 4
-      });
-    }
+    if (!best) return null;
+    used[bi] = true;
+    best.classList.add("star-glow");
+    return {
+      x: parseFloat(best.getAttribute("cx")),
+      y: parseFloat(best.getAttribute("cy")),
+      r: parseFloat(best.getAttribute("r")) || 4
+    };
+  }
+
+  var stations = [];
+
+  // named, clickable parts of the fish (destinos provisorios)
+  var NAMED = [
+    { name: "Fotos",  href: "#fotos",  tx: 300, ty: 90  },  // el ojo
+    { name: "Letras", href: "#letras", tx: 315, ty: 205 },  // la boca
+    { name: "Fechas", href: "#fechas", tx: 300, ty: 960 }   // los pies
+  ];
+  NAMED.forEach(function (n) {
+    var s = snap(n.tx, n.ty);
+    if (s) { s.name = n.name; s.href = n.href; stations.push(s); }
   });
+
+  // ambient glow stops that fill the body between the named ones
+  [0.40, 0.52, 0.66].forEach(function (f) {
+    var s = snap(VB_W / 2, f * VB_H);
+    if (s) stations.push(s);
+  });
+
   stations.sort(function (a, b) { return a.y - b.y; });
 
-  // halos
-  var haloEls = stations.map(function (s) {
-    var el = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  // halos + labels for named stations
+  var haloEls = [], labelEls = [];
+  stations.forEach(function (s) {
+    var el = document.createElementNS(SVGNS, "circle");
     el.setAttribute("cx", s.x); el.setAttribute("cy", s.y);
     el.setAttribute("r", Math.max(s.r * 4.5, 14));
     el.setAttribute("class", "halo");
     halosG.appendChild(el);
-    return el;
+    haloEls.push(el);
+
+    var lbl = null;
+    if (s.name) {
+      var a = document.createElementNS(SVGNS, "a");
+      a.setAttribute("href", s.href);
+      a.setAttributeNS(XLINK, "xlink:href", s.href);
+      a.setAttribute("class", "label");
+      var t = document.createElementNS(SVGNS, "text");
+      t.setAttribute("x", s.x + Math.max(s.r * 3, 18));
+      t.setAttribute("y", s.y + 9);
+      t.textContent = s.name;
+      a.appendChild(t);
+      halosG.appendChild(a);
+      lbl = a;
+    }
+    labelEls.push(lbl);
   });
 
   var TOP_Y = stations[0].y, BOT_Y = stations[stations.length - 1].y;
@@ -626,7 +675,10 @@
       current = nearest;
     }
     haloEls.forEach(function (el, i) {
-      el.classList.toggle("on", !overview && i === current);
+      var on = !overview && i === current;
+      el.classList.toggle("on", on);
+      // show the active label while zoomed in; show all names in overview
+      if (labelEls[i]) labelEls[i].style.opacity = (overview || on) ? "1" : "0";
     });
   }
 
