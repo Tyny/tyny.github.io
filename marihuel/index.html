@@ -55,7 +55,7 @@
      its glow + soft edges are already in the PNG. raised 5px (bottom = -8vh + 5px).
      --u is the logo's displayed width, the unit the sparkles are sized in. */
   .logo-bg {
-    position: absolute; left: 50%; bottom: calc(-8vh + 5px);
+    position: absolute; left: 50%; top: 5px; bottom: auto;
     transform: translateX(-50%);
     width: min(100vw, 1480px); --u: min(100vw, 1480px);
     z-index: 1; pointer-events: none;
@@ -122,6 +122,18 @@
   .core {
     pointer-events: none;
     filter: drop-shadow(0 0 1.3px #fff) drop-shadow(0 0 3.4px #ff6ab0);
+  }
+
+  /* the mouth: a little lens that opens and closes, as if the fish is talking */
+  .mouth {
+    fill: none; stroke: #ffffff; stroke-width: 1.1;
+    transform-box: fill-box; transform-origin: center;
+    filter: drop-shadow(0 0 2px #fff) drop-shadow(0 0 5px #ff5aa0);
+    animation: chomp 2.2s ease-in-out infinite;
+  }
+  @keyframes chomp {
+    0%, 100% { transform: scaleY(0.12); }
+    50%      { transform: scaleY(1); }
   }
 
   /* clickable names on the eye / mouth / feet */
@@ -613,7 +625,7 @@
   var logoBg = document.querySelector(".logo-bg");
 
   // --- animated glow sparkles on the logo's detected glints -----------------
-  var SPARKLES = [{"x": 0.5639, "y": 0.708, "r": 11.7}, {"x": 0.3763, "y": 0.2582, "r": 3.2}, {"x": 0.4638, "y": 0.2262, "r": 11.9}, {"x": 0.7478, "y": 0.6266, "r": 10.5}, {"x": 0.8854, "y": 0.5894, "r": 9.0}, {"x": 0.3221, "y": 0.6884, "r": 3}, {"x": 0.1087, "y": 0.6255, "r": 5.3}, {"x": 0.5562, "y": 0.2939, "r": 3}, {"x": 0.686, "y": 0.6911, "r": 14.8}, {"x": 0.1484, "y": 0.4044, "r": 8.7}, {"x": 0.6078, "y": 0.2275, "r": 8.3}, {"x": 0.5575, "y": 0.4211, "r": 3}, {"x": 0.6548, "y": 0.2618, "r": 8.5}, {"x": 0.8241, "y": 0.5192, "r": 3}];
+  var SPARKLES = [{"x": 0.3706, "y": 0.2511, "r": 11.4}, {"x": 0.7327, "y": 0.7369, "r": 3.9}, {"x": 0.549, "y": 0.8032, "r": 7.7}, {"x": 0.2675, "y": 0.8017, "r": 4.0}, {"x": 0.5953, "y": 0.2359, "r": 8.0}, {"x": 0.6511, "y": 0.2566, "r": 7.1}, {"x": 0.7512, "y": 0.8831, "r": 3}, {"x": 0.1989, "y": 0.3628, "r": 6.9}, {"x": 0.473, "y": 0.7806, "r": 12.6}, {"x": 0.8136, "y": 0.3376, "r": 3}, {"x": 0.8871, "y": 0.7785, "r": 16}, {"x": 0.3542, "y": 0.8698, "r": 3.0}, {"x": 0.9231, "y": 0.2608, "r": 3}, {"x": 0.3139, "y": 0.2332, "r": 8.8}];
   (function () {
     var host = document.getElementById("sparkles");
     if (!host) return;
@@ -734,7 +746,7 @@
   // named, clickable parts of the fish (destinos provisorios)
   var NAMED = [
     { name: "Fotos",  href: "#fotos",  tx: 300, ty: 90  },  // el ojo
-    { name: "Letras", href: "#letras", tx: 315, ty: 205 },  // la boca
+    { name: "Letras", href: "#letras", tx: 312, ty: 175 },  // la boca
     { name: "Fechas", href: "#fechas", tx: 300, ty: 960 }   // los pies
   ];
   NAMED.forEach(function (n) {
@@ -749,6 +761,18 @@
   });
 
   stations.sort(function (a, b) { return a.y - b.y; });
+
+  // the talking mouth: a small lens at the "Letras" (boca) station, opening/closing
+  (function () {
+    var m = null;
+    stations.forEach(function (s) { if (s.name === "Letras") m = s; });
+    if (!m) return;
+    var e = document.createElementNS(SVGNS, "ellipse");
+    e.setAttribute("cx", m.x); e.setAttribute("cy", m.y);
+    e.setAttribute("rx", "15"); e.setAttribute("ry", "6");
+    e.setAttribute("class", "mouth");
+    halosG.appendChild(e);
+  })();
 
   // halos + labels for named stations
   var haloEls = [], labelEls = [];
@@ -799,16 +823,27 @@
 
   function render() {
     var W = window.innerWidth, H = window.innerHeight;
-    var k, fx = VB_W / 2, fy;
+    var fx = VB_W / 2, k, fy;
     if (overview) {
       k = fitK() * 0.9;
       fy = VB_H / 2;
     } else {
-      k = zoomK();
+      k = zoomK();          // same zoom as always -- dot size unchanged
       fy = focusYFromScroll();
     }
     var tx = W / 2 - k * fx;
-    var ty = H / 2 - k * fy + 5;   // nudge the fish down 5px
+    var ty = H / 2 - k * fy + 5;
+
+    // INTRO: at the very top the fish is mostly HIDDEN below the fold -- pushed
+    // far down so only its eye + mouth show, the logo fills the rest. The push
+    // eases away over the first bit of scroll as the fish rises into view.
+    if (!overview) {
+      var mx = document.body.scrollHeight - window.innerHeight;
+      var p = mx > 0 ? Math.min(1, Math.max(0, window.scrollY / mx)) : 0;
+      var intro = Math.max(0, 1 - p / 0.16);
+      intro = intro * intro * (3 - 2 * intro);   // smoothstep
+      ty += intro * H * 0.24;                     // hide the fish down at the start
+    }
     world.style.transform = "translate(" + tx + "px," + ty + "px) scale(" + k + ")";
 
     // the logo background drifts up as you scroll (parallax)
